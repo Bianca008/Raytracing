@@ -1,65 +1,62 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class FirstRay : MonoBehaviour
 {
-    private Transform m_transform;
-    private LineRenderer m_lineRenderer;
+    public float maxStepDistance = 200;
 
-    private Ray m_ray;
-    private RaycastHit m_hit;
-    private Vector3 m_inDirection;
-    public int m_numberOfReflections = 5;
-    private int m_numberOfPoints;
-
-    void Awake()
+    private void Start()
     {
-        m_transform = this.GetComponent<Transform>();
-        m_lineRenderer = this.GetComponent<LineRenderer>();
-        m_lineRenderer.startWidth = 0.05f;
-        m_lineRenderer.endWidth = 0.05f;
-        m_lineRenderer.material.color = Color.blue;
+
     }
 
-    void Update()
+    private void Update()
     {
-        m_numberOfReflections = Mathf.Clamp(m_numberOfReflections, 1, m_numberOfReflections);
-        m_ray = new Ray(m_transform.position, m_transform.forward);
-        m_numberOfPoints = m_numberOfReflections;
-        m_lineRenderer.positionCount = m_numberOfPoints;
-        m_lineRenderer.SetPosition(0, m_transform.position);
 
-        for (int index = 0; index <= m_numberOfReflections; index++)
+    }
+
+    private void OnDrawGizmos()
+    {
+        Handles.color = Color.red;
+        Handles.ArrowHandleCap(0,
+            transform.position + transform.forward * 0.25f,
+            transform.rotation,
+            0.5f,
+            EventType.Repaint);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, 0.25f);
+
+        DrawPredictedReflectionPattern(transform.position + transform.forward * 0.75f, transform.forward);
+    }
+
+    private void DrawPredictedReflectionPattern(Vector3 position, Vector3 direction)
+    {
+        Vector3 startingPosition = position;
+
+        for (int index = 0; index <= 5; ++index)
         {
-            //If the ray hasn't reflected yet  
-            if (index == 0)
-            {
-                //Check if the ray has hit something  
-                if (Physics.Raycast(m_ray.origin, m_ray.direction, out m_hit, 100)) 
-                {
-                    m_inDirection = Vector3.Reflect(m_ray.direction, m_hit.normal);
-                    m_ray = new Ray(m_hit.point, m_inDirection);
+            /*Raycast to detect reflection */
+            Ray ray = new Ray(position, direction);
+            RaycastHit hit;
 
-                    if (m_numberOfReflections == 1)
-                    {
-                        m_lineRenderer.positionCount = ++m_numberOfPoints;
-                    }
-                    //set the position of the next vertex at the line renderer to be the same as the hit point  
-                    m_lineRenderer.SetPosition(index + 1, m_hit.point);
-                }
-            }
-            else  
+            if (Physics.Raycast(ray, out hit, maxStepDistance))
             {
-                if (Physics.Raycast(m_ray.origin, m_ray.direction, out m_hit, 100))
-                {
-                    m_inDirection = Vector3.Reflect(m_inDirection, m_hit.normal);
-                    m_ray = new Ray(m_hit.point, m_inDirection);
-                    m_lineRenderer.positionCount = ++m_numberOfPoints;
-
-                    m_lineRenderer.SetPosition(index + 1, m_hit.point);
-                }
+                direction = Vector3.Reflect(direction, hit.normal);
+                position = hit.point;
             }
+            else
+            {
+                position += direction * maxStepDistance;
+            }
+
+            Gizmos.color = Color.blue;
+            /*Draw between last and actual position.*/
+            Gizmos.DrawLine(startingPosition, position);
+
+            startingPosition = position;
         }
     }
 }
