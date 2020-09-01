@@ -19,17 +19,6 @@ public class FirstRay : MonoBehaviour
         set;
     }
 
-    private Tuple<double, double> GetPolarCoordinates(Vector3 position)
-    {
-        double distanceFromOrigin = Math.Sqrt(Math.Pow(position.x, 2) +
-            Math.Pow(position.y, 2) +
-            Math.Pow(position.z, 2));
-        double theta = Math.Atan(position.y / position.x);
-        double phi = Math.Acos(position.z / distanceFromOrigin);
-
-        return Tuple.Create(theta, phi);
-    }
-
     private double CalculateEnergyInPoint(Vector3 position, double distance)
     {
         /*
@@ -37,13 +26,12 @@ public class FirstRay : MonoBehaviour
 
         Ef - total energy emitted by the sound
         Nr - number of rays
-        D_theta_phi - source directively 
+        D_theta_phi - source directively; used D_theta_phi = 1
         gama -air absorbtion
         d - distance path traveld by the ray
         alfa_i - absorbtion coefficient at surface i
          */
 
-        Tuple<double, double> polarCoordinates = GetPolarCoordinates(position);
         double airAbsorption = 0.0013;
         double energy = startEnergy * Math.Exp(-airAbsorption * distance) * (1 - absorptionCoefficient);
 
