@@ -12,6 +12,7 @@ public class FirstRay : MonoBehaviour
     private float maxStepDistance = 200;
     private int numberOfColissions = 3;
     private int maxDistance = 200;
+    private LineRenderer line;
 
     private double CurrentEnergy
     {
@@ -54,6 +55,9 @@ public class FirstRay : MonoBehaviour
 
     private void DrawPredictedReflectionPattern(Vector3 position, Vector3 direction)
     {
+        SetLineProperties();
+        int numberOfPoints = 1;
+
         Vector3 startingPosition = position;
         double totalDistance = 0;
 
@@ -74,22 +78,28 @@ public class FirstRay : MonoBehaviour
                 position = hit.point;
                 ++numberOfReflections;
                 totalDistance += hit.distance;
+                line.positionCount = ++numberOfPoints;
+                line.SetPosition(numberOfPoints-1, hit.point);
             }
             else
             {
                 position += direction * maxStepDistance;
                 totalDistance += maxStepDistance;
             }
-
-            Gizmos.color = Color.blue;
-            /*Draw between last and actual position.*/
-            Gizmos.DrawLine(startingPosition, position);
-
             startingPosition = position;
 
             /*Recalculate current energy of the ray.*/
             CurrentEnergy = CalculateEnergyInPoint(position, totalDistance);
             Debug.Log(CurrentEnergy + " " + totalDistance + " " + numberOfReflections + " ");
         }
+    }
+
+    private void SetLineProperties()
+    {
+        line = this.GetComponent<LineRenderer>();
+        line.startWidth = 0.03f;
+        line.endWidth = 0.03f;
+        line.positionCount = 1;
+        line.SetPosition(0, transform.position);
     }
 }
