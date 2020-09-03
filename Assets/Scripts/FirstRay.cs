@@ -9,10 +9,11 @@ public class FirstRay : MonoBehaviour
     public double startEnergy = 10;
     public double absorptionCoefficient = 0.2;
     public double minimumEnergy = 5;
+
     private float maxStepDistance = 200;
     private int numberOfColissions = 3;
     private int maxDistance = 200;
-    private readonly int numberOfRays = 18;
+    private readonly int numberOfRays = 5;
 
     private LineRenderer[] lines;
 
@@ -51,15 +52,14 @@ public class FirstRay : MonoBehaviour
 
     private void Update()
     {
-        float angle = 0;
-        float angleStep = 360 / numberOfRays;
+        float angle = -90;
+        float angleStep = 180 / numberOfRays;
 
         for (int index = 0; index < numberOfRays; ++index)
         {
             DrawPredictedReflectionPattern(transform.position, Quaternion.AngleAxis(angle, transform.up) * transform.forward, index);
             angle += angleStep;
         }
-        //DrawPredictedReflectionPattern(transform.position, transform.forward, 0);
     }
 
     private void DrawPredictedReflectionPattern(Vector3 position, Vector3 direction, int numberOfRay)
@@ -106,7 +106,6 @@ public class FirstRay : MonoBehaviour
     private LineRenderer SetLineProperties()
     {
         LineRenderer line = new GameObject("Line").AddComponent<LineRenderer>();
-        //line = this.GetComponent<LineRenderer>();
         line.startWidth = 0.03f;
         line.endWidth = 0.03f;
         line.positionCount = 1;
