@@ -12,7 +12,17 @@ public class FirstRay : MonoBehaviour
     private float maxStepDistance = 200;
     private int numberOfColissions = 3;
     private int maxDistance = 200;
-    private LineRenderer line;
+    private readonly int numberOfRays = 18;
+
+    private LineRenderer[] lines;
+
+    private void Start()
+    {
+        lines = new LineRenderer[numberOfRays];
+
+        for (int index = 0; index < numberOfRays; ++index)
+            lines[index] = SetLineProperties();
+    }
 
     private double CurrentEnergy
     {
@@ -39,23 +49,22 @@ public class FirstRay : MonoBehaviour
         return energy;
     }
 
-    private void OnDrawGizmos()
+    private void Update()
     {
-        Handles.color = Color.red;
-        Handles.ArrowHandleCap(0,
-            transform.position + transform.forward * 0.25f,
-            transform.rotation,
-            0.5f,
-            EventType.Repaint);
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, 0.25f);
+        float angle = 0;
+        float angleStep = 360 / numberOfRays;
 
-        DrawPredictedReflectionPattern(transform.position + transform.forward * 0.75f, transform.forward);
+        for (int index = 0; index < numberOfRays; ++index)
+        {
+            DrawPredictedReflectionPattern(transform.position, Quaternion.AngleAxis(angle, transform.up) * transform.forward, index);
+            angle += angleStep;
+        }
+        //DrawPredictedReflectionPattern(transform.position, transform.forward, 0);
     }
 
-    private void DrawPredictedReflectionPattern(Vector3 position, Vector3 direction)
+    private void DrawPredictedReflectionPattern(Vector3 position, Vector3 direction, int numberOfRay)
     {
-        SetLineProperties();
+        lines[numberOfRay].SetPosition(0, transform.position);
         int numberOfPoints = 1;
 
         Vector3 startingPosition = position;
@@ -78,8 +87,8 @@ public class FirstRay : MonoBehaviour
                 position = hit.point;
                 ++numberOfReflections;
                 totalDistance += hit.distance;
-                line.positionCount = ++numberOfPoints;
-                line.SetPosition(numberOfPoints-1, hit.point);
+                lines[numberOfRay].positionCount = ++numberOfPoints;
+                lines[numberOfRay].SetPosition(numberOfPoints-1, hit.point);
             }
             else
             {
@@ -94,12 +103,15 @@ public class FirstRay : MonoBehaviour
         }
     }
 
-    private void SetLineProperties()
+    private LineRenderer SetLineProperties()
     {
-        line = this.GetComponent<LineRenderer>();
+        LineRenderer line = new GameObject("Line").AddComponent<LineRenderer>();
+        //line = this.GetComponent<LineRenderer>();
         line.startWidth = 0.03f;
         line.endWidth = 0.03f;
         line.positionCount = 1;
-        line.SetPosition(0, transform.position);
+        line.transform.SetParent(transform);
+
+        return line;
     }
 }
