@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class FirstRay : MonoBehaviour
+public class RayGenerator : MonoBehaviour
 {
     public double startEnergy = 10;
     public double absorptionCoefficient = 0.2;
@@ -10,7 +12,7 @@ public class FirstRay : MonoBehaviour
     private float maxStepDistance = 200;
     private int numberOfColissions = 3;
     private int maxDistance = 200;
-    private readonly int numberOfRays = 20;
+    private readonly int numberOfRays = 1;
 
     private LineRenderer[] lines;
 
@@ -46,6 +48,7 @@ public class FirstRay : MonoBehaviour
 
         return energy;
     }
+
     public Tuple<double, double, double> GetPolarCoordinates(Vector3 position)
     {
         double distanceFromOrigin = Math.Sqrt(Math.Pow(position.x, 2) +

@@ -11,8 +11,8 @@ namespace Tests
         {
             Vector3 point = new Vector3(3, 4, 5);
 
-            GameObject gameObject = new GameObject("FirstRay");
-            FirstRay firstRay = gameObject.AddComponent<FirstRay>();
+            GameObject gameObject = new GameObject("RayGenerator");
+            RayGenerator firstRay = gameObject.AddComponent<RayGenerator>();
 
             Tuple<double, double, double> polarCoordinates = firstRay.GetPolarCoordinates(point);
 
@@ -28,8 +28,8 @@ namespace Tests
         {
             Vector3 point = new Vector3(3, 4, 5);
 
-            GameObject gameObject = new GameObject("FirstRay");
-            FirstRay firstRay = gameObject.AddComponent<FirstRay>();
+            GameObject gameObject = new GameObject("RayGenerator");
+            RayGenerator firstRay = gameObject.AddComponent<RayGenerator>();
 
             Tuple<double, double, double> polarCoordinates = firstRay.GetPolarCoordinates(point);
             Vector3 recalculatedPoint = firstRay.GetCartesianCoordinates(polarCoordinates.Item1,
