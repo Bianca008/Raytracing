@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class RayGenerator : MonoBehaviour
@@ -71,7 +69,7 @@ public class RayGenerator : MonoBehaviour
         return new Vector3((float)x, (float)y, (float)z);
     }
 
-    private void Update()
+    private void GenerateRays()
     {
         //!!!Var3 - Fibo Sphere!!!
         double goldenRatio = (1 + Math.Sqrt(5)) / 2;
@@ -89,6 +87,29 @@ public class RayGenerator : MonoBehaviour
                indexRay);
             ++indexRay;
         }
+    }
+
+    private void MoveSource()
+    {
+        float speed = 2;
+        Vector3 pos = transform.position;
+
+        if (Input.GetKey("w"))
+            pos.z += speed * Time.deltaTime;
+        if (Input.GetKey("s"))
+            pos.z -= speed * Time.deltaTime;
+        if (Input.GetKey("d"))
+            pos.x += speed * Time.deltaTime;
+        if (Input.GetKey("a"))
+            pos.x -= speed * Time.deltaTime;
+
+        transform.position = pos;
+    }
+
+    private void Update()
+    {
+        GenerateRays();
+        MoveSource();
     }
 
     private void DrawPredictedReflectionPattern(Vector3 position, Vector3 direction, int numberOfRay)
