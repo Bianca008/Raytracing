@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 public class FirstRay : MonoBehaviour
@@ -13,7 +10,7 @@ public class FirstRay : MonoBehaviour
     private float maxStepDistance = 200;
     private int numberOfColissions = 3;
     private int maxDistance = 200;
-    private readonly int numberOfRays = 5;
+    private readonly int numberOfRays = 20;
 
     private LineRenderer[] lines;
 
@@ -49,16 +46,110 @@ public class FirstRay : MonoBehaviour
 
         return energy;
     }
+    public Tuple<double, double, double> GetPolarCoordinates(Vector3 position)
+    {
+        double distanceFromOrigin = Math.Sqrt(Math.Pow(position.x, 2) +
+                                    Math.Pow(position.y, 2) +
+                                    Math.Pow(position.z, 2));
+        double theta = Math.Atan(position.y / position.x);
+        double phi = Math.Acos(position.z / distanceFromOrigin);
+
+        /*This transformation is in radians.*/
+        return Tuple.Create(distanceFromOrigin, theta, phi);
+    }
+
+    public Vector3 GetCartesianCoordinates(double distance, double theta, double phi)
+    {
+        /*Sin and Cos are using radians.*/
+        double x = distance * Math.Sin(phi) * Math.Cos(theta);
+        double y = distance * Math.Sin(phi) * Math.Sin(theta);
+        double z = distance * Math.Cos(phi);
+
+        return new Vector3((float)x, (float)y, (float)z);
+    }
 
     private void Update()
     {
-        float angle = -90;
-        float angleStep = 180 / numberOfRays;
+        ////!!!Var1!!!
+
+        //Tuple<double, double, double> polarCoord = GetPolarCoordinates(transform.position);
+        ///*
+        // phi - from 0 to 180, where 180 degrees = 3.1415926536 radians
+        // theta - from 0 to 360, where 360 degrees =  6.2831853072 radians
+        // */
+
+        //float stepPhi = 3.1415926536f / numberOfRays;
+        //float stepTheta = 6.2831853072f / numberOfRays;
+
+        //int indexRay = 0;
+        //double theta = 0;
+        //double phi = 0;
+
+        //for (int indexTheta = 0; indexTheta < numberOfRays; ++indexTheta)
+        //    for (int indexPhi = 0; indexPhi < numberOfRays; ++indexPhi)
+        //    {
+        //        Vector3 cartesianCoords = GetCartesianCoordinates(1, theta, phi);
+        //        DrawPredictedReflectionPattern(transform.position,
+        //           cartesianCoords,
+        //           indexRay);
+        //        ++indexRay;
+
+        //        Debug.Log(indexRay + " " + theta + " " + phi + " " + cartesianCoords);
+
+        //        theta += stepTheta;
+        //        phi += stepPhi;
+        //    }
+
+        /*
+         //!!!Var2!!!
+        Tuple<double, double, double> polarCoord = GetPolarCoordinates(transform.position);
+        
+         //phi - from 0 to 180, where 180 degrees = 3.1415926536 radians
+         //theta - from 0 to 360, where 360 degrees =  6.2831853072 radians
+        
+
+        float stepPhi = 3.1415926536f / numberOfRays;
+        float stepTheta = 6.2831853072f / numberOfRays;
+
+        int indexRay = 0;
+        double theta = 0;
+        double phi = 0;
+
+        for (int indexTheta = 0; indexTheta < numberOfRays; ++indexTheta)
+        {
+            Vector3 cartesianCoords = GetCartesianCoordinates(1, theta, phi);
+            DrawPredictedReflectionPattern(transform.position,
+               cartesianCoords,
+               indexRay);
+            ++indexRay;
+            //cartesianCoords = GetCartesianCoordinates(1, theta, phi + 3.1415);
+            DrawPredictedReflectionPattern(transform.position,
+               -cartesianCoords,
+               indexRay);
+            ++indexRay;
+            Debug.Log(cartesianCoords + " " + -cartesianCoords);
+
+            theta += stepTheta;
+            phi += stepPhi;
+        }
+        */
+
+
+        //!!!Var3 - Fibo Sphere!!!
+        double goldenRatio = (1 + Math.Sqrt(5)) / 2;
+        double goldenAngle = (2 - goldenRatio) * (2 * Math.PI);
+        int indexRay = 0;
 
         for (int index = 0; index < numberOfRays; ++index)
         {
-            DrawPredictedReflectionPattern(transform.position, Quaternion.AngleAxis(angle, transform.up) * transform.forward, index);
-            angle += angleStep;
+            double theta = Math.Asin(-1 + 2 * index / (numberOfRays + 1));
+            double phi = goldenAngle * index;
+
+            Debug.Log(indexRay + " " + GetCartesianCoordinates(1, theta, phi));
+            DrawPredictedReflectionPattern(transform.position,
+               GetCartesianCoordinates(1, theta, phi),
+               indexRay);
+            ++indexRay;
         }
     }
 
@@ -67,14 +158,13 @@ public class FirstRay : MonoBehaviour
         lines[numberOfRay].SetPosition(0, transform.position);
         int numberOfPoints = 1;
 
-        Vector3 startingPosition = position;
         double totalDistance = 0;
 
         CurrentEnergy = startEnergy;
         int numberOfReflections = 0;
 
         while (CurrentEnergy >= minimumEnergy &&
-            totalDistance <= maxDistance && 
+            totalDistance <= maxDistance &&
             numberOfReflections < numberOfColissions)
         {
             /*Raycast to detect reflection */
@@ -88,18 +178,16 @@ public class FirstRay : MonoBehaviour
                 ++numberOfReflections;
                 totalDistance += hit.distance;
                 lines[numberOfRay].positionCount = ++numberOfPoints;
-                lines[numberOfRay].SetPosition(numberOfPoints-1, hit.point);
+                lines[numberOfRay].SetPosition(numberOfPoints - 1, hit.point);
             }
             else
             {
                 position += direction * maxStepDistance;
                 totalDistance += maxStepDistance;
             }
-            startingPosition = position;
 
             /*Recalculate current energy of the ray.*/
             CurrentEnergy = CalculateEnergyInPoint(position, totalDistance);
-            Debug.Log(CurrentEnergy + " " + totalDistance + " " + numberOfReflections + " ");
         }
     }
 
