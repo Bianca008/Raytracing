@@ -89,27 +89,9 @@ public class RayGenerator : MonoBehaviour
         }
     }
 
-    private void MoveSource()
-    {
-        float speed = 2;
-        Vector3 pos = transform.position;
-
-        if (Input.GetKey("w"))
-            pos.z += speed * Time.deltaTime;
-        if (Input.GetKey("s"))
-            pos.z -= speed * Time.deltaTime;
-        if (Input.GetKey("d"))
-            pos.x += speed * Time.deltaTime;
-        if (Input.GetKey("a"))
-            pos.x -= speed * Time.deltaTime;
-
-        transform.position = pos;
-    }
-
     private void Update()
     {
         GenerateRays();
-        MoveSource();
     }
 
     private void DrawPredictedReflectionPattern(Vector3 position, Vector3 direction, int numberOfRay)
