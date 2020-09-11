@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class RayGenerator : MonoBehaviour
 {
-    public double startEnergy = 10;
+    public double startEnergy = 25;
     public double absorptionCoefficient = 0.2;
     public double minimumEnergy = 5;
 
@@ -42,7 +42,7 @@ public class RayGenerator : MonoBehaviour
          */
 
         double airAbsorption = 0.0013;
-        double energy = startEnergy * Math.Exp(-airAbsorption * distance) * (1 - absorptionCoefficient);
+        double energy = startEnergy / numberOfRays * Math.Exp(-airAbsorption * distance) * (1 - absorptionCoefficient);
 
         return energy;
     }
@@ -129,6 +129,8 @@ public class RayGenerator : MonoBehaviour
 
             /*Recalculate current energy of the ray.*/
             CurrentEnergy = CalculateEnergyInPoint(position, totalDistance);
+
+            Debug.Log(CurrentEnergy);
         }
     }
 
