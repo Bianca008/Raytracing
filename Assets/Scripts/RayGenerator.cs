@@ -5,14 +5,14 @@ public class RayGenerator : MonoBehaviour
 {
     public double startEnergy = 25;
     public double absorptionCoefficient = 0.2;
-    public double minimumEnergy = 5;
+    public double minimumEnergy = 0;
 
-    private float maxStepDistance = 200;
     private int numberOfColissions = 3;
     private int maxDistance = 200;
-    private readonly int numberOfRays = 1;
+    private readonly int numberOfRays = 3;
 
     private LineRenderer[] lines;
+    private RayGeometry rayGeometryGenerator;
 
     private void Start()
     {
@@ -20,6 +20,8 @@ public class RayGenerator : MonoBehaviour
 
         for (int index = 0; index < numberOfRays; ++index)
             lines[index] = SetLineProperties();
+
+        rayGeometryGenerator = new RayGeometry(transform.position, lines, numberOfColissions, maxDistance);
     }
 
     private double CurrentEnergy
@@ -59,79 +61,10 @@ public class RayGenerator : MonoBehaviour
         return Tuple.Create(distanceFromOrigin, theta, phi);
     }
 
-    public Vector3 GetCartesianCoordinates(double distance, double theta, double phi)
-    {
-        /*Sin and Cos are using radians.*/
-        double x = distance * Math.Sin(phi) * Math.Cos(theta);
-        double y = distance * Math.Sin(phi) * Math.Sin(theta);
-        double z = distance * Math.Cos(phi);
-
-        return new Vector3((float)x, (float)y, (float)z);
-    }
-
-    private void GenerateRays()
-    {
-        //!!!Var3 - Fibo Sphere!!!
-        double goldenRatio = (1 + Math.Sqrt(5)) / 2;
-        double goldenAngle = (2 - goldenRatio) * (2 * Math.PI);
-        int indexRay = 0;
-
-        for (int index = 0; index < numberOfRays; ++index)
-        {
-            double theta = Math.Asin(-1 + 2 * index / (numberOfRays + 1));
-            double phi = goldenAngle * index;
-
-            Debug.Log(indexRay + " " + GetCartesianCoordinates(1, theta, phi));
-            DrawPredictedReflectionPattern(transform.position,
-               GetCartesianCoordinates(1, theta, phi),
-               indexRay);
-            ++indexRay;
-        }
-    }
-
     private void Update()
     {
-        GenerateRays();
-    }
-
-    private void DrawPredictedReflectionPattern(Vector3 position, Vector3 direction, int numberOfRay)
-    {
-        lines[numberOfRay].SetPosition(0, transform.position);
-        int numberOfPoints = 1;
-
-        double totalDistance = 0;
-
-        CurrentEnergy = startEnergy;
-        int numberOfReflections = 0;
-
-        while (CurrentEnergy >= minimumEnergy &&
-            totalDistance <= maxDistance &&
-            numberOfReflections < numberOfColissions)
-        {
-            /*Raycast to detect reflection */
-            Ray ray = new Ray(position, direction);
-            RaycastHit hit;
-
-            if (Physics.Raycast(ray, out hit, maxStepDistance))
-            {
-                direction = Vector3.Reflect(direction, hit.normal);
-                position = hit.point;
-                ++numberOfReflections;
-                totalDistance += hit.distance;
-                lines[numberOfRay].positionCount = ++numberOfPoints;
-                lines[numberOfRay].SetPosition(numberOfPoints - 1, hit.point);
-            }
-            else
-            {
-                position += direction * maxStepDistance;
-                totalDistance += maxStepDistance;
-            }
-
-            /*Recalculate current energy of the ray.*/
-            CurrentEnergy = CalculateEnergyInPoint(position, totalDistance);
-
-            Debug.Log(CurrentEnergy);
-        }
+        //GenerateRays();
+        rayGeometryGenerator.GenerateRays();
     }
 
     private LineRenderer SetLineProperties()
