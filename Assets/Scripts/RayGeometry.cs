@@ -1,21 +1,34 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class RayGeometry 
+public class RayGeometry
 {
     private int numberOfRays;
     private int numberOfColissions;
     private int maxDistance;
     private Vector3 sourcePosition;
-    private LineRenderer[] lines;
+    //private LineRenderer[] lines;
+    private List<List<Vector3>> linePositions;
 
-    public RayGeometry(Vector3 sourcePos, LineRenderer[] linesToDraw, int nrOfColissions = 3, int maxDist = 200)
+    public List<List<Vector3>> LinePosistions
+    {
+        get
+        {
+            return linePositions;
+        }
+    }
+
+
+    public RayGeometry(Vector3 sourcePos, int nrOfRays, int nrOfColissions = 3, int maxDist = 200)
     {
         sourcePosition = sourcePos;
-        lines = linesToDraw;
         numberOfColissions = nrOfColissions;
-        numberOfRays = lines.Length;
+        numberOfRays = nrOfRays;
         maxDistance = maxDist;
+        linePositions = new List<List<Vector3>>();
+        for (int index = 0; index < numberOfRays; ++index)
+            linePositions.Add(new List<Vector3>() { sourcePosition });
     }
 
     public Vector3 GetCartesianCoordinates(double distance, double theta, double phi)
@@ -50,9 +63,6 @@ public class RayGeometry
 
     private void DrawPredictedReflectionPattern(Vector3 position, Vector3 direction, int numberOfRay)
     {
-        lines[numberOfRay].SetPosition(0, sourcePosition);
-        int numberOfPoints = 1;
-
         double totalDistance = 0;
         int numberOfReflections = 0;
 
@@ -69,8 +79,7 @@ public class RayGeometry
                 position = hit.point;
                 ++numberOfReflections;
                 totalDistance += hit.distance;
-                lines[numberOfRay].positionCount = ++numberOfPoints;
-                lines[numberOfRay].SetPosition(numberOfPoints - 1, hit.point);
+                linePositions[numberOfRay].Add(hit.point);
             }
             else
             {

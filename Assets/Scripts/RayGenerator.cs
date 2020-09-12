@@ -13,6 +13,7 @@ public class RayGenerator : MonoBehaviour
 
     private LineRenderer[] lines;
     private RayGeometry rayGeometryGenerator;
+    private RaysDrawer rayDrawer;
 
     private void Start()
     {
@@ -21,7 +22,11 @@ public class RayGenerator : MonoBehaviour
         for (int index = 0; index < numberOfRays; ++index)
             lines[index] = SetLineProperties();
 
-        rayGeometryGenerator = new RayGeometry(transform.position, lines, numberOfColissions, maxDistance);
+        rayGeometryGenerator = new RayGeometry(transform.position, numberOfRays, numberOfColissions, maxDistance);
+
+        rayGeometryGenerator.GenerateRays();
+
+        rayDrawer = new RaysDrawer(lines, rayGeometryGenerator.LinePosistions);
     }
 
     private double CurrentEnergy
@@ -65,6 +70,7 @@ public class RayGenerator : MonoBehaviour
     {
         //GenerateRays();
         rayGeometryGenerator.GenerateRays();
+        rayDrawer.Draw();
     }
 
     private LineRenderer SetLineProperties()
