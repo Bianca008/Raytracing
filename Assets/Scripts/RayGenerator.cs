@@ -17,15 +17,12 @@ public class RayGenerator : MonoBehaviour
 
     private void Start()
     {
-        lines = new LineRenderer[numberOfRays];
-
-        for (int index = 0; index < numberOfRays; ++index)
-            lines[index] = SetLineProperties();
-
-        rayGeometryGenerator = new RayGeometry(VectorConverter.Convert(transform.position), numberOfRays, numberOfColissions, maxDistance);
-
+        lines = LinesCreator.GenerateLines(numberOfRays, transform);
+        rayGeometryGenerator = new RayGeometry(VectorConverter.Convert(transform.position),
+            numberOfRays,
+            numberOfColissions,
+            maxDistance);
         rayGeometryGenerator.GenerateRays();
-
         rayDrawer = new RaysDrawer(lines, rayGeometryGenerator.LinePosistions);
     }
 
@@ -70,16 +67,5 @@ public class RayGenerator : MonoBehaviour
     {
         rayGeometryGenerator.GenerateRays();
         rayDrawer.Draw();
-    }
-
-    private LineRenderer SetLineProperties()
-    {
-        LineRenderer line = new GameObject("Line").AddComponent<LineRenderer>();
-        line.startWidth = 0.03f;
-        line.endWidth = 0.03f;
-        line.positionCount = 1;
-        line.transform.SetParent(transform);
-
-        return line;
     }
 }
