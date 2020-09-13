@@ -68,7 +68,6 @@ public class RayGenerator : MonoBehaviour
 
     private void Update()
     {
-        //GenerateRays();
         rayGeometryGenerator.GenerateRays();
         rayDrawer.Draw();
     }

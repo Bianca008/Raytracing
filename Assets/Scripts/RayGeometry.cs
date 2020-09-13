@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+//using System.Numerics;
 
 public class RayGeometry
 {
@@ -8,17 +9,13 @@ public class RayGeometry
     private int numberOfColissions;
     private int maxDistance;
     private Vector3 sourcePosition;
-    //private LineRenderer[] lines;
-    private List<List<Vector3>> linePositions;
+    private IRayCaster rayCaster;
 
     public List<List<Vector3>> LinePosistions
     {
-        get
-        {
-            return linePositions;
-        }
+        get;
+        set;
     }
-
 
     public RayGeometry(Vector3 sourcePos, int nrOfRays, int nrOfColissions = 3, int maxDist = 200)
     {
@@ -26,9 +23,12 @@ public class RayGeometry
         numberOfColissions = nrOfColissions;
         numberOfRays = nrOfRays;
         maxDistance = maxDist;
-        linePositions = new List<List<Vector3>>();
+        LinePosistions = new List<List<Vector3>>();
+
         for (int index = 0; index < numberOfRays; ++index)
-            linePositions.Add(new List<Vector3>() { sourcePosition });
+            LinePosistions.Add(new List<Vector3>() { sourcePosition });
+
+        rayCaster = new IRayCaster(maxDistance);
     }
 
     public Vector3 GetCartesianCoordinates(double distance, double theta, double phi)
@@ -53,39 +53,24 @@ public class RayGeometry
             double theta = Math.Asin(-1 + 2 * index / (numberOfRays + 1));
             double phi = goldenAngle * index;
 
-            //Debug.Log(indexRay + " " + GetCartesianCoordinates(1, theta, phi));
-            DrawPredictedReflectionPattern(sourcePosition,
+            GenerateRay(sourcePosition,
                GetCartesianCoordinates(1, theta, phi),
                indexRay);
             ++indexRay;
         }
     }
 
-    private void DrawPredictedReflectionPattern(Vector3 position, Vector3 direction, int numberOfRay)
+    private void GenerateRay(Vector3 position, Vector3 direction, int numberOfRay)
     {
-        double totalDistance = 0;
-        int numberOfReflections = 0;
+        rayCaster.TotalDistance = 0;
+        rayCaster.NumberOfReflections = 0;
+        rayCaster.Position = position;
+        rayCaster.Direction = direction;
 
-        while (totalDistance <= maxDistance &&
-            numberOfReflections < numberOfColissions)
+        while (rayCaster.TotalDistance <= maxDistance &&
+            rayCaster.NumberOfReflections < numberOfColissions)
         {
-            /*Raycast to detect reflection */
-            Ray ray = new Ray(position, direction);
-            RaycastHit hit;
-
-            if (Physics.Raycast(ray, out hit, maxDistance))
-            {
-                direction = Vector3.Reflect(direction, hit.normal);
-                position = hit.point;
-                ++numberOfReflections;
-                totalDistance += hit.distance;
-                linePositions[numberOfRay].Add(hit.point);
-            }
-            else
-            {
-                position += direction * maxDistance;
-                totalDistance += maxDistance;
-            }
+            rayCaster.RayCast(LinePosistions, numberOfRay);
         }
     }
 }
