@@ -1,18 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class IRayCaster
 {
     private int maxDistance;
 
-    public Vector3 Position
+    public System.Numerics.Vector3 Position
     {
         get;
         set;
     }
 
-    public Vector3 Direction
+    public System.Numerics.Vector3 Direction
     {
         get;
         set;
@@ -35,19 +34,19 @@ public class IRayCaster
         maxDistance = maxDist;
     }
 
-    public void RayCast(List<List<Vector3>> linePositions,
+    public void RayCast(List<List<System.Numerics.Vector3>> linePositions,
         int numberOfRay)
     {
-        Ray ray = new Ray(Position, Direction);
+        Ray ray = new Ray(VectorConverter.Convert(Position), VectorConverter.Convert(Direction));
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit, maxDistance))
         {
-            Direction = Vector3.Reflect(Direction, hit.normal);
-            Position = hit.point;
+            Direction = VectorConverter.Convert(UnityEngine.Vector3.Reflect(VectorConverter.Convert(Direction), hit.normal));
+            Position = VectorConverter.Convert(hit.point);
             ++NumberOfReflections;
             TotalDistance += hit.distance;
-            linePositions[numberOfRay].Add(hit.point);
+            linePositions[numberOfRay].Add(VectorConverter.Convert(hit.point));
         }
         else
         {

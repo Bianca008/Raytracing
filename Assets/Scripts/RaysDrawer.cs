@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using System.Numerics;
 
 public class RaysDrawer
 {
-    private List<List<Vector3>> linePositions;
+    private List<List<System.Numerics.Vector3>> linePositions;
     public LineRenderer[] lines;
 
-    public RaysDrawer(LineRenderer[] linesToDraw, List<List<Vector3>> linePos)
+    public RaysDrawer(LineRenderer[] linesToDraw, List<List<System.Numerics.Vector3>> linePos)
     {
         lines = linesToDraw;
         linePositions = linePos;
@@ -17,7 +18,7 @@ public class RaysDrawer
         /* Set initial position.*/
         for (int indexLine = 0; indexLine < lines.Length; ++indexLine)
         {
-            lines[indexLine].SetPosition(0, linePositions[indexLine][0]);
+            lines[indexLine].SetPosition(0, VectorConverter.Convert(linePositions[indexLine][0]));
         }
 
         /* Add position for each colission.*/
@@ -27,7 +28,7 @@ public class RaysDrawer
             for (int indexPosition = 1; indexPosition < linePositions[indexLine].Count; ++indexPosition)
             {
                 lines[indexLine].positionCount = ++numberOfPoints;
-                lines[indexLine].SetPosition(numberOfPoints - 1, linePositions[indexLine][indexPosition]);
+                lines[indexLine].SetPosition(numberOfPoints - 1, VectorConverter.Convert(linePositions[indexLine][indexPosition]));
             }
         }
     }

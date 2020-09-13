@@ -22,7 +22,7 @@ public class RayGenerator : MonoBehaviour
         for (int index = 0; index < numberOfRays; ++index)
             lines[index] = SetLineProperties();
 
-        rayGeometryGenerator = new RayGeometry(transform.position, numberOfRays, numberOfColissions, maxDistance);
+        rayGeometryGenerator = new RayGeometry(VectorConverter.Convert(transform.position), numberOfRays, numberOfColissions, maxDistance);
 
         rayGeometryGenerator.GenerateRays();
 
