@@ -46,6 +46,7 @@ public class IRayCaster
             Position = VectorConverter.Convert(hit.point);
             ++NumberOfReflections;
             TotalDistance += hit.distance;
+            //aici este o problema ca imi tot adauga puncte care de fapt sunt aceleasi puncte
             linePositions[numberOfRay].Add(VectorConverter.Convert(hit.point));
         }
         else

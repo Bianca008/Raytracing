@@ -26,7 +26,6 @@ public class RayGenerator : MonoBehaviour
 
     private void Update()
     {
-        rayGeometryGenerator.GenerateRays();
         rayDrawer.Draw();
         energyCalculator.CalculateEnergy(rayGeometryGenerator.LinePosistions);
     }
