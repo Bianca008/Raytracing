@@ -3,13 +3,13 @@ using UnityEngine;
 
 public class RaysDrawer
 {
-    private readonly List<List<System.Numerics.Vector3>> linePositions;
+    private readonly List<AcousticRay> rays;
     private readonly LineRenderer[] lines;
 
-    public RaysDrawer(LineRenderer[] linesToDraw, List<List<System.Numerics.Vector3>> linePos)
+    public RaysDrawer(LineRenderer[] linesToDraw, List<AcousticRay> rays)
     {
         lines = linesToDraw;
-        linePositions = linePos;
+        this.rays = rays;
     }
 
     public void Draw()
@@ -17,17 +17,18 @@ public class RaysDrawer
         /* Set initial position.*/
         for (int indexLine = 0; indexLine < lines.Length; ++indexLine)
         {
-            lines[indexLine].SetPosition(0, VectorConverter.Convert(linePositions[indexLine][0]));
+            lines[indexLine].SetPosition(0, 
+                VectorConverter.Convert(rays[indexLine].ColissionPoints[0]));
         }
 
         /* Add position for each colission.*/
-        for (int indexLine = 0; indexLine < linePositions.Count; ++indexLine)
+        for (int indexLine = 0; indexLine < rays.Count; ++indexLine)
         {
             int numberOfPoints = 1;
-            for (int indexPosition = 1; indexPosition < linePositions[indexLine].Count; ++indexPosition)
+            for (int indexPosition = 1; indexPosition < rays[indexLine].ColissionPoints.Count; ++indexPosition)
             {
                 lines[indexLine].positionCount = ++numberOfPoints;
-                lines[indexLine].SetPosition(numberOfPoints - 1, VectorConverter.Convert(linePositions[indexLine][indexPosition]));
+                lines[indexLine].SetPosition(numberOfPoints - 1, VectorConverter.Convert(rays[indexLine].ColissionPoints[indexPosition]));
             }
         }
     }

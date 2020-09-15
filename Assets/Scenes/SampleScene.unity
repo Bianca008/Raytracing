@@ -225,6 +225,7 @@ GameObject:
   - component: {fileID: 285472875}
   - component: {fileID: 285472874}
   - component: {fileID: 285472873}
+  - component: {fileID: 285472877}
   m_Layer: 0
   m_Name: Wall
   m_TagString: Untagged
@@ -306,6 +307,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &285472877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 285472872}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f2456b8907bf164d95890752a1bc416, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AbsorbtionCoefficient: 0.1
 --- !u!1 &446718811
 GameObject:
   m_ObjectHideFlags: 0
@@ -318,6 +332,7 @@ GameObject:
   - component: {fileID: 446718814}
   - component: {fileID: 446718813}
   - component: {fileID: 446718812}
+  - component: {fileID: 446718816}
   m_Layer: 0
   m_Name: Wall
   m_TagString: Untagged
@@ -399,6 +414,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &446718816
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 446718811}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f2456b8907bf164d95890752a1bc416, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AbsorbtionCoefficient: 0.2
 --- !u!1 &594061502
 GameObject:
   m_ObjectHideFlags: 0
@@ -411,6 +439,7 @@ GameObject:
   - component: {fileID: 594061505}
   - component: {fileID: 594061504}
   - component: {fileID: 594061503}
+  - component: {fileID: 594061507}
   m_Layer: 0
   m_Name: Wall
   m_TagString: Untagged
@@ -492,6 +521,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &594061507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 594061502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f2456b8907bf164d95890752a1bc416, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AbsorbtionCoefficient: 0.1
 --- !u!1 &739994632
 GameObject:
   m_ObjectHideFlags: 0
@@ -504,6 +546,7 @@ GameObject:
   - component: {fileID: 739994635}
   - component: {fileID: 739994634}
   - component: {fileID: 739994633}
+  - component: {fileID: 739994637}
   m_Layer: 0
   m_Name: Floor
   m_TagString: Untagged
@@ -585,6 +628,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &739994637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 739994632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f2456b8907bf164d95890752a1bc416, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AbsorbtionCoefficient: 0.3
 --- !u!1 &793960836
 GameObject:
   m_ObjectHideFlags: 0
@@ -617,9 +673,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e0a936af8be30543adf6b8ccd9af25b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startEnergy: 10
-  absorptionCoefficient: 0.2
-  minimumEnergy: 5
+  StartEnergy: 25
 --- !u!135 &793960838
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -706,6 +760,7 @@ GameObject:
   - component: {fileID: 949511348}
   - component: {fileID: 949511347}
   - component: {fileID: 949511346}
+  - component: {fileID: 949511350}
   m_Layer: 0
   m_Name: Wall
   m_TagString: Untagged
@@ -787,6 +842,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &949511350
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 949511345}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f2456b8907bf164d95890752a1bc416, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AbsorbtionCoefficient: 0.2
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -884,9 +952,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57b9e941a78162944a89637a20c2c7fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 793960841}
-  smoothSpeed: 0.125
-  offset: {x: 0, y: 2, z: -1}
+  Target: {fileID: 793960841}
+  Offset: {x: 0, y: 0, z: 0}
 --- !u!65 &963194230
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -34,8 +34,7 @@ public class IRayCaster
         maxDistance = maxDist;
     }
 
-    public void RayCast(List<List<System.Numerics.Vector3>> linePositions,
-        List<List<AcousticMaterial>> AcousticMaterials,
+    public void RayCast(List<AcousticRay> rays,
         int numberOfRay)
     {
         Ray ray = new Ray(VectorConverter.Convert(Position), VectorConverter.Convert(Direction));
@@ -48,14 +47,14 @@ public class IRayCaster
             Position = VectorConverter.Convert(hit.point);
             ++NumberOfReflections;
             TotalDistance += hit.distance;
-            linePositions[numberOfRay].Add(VectorConverter.Convert(hit.point));
+            rays[numberOfRay].ColissionPoints.Add(VectorConverter.Convert(hit.point));
 
             if (acousticMaterial != null)
-                AcousticMaterials[numberOfRay].Add(acousticMaterial);
+                rays[numberOfRay].AcousticMaterials.Add(acousticMaterial);
             else
             {
                 GameObject gameObject = new GameObject();
-                AcousticMaterials[numberOfRay].Add(gameObject.AddComponent<AcousticMaterial>());
+                rays[numberOfRay].AcousticMaterials.Add(gameObject.AddComponent<AcousticMaterial>());
             }
         }
         else

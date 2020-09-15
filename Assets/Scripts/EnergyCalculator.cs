@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
+//using UnityEngine;
 
 public class EnergyCalculator
 {
@@ -45,20 +45,20 @@ public class EnergyCalculator
         return Math.Sqrt(Math.Pow(start.X - end.X, 2) + Math.Pow(start.Y - end.Y, 2) + Math.Pow(start.Z - end.Z, 2));
     }
 
-    public void CalculateEnergy(List<List<System.Numerics.Vector3>> linesPositions, List<List<AcousticMaterial>> acousticMaterials)
+    public void CalculateEnergy(List<AcousticRay> rays)
     {
-        for (int indexRay = 0; indexRay < linesPositions.Count; ++indexRay)
+        for (int indexRay = 0; indexRay < rays.Count; ++indexRay)
         {
             CurrentEnergy = startEnergy;
             double distance = 0;
-            for (int indexPoint = 1; indexPoint < linesPositions[indexRay].Count; ++indexPoint)
+            for (int indexPoint = 1; indexPoint < rays[indexRay].ColissionPoints.Count; ++indexPoint)
             {
-                distance += GetDistance(linesPositions[indexRay][indexPoint - 1],
-                    linesPositions[indexRay][indexPoint]);
-                double energy = CalculateEnergyInPoint(linesPositions[indexRay][indexPoint],
+                distance += GetDistance(rays[indexRay].ColissionPoints[indexPoint - 1],
+                    rays[indexRay].ColissionPoints[indexPoint]);
+                double energy = CalculateEnergyInPoint(rays[indexRay].ColissionPoints[indexPoint],
                     distance,
-                    acousticMaterials[indexRay][indexPoint - 1].AbsorbtionCoefficient);
-                Debug.Log(energy + " " + indexRay + "  " + indexPoint);
+                    rays[indexRay].AcousticMaterials[indexPoint - 1].AbsorbtionCoefficient);
+               // Debug.Log(energy + " " + indexRay + "  " + indexPoint);
             }
         }
     }

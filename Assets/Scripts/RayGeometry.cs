@@ -4,19 +4,12 @@ using System.Numerics;
 
 public class RayGeometry
 {
-    private int numberOfRays;
-    private int numberOfColissions;
-    private int maxDistance;
-    private Vector3 sourcePosition;
-    private IRayCaster rayCaster;
+    private readonly int numberOfRays;
+    private readonly int numberOfColissions;
+    private readonly int maxDistance;
+    private readonly IRayCaster rayCaster;
 
-    public List<List<Vector3>> LinePositions
-    {
-        get;
-        set;
-    }
-
-    public List<List<AcousticMaterial>> AcousticMaterials
+    public List<AcousticRay> Rays
     {
         get;
         set;
@@ -24,17 +17,14 @@ public class RayGeometry
 
     public RayGeometry(Vector3 sourcePos, int nrOfRays, int nrOfColissions = 3, int maxDist = 200)
     {
-        sourcePosition = sourcePos;
+        Rays = new List<AcousticRay>();
         numberOfColissions = nrOfColissions;
         numberOfRays = nrOfRays;
         maxDistance = maxDist;
-        LinePositions = new List<List<Vector3>>();
-        AcousticMaterials = new List<List<AcousticMaterial>>();
-
+      
         for (int index = 0; index < numberOfRays; ++index)
         {
-            LinePositions.Add(new List<Vector3>() { sourcePosition });
-            AcousticMaterials.Add(new List<AcousticMaterial>());
+            Rays.Add(new AcousticRay(sourcePos));
         }
 
         rayCaster = new IRayCaster(maxDistance);
@@ -62,7 +52,7 @@ public class RayGeometry
             double theta = Math.Asin(-1 + 2 * index / (numberOfRays + 1));
             double phi = goldenAngle * index;
 
-            GenerateRay(sourcePosition,
+            GenerateRay(Rays[index].Source,
                GetCartesianCoordinates(1, theta, phi),
                indexRay);
             ++indexRay;
@@ -79,7 +69,7 @@ public class RayGeometry
         while (rayCaster.TotalDistance <= maxDistance &&
             rayCaster.NumberOfReflections < numberOfColissions)
         {
-            rayCaster.RayCast(LinePositions, AcousticMaterials, numberOfRay);
+            rayCaster.RayCast(Rays, numberOfRay);
         }
     }
 }
