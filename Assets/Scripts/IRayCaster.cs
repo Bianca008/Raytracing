@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class IRayCaster
 {
-    private int maxDistance;
+    private readonly int maxDistance;
 
     public System.Numerics.Vector3 Position
     {

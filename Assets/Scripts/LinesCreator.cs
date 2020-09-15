@@ -4,9 +4,7 @@ public class LinesCreator
 {
     public static LineRenderer[] GenerateLines(int numberOfRays, Transform source)
     {
-        LineRenderer[] lines;
-
-        lines = new LineRenderer[numberOfRays];
+        LineRenderer[] lines = new LineRenderer[numberOfRays];
 
         for (int index = 0; index < numberOfRays; ++index)
             lines[index] = SetLineProperties(source);

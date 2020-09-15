@@ -2,9 +2,9 @@
 
 public class RayGenerator : MonoBehaviour
 {
-    public double startEnergy = 25;
+    public double StartEnergy = 25;
     private int numberOfColissions = 3;
-    private int maxDistance = 200;
+    private readonly int maxDistance = 200;
     private readonly int numberOfRays = 3;
 
     private LineRenderer[] lines;
@@ -20,13 +20,13 @@ public class RayGenerator : MonoBehaviour
             numberOfColissions,
             maxDistance);
         rayGeometryGenerator.GenerateRays();
-        rayDrawer = new RaysDrawer(lines, rayGeometryGenerator.LinePosistions);
-        energyCalculator = new EnergyCalculator(numberOfRays, startEnergy);
+        rayDrawer = new RaysDrawer(lines, rayGeometryGenerator.LinePositions);
+        energyCalculator = new EnergyCalculator(numberOfRays, StartEnergy);
     }
 
     private void Update()
     {
         rayDrawer.Draw();
-        energyCalculator.CalculateEnergy(rayGeometryGenerator.LinePosistions, rayGeometryGenerator.AcousticMaterials);
+        energyCalculator.CalculateEnergy(rayGeometryGenerator.LinePositions, rayGeometryGenerator.AcousticMaterials);
     }
 }

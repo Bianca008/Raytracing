@@ -2,9 +2,9 @@
 
 public class CameraFollow : MonoBehaviour
 {
-    public Transform target;
-    public float smoothSpeed = 0.00001f;
-    public Vector3 offset;
+    public Transform Target;
+    private float smoothSpeed = 0.00001f;
+    public Vector3 Offset;
 
     private void Start()
     {
@@ -13,11 +13,11 @@ public class CameraFollow : MonoBehaviour
 
     private void SetInitialPosition()
     {
-        Vector3 desiredPosition = target.position + offset;
+        Vector3 desiredPosition = Target.position + Offset;
         Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);
         transform.position = smoothedPosition;
 
-        transform.LookAt(target);
+        transform.LookAt(Target);
     }
 
     /*LateUpdate help us to update camera after source.*/

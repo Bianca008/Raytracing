@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class RaysDrawer
 {
-    private List<List<System.Numerics.Vector3>> linePositions;
-    public LineRenderer[] lines;
+    private readonly List<List<System.Numerics.Vector3>> linePositions;
+    private readonly LineRenderer[] lines;
 
     public RaysDrawer(LineRenderer[] linesToDraw, List<List<System.Numerics.Vector3>> linePos)
     {
