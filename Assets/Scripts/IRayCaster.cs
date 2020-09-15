@@ -35,6 +35,7 @@ public class IRayCaster
     }
 
     public void RayCast(List<List<System.Numerics.Vector3>> linePositions,
+        List<List<AcousticMaterial>> AcousticMaterials,
         int numberOfRay)
     {
         Ray ray = new Ray(VectorConverter.Convert(Position), VectorConverter.Convert(Direction));
@@ -42,12 +43,20 @@ public class IRayCaster
 
         if (Physics.Raycast(ray, out hit, maxDistance))
         {
+            AcousticMaterial acousticMaterial = hit.transform.GetComponent<AcousticMaterial>();
             Direction = VectorConverter.Convert(UnityEngine.Vector3.Reflect(VectorConverter.Convert(Direction), hit.normal));
             Position = VectorConverter.Convert(hit.point);
             ++NumberOfReflections;
             TotalDistance += hit.distance;
-            //aici este o problema ca imi tot adauga puncte care de fapt sunt aceleasi puncte
             linePositions[numberOfRay].Add(VectorConverter.Convert(hit.point));
+
+            if (acousticMaterial != null)
+                AcousticMaterials[numberOfRay].Add(acousticMaterial);
+            else
+            {
+                GameObject gameObject = new GameObject();
+                AcousticMaterials[numberOfRay].Add(gameObject.AddComponent<AcousticMaterial>());
+            }
         }
         else
         {

@@ -27,6 +27,6 @@ public class RayGenerator : MonoBehaviour
     private void Update()
     {
         rayDrawer.Draw();
-        energyCalculator.CalculateEnergy(rayGeometryGenerator.LinePosistions);
+        energyCalculator.CalculateEnergy(rayGeometryGenerator.LinePosistions, rayGeometryGenerator.AcousticMaterials);
     }
 }

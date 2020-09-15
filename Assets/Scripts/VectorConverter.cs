@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using System.Numerics;
-
-public class VectorConverter
+﻿public class VectorConverter
 {
     public static System.Numerics.Vector3 Convert(UnityEngine.Vector3 vector)
     {

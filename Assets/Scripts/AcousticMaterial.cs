@@ -1,18 +1,6 @@
-﻿public class AcousticMaterial 
+﻿using UnityEngine;
+
+public class AcousticMaterial : MonoBehaviour
 {
-    public float AbsorbtionCoefficient
-    {
-        get;
-        set;
-    }
-
-    public AcousticMaterial()
-    {
-
-    }
-
-    public AcousticMaterial(float absorbtionCoeffcient)
-    {
-        AbsorbtionCoefficient = absorbtionCoeffcient;
-    }
+    public float AbsorbtionCoefficient;
 }

@@ -10,7 +10,13 @@ public class RayGeometry
     private Vector3 sourcePosition;
     private IRayCaster rayCaster;
 
-    public List<List<Vector3>> LinePosistions
+    public List<List<Vector3>> LinePosistions // List<Rays>
+    {
+        get;
+        set;
+    }
+
+    public List<List<AcousticMaterial>> AcousticMaterials
     {
         get;
         set;
@@ -23,9 +29,13 @@ public class RayGeometry
         numberOfRays = nrOfRays;
         maxDistance = maxDist;
         LinePosistions = new List<List<Vector3>>();
+        AcousticMaterials = new List<List<AcousticMaterial>>();
 
         for (int index = 0; index < numberOfRays; ++index)
+        {
             LinePosistions.Add(new List<Vector3>() { sourcePosition });
+            AcousticMaterials.Add(new List<AcousticMaterial>());
+        }
 
         rayCaster = new IRayCaster(maxDistance);
     }
@@ -69,7 +79,7 @@ public class RayGeometry
         while (rayCaster.TotalDistance <= maxDistance &&
             rayCaster.NumberOfReflections < numberOfColissions)
         {
-            rayCaster.RayCast(LinePosistions, numberOfRay);
+            rayCaster.RayCast(LinePosistions, AcousticMaterials, numberOfRay);
         }
     }
 }
