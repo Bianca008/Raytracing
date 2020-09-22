@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using UnityEngine;
 using Vector3 = System.Numerics.Vector3;
@@ -23,6 +24,14 @@ public class AcousticRay
         set;
     }
 
+    public float Distance
+    {
+        get
+        {
+            return GetDistance();
+        }
+    }
+
     public AcousticRay(Vector3 source)
     {
         Source = source;
@@ -43,5 +52,19 @@ public class AcousticRay
         newRay.AcousticMaterials = AcousticMaterials.GetRange(0, position + 1);
 
         return newRay;
+    }
+
+    private float GetDistance()
+    {
+        float distance = 0;
+
+        for (int index = 0; index < ColissionPoints.Count - 1; ++index)
+        {
+            distance += (float)Math.Sqrt(Math.Pow(ColissionPoints[index].X - ColissionPoints[index + 1].X, 2) +
+                                  Math.Pow(ColissionPoints[index].Y - ColissionPoints[index + 1].Y, 2) +
+                                  Math.Pow(ColissionPoints[index].Z - ColissionPoints[index + 1].Z, 2));
+        }
+
+        return distance;
     }
 }

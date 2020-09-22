@@ -29,11 +29,18 @@ public class RayGenerator : MonoBehaviour
         energyCalculator = new EnergyCalculator(numberOfRays, StartEnergy);
         microphone = new MicrophoneSphere(new System.Numerics.Vector3(0, 0.5f, 1.75f), 0.05f);
         List<AcousticRay> newRays = rayGeometryGenerator.GetIntersectedRays(microphone);
+
+        newRays.Sort(delegate (AcousticRay first, AcousticRay second)
+        {
+            return first.Distance.CompareTo(second.Distance);
+
+        });
+
         intersectedLines = LinesCreator.GenerateLines(newRays.Count, transform);
         intersectedRayDrawer = new RaysDrawer(intersectedLines, newRays);
         GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         sphere.transform.position = VectorConverter.Convert(microphone.Center);
-        sphere.transform.localScale = new UnityEngine.Vector3(microphone.Radius*5, microphone.Radius*5, microphone.Radius*5);
+        sphere.transform.localScale = new UnityEngine.Vector3(microphone.Radius * 5, microphone.Radius * 5, microphone.Radius * 5);
         //rayDrawer.Draw();
         //intersectedRayDrawer.Draw();
         energyCalculator.CalculateEnergy(rayGeometryGenerator.Rays);
