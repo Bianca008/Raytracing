@@ -33,11 +33,13 @@ public class AcousticRay
         AcousticMaterials.Add(gameObject.AddComponent<AcousticMaterial>());
     }
 
-    public AcousticRay TruncateRay(int position)
+    public AcousticRay TruncateRay(int position, Vector3 microphonePos)
     {
         AcousticRay newRay = new AcousticRay(Source);
         //index, nr de elemente ce le vreau copiate
-        newRay.ColissionPoints = ColissionPoints.GetRange(0, position + 1);
+        newRay.ColissionPoints = ColissionPoints.GetRange(0, position);
+        newRay.ColissionPoints.Add(microphonePos);
+        //aici trebuie revizuit un pic pt materialul acustic
         newRay.AcousticMaterials = AcousticMaterials.GetRange(0, position + 1);
 
         return newRay;

@@ -82,7 +82,7 @@ public class RayGeometry
             {
                 if (microphone.LineIntersectionWithSphere(Rays[indexRay].ColissionPoints[indexPosition],
                     Rays[indexRay].ColissionPoints[indexPosition + 1]))
-                    newRays.Add(Rays[indexRay].TruncateRay(indexPosition + 1));
+                    newRays.Add(Rays[indexRay].TruncateRay(indexPosition + 1, microphone.Center));
             }
 
         return newRays;
