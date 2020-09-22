@@ -41,5 +41,12 @@ namespace Tests
         //    Assert.IsTrue(Math.Abs(recalculatedPoint.y - point.y) < epsilon);
         //    Assert.IsTrue(Math.Abs(recalculatedPoint.z - point.z) < epsilon);
         //}
+
+        [Test]
+        public void LineIntersectionWithSphere_Test()
+        {
+
+        }
+
     }
 }

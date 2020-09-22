@@ -35,7 +35,7 @@ public class EnergyCalculator
          */
 
         const double airAbsorption = 0.0013;
-        double energy = startEnergy / numberOfRays * Math.Exp(-airAbsorption * distance) * (1 - absorptionCoefficient);
+        double energy = startEnergy * Math.Exp(-airAbsorption * distance) * (1 - absorptionCoefficient);
 
         return energy;
     }
@@ -49,7 +49,7 @@ public class EnergyCalculator
     {
         for (int indexRay = 0; indexRay < rays.Count; ++indexRay)
         {
-            CurrentEnergy = startEnergy;
+            CurrentEnergy = startEnergy / numberOfRays;
             double distance = 0;
             for (int indexPoint = 1; indexPoint < rays[indexRay].ColissionPoints.Count; ++indexPoint)
             {
@@ -58,7 +58,7 @@ public class EnergyCalculator
                 double energy = CalculateEnergyInPoint(rays[indexRay].ColissionPoints[indexPoint],
                     distance,
                     rays[indexRay].AcousticMaterials[indexPoint - 1].AbsorbtionCoefficient);
-               // Debug.Log(energy + " " + indexRay + "  " + indexPoint);
+                // Debug.Log(energy + " " + indexRay + "  " + indexPoint);
             }
         }
     }

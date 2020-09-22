@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Numerics;
+using Vector3 = System.Numerics.Vector3;
 
 public class RayGeometry
 {
@@ -21,7 +21,7 @@ public class RayGeometry
         numberOfColissions = nrOfColissions;
         numberOfRays = nrOfRays;
         maxDistance = maxDist;
-      
+
         for (int index = 0; index < numberOfRays; ++index)
         {
             Rays.Add(new AcousticRay(sourcePos));
@@ -71,5 +71,20 @@ public class RayGeometry
         {
             rayCaster.RayCast(Rays, numberOfRay);
         }
+    }
+
+    public List<AcousticRay> GetIntersectedRays(MicrophoneSphere microphone)
+    {
+        List<AcousticRay> newRays = new List<AcousticRay>();
+
+        for (int indexRay = 0; indexRay < Rays.Count; ++indexRay)
+            for (int indexPosition = 0; indexPosition < Rays[indexRay].ColissionPoints.Count - 1; ++indexPosition)
+            {
+                if (microphone.LineIntersectionWithSphere(Rays[indexRay].ColissionPoints[indexPosition],
+                    Rays[indexRay].ColissionPoints[indexPosition + 1]))
+                    newRays.Add(Rays[indexRay].TruncateRay(indexPosition + 1));
+            }
+
+        return newRays;
     }
 }
