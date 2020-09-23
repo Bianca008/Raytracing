@@ -14,8 +14,8 @@ public class LinesCreator
     private static LineRenderer SetLineProperties(Transform source, Material material)
     {
         LineRenderer line = new GameObject("Line").AddComponent<LineRenderer>();
-        line.startWidth = 0.03f;
-        line.endWidth = 0.03f;
+        line.startWidth = 0.01f;
+        line.endWidth = 0.01f;
         line.positionCount = 1;
         line.transform.SetParent(source);
         if (material != null)

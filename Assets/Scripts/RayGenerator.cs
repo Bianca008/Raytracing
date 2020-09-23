@@ -43,7 +43,7 @@ public class RayGenerator : MonoBehaviour
         intersectedRayDrawer = new RaysDrawer(intersectedLines, newRays);
         GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         sphere.transform.position = VectorConverter.Convert(microphone.Center);
-        sphere.transform.localScale = new UnityEngine.Vector3(microphone.Radius * 5, microphone.Radius * 5, microphone.Radius * 5);
+        sphere.transform.localScale = new UnityEngine.Vector3(microphone.Radius, microphone.Radius, microphone.Radius);
         //rayDrawer.Draw();
         //intersectedRayDrawer.Draw();
         energyCalculator.CalculateEnergy(rayGeometryGenerator.Rays);
