@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using UnityEngine;
 using Vector3 = System.Numerics.Vector3;
 
@@ -45,10 +44,10 @@ public class AcousticRay
     public AcousticRay TruncateRay(int position, Vector3 microphonePos)
     {
         AcousticRay newRay = new AcousticRay(Source);
-        //index, nr de elemente ce le vreau copiate
+        /*index, number of elements to copy*/
         newRay.ColissionPoints = ColissionPoints.GetRange(0, position);
         newRay.ColissionPoints.Add(microphonePos);
-        //aici trebuie revizuit un pic pt materialul acustic
+        /* TODO: see acoustic material for last acoustic material */
         newRay.AcousticMaterials = AcousticMaterials.GetRange(0, position + 1);
 
         return newRay;

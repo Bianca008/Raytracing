@@ -17,9 +17,12 @@ public class RayGenerator : MonoBehaviour
     private EnergyCalculator energyCalculator;
     private MicrophoneSphere microphone;
 
+    public Material lineMaterial;
+    //Material
+
     private void Start()
     {
-        lines = LinesCreator.GenerateLines(numberOfRays, transform);
+        lines = LinesCreator.GenerateLines(numberOfRays, transform, lineMaterial);
         rayGeometryGenerator = new RayGeometry(VectorConverter.Convert(transform.position),
             numberOfRays,
             numberOfColissions,
@@ -36,7 +39,7 @@ public class RayGenerator : MonoBehaviour
 
         });
 
-        intersectedLines = LinesCreator.GenerateLines(newRays.Count, transform);
+        intersectedLines = LinesCreator.GenerateLines(newRays.Count, transform, lineMaterial);
         intersectedRayDrawer = new RaysDrawer(intersectedLines, newRays);
         GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         sphere.transform.position = VectorConverter.Convert(microphone.Center);
