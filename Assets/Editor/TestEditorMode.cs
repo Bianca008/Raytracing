@@ -19,8 +19,8 @@ namespace Tests
             List<AcousticRay> rays = new List<AcousticRay>();
             rays.Add(ray);
 
-            PowerCalculator powerCalculator = new PowerCalculator(rays, 1);
-            powerCalculator.ComputePower();
+            IntensityCalculator intensityCalculator = new IntensityCalculator(rays, 1);
+            intensityCalculator.ComputePower();
 
             double epsilon = 1e-5;
             Assert.IsTrue(Math.Abs(rays[0].Intensities[0] - 0.07957) < epsilon);
@@ -39,8 +39,8 @@ namespace Tests
             List<AcousticRay> rays = new List<AcousticRay>();
             rays.Add(ray);
 
-            PowerCalculator powerCalculator = new PowerCalculator(rays, 1);
-            powerCalculator.ComputePower();
+            IntensityCalculator intensityCalculator = new IntensityCalculator(rays, 1);
+            intensityCalculator.ComputePower();
 
             double epsilon = 1e-5;
             double[] expectedValues = { 0.07957, 0.01067638, 0.00571915, 0.0012912485 };
@@ -69,8 +69,8 @@ namespace Tests
             rays.Add(first);
             rays.Add(second);
 
-            PowerCalculator powerCalculator = new PowerCalculator(rays, 1);
-            powerCalculator.ComputePower();
+            IntensityCalculator intensityCalculator = new IntensityCalculator(rays, 1);
+            intensityCalculator.ComputePower();
 
             double epsilon = 1e-5;
             double[] expectedValuesFirstRay = { 0.07957, 0.02914652, 0.0213324395, 0.010136305 };

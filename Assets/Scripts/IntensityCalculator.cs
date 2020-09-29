@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-public class PowerCalculator
+public class IntensityCalculator
 {
     private List<AcousticRay> Rays
     {
@@ -15,7 +15,7 @@ public class PowerCalculator
         set;
     }
 
-    public PowerCalculator(List<AcousticRay> rays, float initialPower)
+    public IntensityCalculator(List<AcousticRay> rays, float initialPower)
     {
         InitialIntensity = initialPower / (4.0 * Math.PI);
         Rays = rays;
