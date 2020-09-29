@@ -3,11 +3,11 @@ using UnityEngine;
 
 public class RayGenerator : MonoBehaviour
 {
-    public int numberOfRay;
+    public int NumberOfRay;
     public double InitialPower = 25;
     private int numberOfColissions = 9;
     private readonly int maxDistance = 200;
-    public int numberOfRays = 10000;
+    public int NumberOfRays = 10000;
     public int IntersectedRays;
     public int IntersectedRaysWithDuplicate;
     private LineRenderer[] lines;
@@ -16,7 +16,7 @@ public class RayGenerator : MonoBehaviour
     private RaysDrawer rayDrawer;
     private RaysDrawer intersectedRayDrawer;
     private MicrophoneSphere microphone;
-    public Material lineMaterial;
+    public Material LineMaterial;
 
     private void Start()
     {
@@ -28,8 +28,8 @@ public class RayGenerator : MonoBehaviour
 
     private void Update()
     {
-        if (numberOfRay <= IntersectedRays && numberOfRay >= 1)
-            intersectedRayDrawer.Draw(numberOfRay - 1);
+        if (NumberOfRay <= IntersectedRays && NumberOfRay >= 1)
+            intersectedRayDrawer.Draw(NumberOfRay - 1);
         else
         {
             Debug.Log("The number of ray does not exist...");
@@ -39,7 +39,7 @@ public class RayGenerator : MonoBehaviour
     private void CreateRays()
     {
         rayGeometryGenerator = new RayGeometry(VectorConverter.Convert(transform.position),
-            numberOfRays,
+            NumberOfRays,
             numberOfColissions,
             maxDistance);
         rayGeometryGenerator.GenerateRays();
@@ -93,7 +93,7 @@ public class RayGenerator : MonoBehaviour
         });
         IntersectedRaysWithDuplicate = newRays.Count;
         List<AcousticRay> raysWithoutDuplicates = RemoveDuplicates(newRays);
-        intersectedLines = LinesCreator.GenerateLines(raysWithoutDuplicates.Count, transform, lineMaterial);
+        intersectedLines = LinesCreator.GenerateLines(raysWithoutDuplicates.Count, transform, LineMaterial);
         intersectedRayDrawer = new RaysDrawer(intersectedLines, raysWithoutDuplicates);
     }
 
