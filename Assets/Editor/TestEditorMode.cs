@@ -97,14 +97,38 @@ namespace Tests
             List<AcousticRay> rays = new List<AcousticRay>();
             rays.Add(ray);
 
-            DistanceCalculator intensityCalculator = new DistanceCalculator(rays);
-            intensityCalculator.ComputeDistances();
+            DistanceCalculator distanceCalculator = new DistanceCalculator(rays);
+            distanceCalculator.ComputeDistances();
 
             double epsilon = 1e-2;
             double[] expectedValues = { 0, 1.73, 2.73, 6.85};
 
             for (int index = 0; index < expectedValues.Length; ++index)
                 Assert.IsTrue(Math.Abs(rays[0].Distances[index] - expectedValues[index]) < epsilon);
+        }
+
+        [Test]
+        public void OneRayComputeTime_Test()
+        {
+            Vector3 origin = new Vector3(0, 0, 0);
+            AcousticRay ray = new AcousticRay(origin);
+            ray.ColissionPoints.Add(new Vector3(1, 1, 1));
+            ray.ColissionPoints.Add(new Vector3(2, 1, 1));
+            ray.ColissionPoints.Add(new Vector3(1, 5, 1));
+
+            List<AcousticRay> rays = new List<AcousticRay>();
+            rays.Add(ray);
+
+            DistanceCalculator distanceCalculator = new DistanceCalculator(rays);
+            distanceCalculator.ComputeDistances();
+
+            List<List<double>> rayTime = TimeCalculator.GetTime(rays);
+
+            double epsilon = 1e-5;
+            double[] expectedValues = { 0, 0.0050466, 0.007960288, 0.01997364 };
+
+            for (int index = 0; index < expectedValues.Length; ++index)
+                Assert.IsTrue(Math.Abs(rayTime[0][index] - expectedValues[index]) < epsilon);
         }
 
         //[Test]
