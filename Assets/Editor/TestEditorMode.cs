@@ -83,6 +83,28 @@ namespace Tests
                 Assert.IsTrue(Math.Abs(rays[1].Intensities[index] - expectedValuesSecondRay[index]) < epsilon);
         }
 
+        [Test]
+        public void OneRayComputeDistances_Test()
+        {
+            Vector3 origin = new Vector3(0, 0, 0);
+            AcousticRay ray = new AcousticRay(origin);
+            ray.ColissionPoints.Add(new Vector3(1, 1, 1));
+            ray.ColissionPoints.Add(new Vector3(2, 1, 1));
+            ray.ColissionPoints.Add(new Vector3(1, 5, 1));
+
+            List<AcousticRay> rays = new List<AcousticRay>();
+            rays.Add(ray);
+
+            DistanceCalculator intensityCalculator = new DistanceCalculator(rays);
+            intensityCalculator.ComputeDistances();
+
+            double epsilon = 1e-2;
+            double[] expectedValues = { 0, 1.73, 2.73, 6.85};
+
+            for (int index = 0; index < expectedValues.Length; ++index)
+                Assert.IsTrue(Math.Abs(rays[0].Distances[index] - expectedValues[index]) < epsilon);
+        }
+
         //[Test]
         //public void GetPolarCoordinates_Test()
         //{
@@ -119,11 +141,11 @@ namespace Tests
         //    Assert.IsTrue(Math.Abs(recalculatedPoint.z - point.z) < epsilon);
         //}
 
-        [Test]
-        public void LineIntersectionWithSphere_Test()
-        {
+        //[Test]
+        //public void LineIntersectionWithSphere_Test()
+        //{
 
-        }
+        //}
 
         //[Test]
         //public void RemoveDuplicateForTwoRays_Test()
