@@ -15,7 +15,6 @@ public class RayGenerator : MonoBehaviour
     private RayGeometry rayGeometryGenerator;
     private RaysDrawer rayDrawer;
     private RaysDrawer intersectedRayDrawer;
-    private EnergyCalculator energyCalculator;
     private MicrophoneSphere microphone;
     public Material lineMaterial;
 
@@ -108,18 +107,5 @@ public class RayGenerator : MonoBehaviour
         GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         sphere.transform.position = VectorConverter.Convert(microphone.Center);
         sphere.transform.localScale = new UnityEngine.Vector3(microphone.Radius, microphone.Radius, microphone.Radius);
-    }
-
-    private void CalculateEnergy()
-    {
-        energyCalculator = new EnergyCalculator(numberOfRays, InitialPower);
-        energyCalculator.CalculateEnergy(rayGeometryGenerator.Rays);
-    }
-
-    private void CreateAndDrawAllRays()
-    {
-        lines = LinesCreator.GenerateLines(numberOfRays, transform, lineMaterial);
-        rayDrawer = new RaysDrawer(lines, rayGeometryGenerator.Rays);
-        rayDrawer.Draw();
     }
 }
