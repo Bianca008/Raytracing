@@ -24,7 +24,7 @@ namespace Tests
 
             double epsilon = 1e-5;
             Assert.IsTrue(Math.Abs(rays[0].Intensities[0] - 0.07957) < epsilon);
-            Assert.IsTrue(Math.Abs(rays[0].Intensities[1] - 0.01067638) < epsilon);
+            Assert.IsTrue(Math.Abs(rays[0].Intensities[1] - 0.0106613589) < epsilon);
         }
 
         [Test]
@@ -43,7 +43,7 @@ namespace Tests
             intensityCalculator.ComputePower();
 
             double epsilon = 1e-5;
-            double[] expectedValues = { 0.07957, 0.01067638, 0.00571915, 0.0012912485 };
+            double[] expectedValues = { 0.07957747, 0.0106613589, 0.00571340513, 0.001289675 };
 
             for (int index = 0; index < expectedValues.Length; ++index)
                 Assert.IsTrue(Math.Abs(rays[0].Intensities[index] - expectedValues[index]) < epsilon);
@@ -73,8 +73,10 @@ namespace Tests
             intensityCalculator.ComputePower();
 
             double epsilon = 1e-5;
-            double[] expectedValuesFirstRay = { 0.07957, 0.02914652, 0.0213324395, 0.010136305 };
-            double[] expectedValuesSecondRay = { 0.07957, 0.02914652, 0.0213324395, 0.010136305, 0.00722706578, 0.0053945758 };
+            double[] expectedValuesFirstRay = { 0.07957747, 0.0106613589, 0.00571340513, 0.001289675 };
+            double[] expectedValuesSecondRay = { 0.07957747, 0.0106613589,
+                                                 0.00571340513, 0.001289675,
+                                                 0.0006555853067, 0.00036531784 };
 
             for (int index = 0; index < expectedValuesFirstRay.Length; ++index)
                 Assert.IsTrue(Math.Abs(rays[0].Intensities[index] - expectedValuesFirstRay[index]) < epsilon);
