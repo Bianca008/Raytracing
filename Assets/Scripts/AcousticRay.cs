@@ -23,6 +23,12 @@ public class AcousticRay
         set;
     }
 
+    public List<double> Intensities
+    {
+        get;
+        set;
+    }
+
     public float Distance
     {
         get
@@ -39,6 +45,7 @@ public class AcousticRay
         AcousticMaterials = new List<AcousticMaterial>();
         GameObject gameObject = new GameObject();
         AcousticMaterials.Add(gameObject.AddComponent<AcousticMaterial>());
+        Intensities = new List<double>();
     }
 
     public AcousticRay TruncateRay(int position, Vector3 microphonePos)

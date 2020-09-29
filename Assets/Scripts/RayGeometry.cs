@@ -49,7 +49,7 @@ public class RayGeometry
 
         for (int index = 0; index < numberOfRays; ++index)
         {
-            double theta = Math.Asin(-1 + 2 * index / (numberOfRays + 1));
+            double theta = Math.Asin(-1.0 + 2.0 * index / (numberOfRays + 1.0));
             double phi = goldenAngle * index;
 
             GenerateRay(Rays[index].Source,
