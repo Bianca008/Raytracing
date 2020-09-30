@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Schema;
 using UnityEngine;
+using XCharts;
 
 public class RayGenerator : MonoBehaviour
 {
@@ -8,7 +9,7 @@ public class RayGenerator : MonoBehaviour
     public float InitialPower = 1;
     private int numberOfColissions = 9;
     private readonly int maxDistance = 200;
-    public int NumberOfRays = 150;
+    public int NumberOfRays = 100000;
     public int IntersectedRays;
     public int IntersectedRaysWithDuplicate;
     private List<AcousticRay> rays;
@@ -120,20 +121,50 @@ public class RayGenerator : MonoBehaviour
         intensityCalculator.ComputePower();
     }
 
+    public GameObject ChartArea;
+
     private void ComputePressureAndTime()
     {
         DistanceCalculator distanceCalculator = new DistanceCalculator(rays);
         distanceCalculator.ComputeDistances();
 
         List<List<double>> times = TimeCalculator.GetTime(rays);
-        List<double> xTime = new List<double>();
+        List<float> xTime = new List<float>();
         for (int index = 0; index < times.Count; ++index)
-            xTime.Add(times[index][times[index].Count - 1]);
+            xTime.Add((float)times[index][times[index].Count - 1]);
 
-        List<double> yPressure = new List<double>();
+        List<float> yPressure = new List<float>();
         for (int index = 0; index < rays.Count; ++index)
-            yPressure.Add(rays[index].Intensities[rays[index].Intensities.Count - 1]);
+            yPressure.Add((float)rays[index].Intensities[rays[index].Intensities.Count - 1]);
 
         /*TODO: Now we have the intensities and pressures. And you might want to return them to make a plot.*/
+
+        var chart = ChartArea.GetComponent<BarChart>();
+       
+        if (chart == null)
+        {
+            chart = ChartArea.AddComponent<BarChart>();
+        }
+        
+        chart.title.show = true;
+        chart.title.text = "Time-Pressure chart";
+        chart.tooltip.show = true;
+        chart.legend.show = false;
+        chart.xAxises[0].show = true;
+        chart.xAxises[1].show = false;
+        chart.yAxises[0].show = true;
+        chart.yAxises[1].show = false;
+        chart.xAxises[0].type = Axis.AxisType.Category;
+        chart.yAxises[0].type = Axis.AxisType.Value;
+        chart.xAxises[0].splitNumber = 10;
+        chart.xAxises[0].boundaryGap = true;
+        chart.RemoveData();
+        chart.AddSerie(SerieType.Bar);
+
+        for (int index =0 ;index<xTime.Count;++index)
+        {
+            chart.AddXAxisData(xTime[index].ToString());
+            chart.AddData(0, yPressure[index]);
+        }
     }
 }
