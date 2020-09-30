@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Xml.Schema;
 using UnityEngine;
-using XCharts;
 
 public class RayGenerator : MonoBehaviour
 {
@@ -20,6 +18,8 @@ public class RayGenerator : MonoBehaviour
     private RaysDrawer intersectedRayDrawer;
     private MicrophoneSphere microphone;
     public Material LineMaterial;
+    public GameObject ChartArea;
+    private ChartDrawer chartDrawer;
 
     private void Start()
     {
@@ -29,7 +29,7 @@ public class RayGenerator : MonoBehaviour
         DrawMicrophone();
 
         ComputeIntensities();
-        ComputePressureAndTime();
+        DrawChartTimePressure();
     }
 
     private void Update()
@@ -40,6 +40,11 @@ public class RayGenerator : MonoBehaviour
         {
             Debug.Log("The number of ray does not exist...");
         }
+
+        if (Input.GetKey("i"))
+            chartDrawer.Enable = false;
+        if (Input.GetKey("o"))
+            chartDrawer.Enable = true;
     }
 
     private void CreateRays()
@@ -121,9 +126,7 @@ public class RayGenerator : MonoBehaviour
         intensityCalculator.ComputePower();
     }
 
-    public GameObject ChartArea;
-
-    private void ComputePressureAndTime()
+    private void DrawChartTimePressure()
     {
         DistanceCalculator distanceCalculator = new DistanceCalculator(rays);
         distanceCalculator.ComputeDistances();
@@ -137,34 +140,7 @@ public class RayGenerator : MonoBehaviour
         for (int index = 0; index < rays.Count; ++index)
             yPressure.Add((float)rays[index].Intensities[rays[index].Intensities.Count - 1]);
 
-        /*TODO: Now we have the intensities and pressures. And you might want to return them to make a plot.*/
-
-        var chart = ChartArea.GetComponent<BarChart>();
-       
-        if (chart == null)
-        {
-            chart = ChartArea.AddComponent<BarChart>();
-        }
-        
-        chart.title.show = true;
-        chart.title.text = "Time-Pressure chart";
-        chart.tooltip.show = true;
-        chart.legend.show = false;
-        chart.xAxises[0].show = true;
-        chart.xAxises[1].show = false;
-        chart.yAxises[0].show = true;
-        chart.yAxises[1].show = false;
-        chart.xAxises[0].type = Axis.AxisType.Category;
-        chart.yAxises[0].type = Axis.AxisType.Value;
-        chart.xAxises[0].splitNumber = 10;
-        chart.xAxises[0].boundaryGap = true;
-        chart.RemoveData();
-        chart.AddSerie(SerieType.Bar);
-
-        for (int index =0 ;index<xTime.Count;++index)
-        {
-            chart.AddXAxisData(xTime[index].ToString());
-            chart.AddData(0, yPressure[index]);
-        }
+        chartDrawer = new ChartDrawer(ChartArea);
+        chartDrawer.Draw(xTime, yPressure);
     }
 }
