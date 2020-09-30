@@ -675,10 +675,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e0a936af8be30543adf6b8ccd9af25b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberOfRay: 1
-  StartEnergy: 25
+  NumberOfRay: 0
+  InitialPower: 1
+  NumberOfRays: 500
   IntersectedRays: 0
-  lineMaterial: {fileID: 2100000, guid: 4f0845e0f49fd5d4eb24120d85a89ce5, type: 2}
+  IntersectedRaysWithDuplicate: 0
+  LineMaterial: {fileID: 0}
 --- !u!135 &793960838
 SphereCollider:
   m_ObjectHideFlags: 0

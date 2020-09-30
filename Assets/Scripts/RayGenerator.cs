@@ -1,15 +1,17 @@
 ﻿using System.Collections.Generic;
+using System.Xml.Schema;
 using UnityEngine;
 
 public class RayGenerator : MonoBehaviour
 {
     public int NumberOfRay;
-    public double InitialPower = 25;
+    public float InitialPower = 1;
     private int numberOfColissions = 9;
     private readonly int maxDistance = 200;
-    public int NumberOfRays = 10000;
+    public int NumberOfRays = 150;
     public int IntersectedRays;
     public int IntersectedRaysWithDuplicate;
+    private List<AcousticRay> rays;
     private LineRenderer[] lines;
     private LineRenderer[] intersectedLines;
     private RayGeometry rayGeometryGenerator;
@@ -24,6 +26,9 @@ public class RayGenerator : MonoBehaviour
         CreateMicrophone();
         CreateIntersectedRaysWithMicrophone();
         DrawMicrophone();
+
+        ComputeIntensities();
+        ComputePressureAndTime();
     }
 
     private void Update()
@@ -92,9 +97,9 @@ public class RayGenerator : MonoBehaviour
 
         });
         IntersectedRaysWithDuplicate = newRays.Count;
-        List<AcousticRay> raysWithoutDuplicates = RemoveDuplicates(newRays);
-        intersectedLines = LinesCreator.GenerateLines(raysWithoutDuplicates.Count, transform, LineMaterial);
-        intersectedRayDrawer = new RaysDrawer(intersectedLines, raysWithoutDuplicates);
+        rays = RemoveDuplicates(newRays);
+        intersectedLines = LinesCreator.GenerateLines(rays.Count, transform, LineMaterial);
+        intersectedRayDrawer = new RaysDrawer(intersectedLines, rays);
     }
 
     private void CreateMicrophone()
@@ -107,5 +112,28 @@ public class RayGenerator : MonoBehaviour
         GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         sphere.transform.position = VectorConverter.Convert(microphone.Center);
         sphere.transform.localScale = new UnityEngine.Vector3(microphone.Radius, microphone.Radius, microphone.Radius);
+    }
+
+    private void ComputeIntensities()
+    {
+        IntensityCalculator intensityCalculator = new IntensityCalculator(rays, InitialPower);
+        intensityCalculator.ComputePower();
+    }
+
+    private void ComputePressureAndTime()
+    {
+        DistanceCalculator distanceCalculator = new DistanceCalculator(rays);
+        distanceCalculator.ComputeDistances();
+
+        List<List<double>> times = TimeCalculator.GetTime(rays);
+        List<double> xTime = new List<double>();
+        for (int index = 0; index < times.Count; ++index)
+            xTime.Add(times[index][times[index].Count - 1]);
+
+        List<double> yPressure = new List<double>();
+        for (int index = 0; index < rays.Count; ++index)
+            yPressure.Add(rays[index].Intensities[rays[index].Intensities.Count - 1]);
+
+        /*TODO: Now we have the intensities and pressures. And you might want to return them to make a plot.*/
     }
 }
