@@ -24,8 +24,8 @@ public class RayGenerator : MonoBehaviour
 
     private void Start()
     {
-        CreateRays();
         CreateMicrophone();
+        CreateRays();
         CreateIntersectedRaysWithMicrophone();
         DrawMicrophone();
 
@@ -51,6 +51,7 @@ public class RayGenerator : MonoBehaviour
     private void CreateRays()
     {
         rayGeometryGenerator = new RayGeometry(VectorConverter.Convert(transform.position),
+            microphone.Center,
             NumberOfRays,
             numberOfColissions,
             maxDistance);

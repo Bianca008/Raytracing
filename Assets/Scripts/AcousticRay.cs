@@ -11,6 +11,12 @@ public class AcousticRay
         set;
     }
 
+    public Vector3 MicrophonePosition
+    {
+        get;
+        set;
+    }
+
     public List<Vector3> ColissionPoints
     {
         get;
@@ -43,9 +49,10 @@ public class AcousticRay
         }
     }
 
-    public AcousticRay(Vector3 source)
+    public AcousticRay(Vector3 source, Vector3 microphone)
     {
         Source = source;
+        MicrophonePosition = microphone;
         ColissionPoints = new List<Vector3>();
         ColissionPoints.Add(Source);
         AcousticMaterials = new List<AcousticMaterial>();
@@ -57,7 +64,7 @@ public class AcousticRay
 
     public AcousticRay TruncateRay(int position, Vector3 microphonePos)
     {
-        AcousticRay newRay = new AcousticRay(Source);
+        AcousticRay newRay = new AcousticRay(Source, microphonePos);
         /*index, number of elements to copy*/
         newRay.ColissionPoints = ColissionPoints.GetRange(0, position);
         newRay.ColissionPoints.Add(microphonePos);

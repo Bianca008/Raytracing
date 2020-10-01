@@ -15,7 +15,11 @@ public class RayGeometry
         set;
     }
 
-    public RayGeometry(Vector3 sourcePos, int nrOfRays, int nrOfColissions = 3, int maxDist = 200)
+    public RayGeometry(Vector3 sourcePos,
+        Vector3 microphonePos,
+        int nrOfRays,
+        int nrOfColissions = 3,
+        int maxDist = 200)
     {
         Rays = new List<AcousticRay>();
         numberOfColissions = nrOfColissions;
@@ -24,7 +28,7 @@ public class RayGeometry
 
         for (int index = 0; index < numberOfRays; ++index)
         {
-            Rays.Add(new AcousticRay(sourcePos));
+            Rays.Add(new AcousticRay(sourcePos, microphonePos));
         }
 
         rayCaster = new IRayCaster(maxDistance);
