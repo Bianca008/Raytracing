@@ -5,11 +5,14 @@ public class RayGenerator : MonoBehaviour
 {
     public int NumberOfRay;
     public float InitialPower = 1;
-    private int numberOfColissions = 9;
-    private readonly int maxDistance = 200;
     public int NumberOfRays = 100000;
     public int IntersectedRays;
     public int IntersectedRaysWithDuplicate;
+    public Material LineMaterial;
+    public GameObject ChartArea;
+
+    private readonly int maxDistance = 200;
+    private int numberOfColissions = 9;
     private List<AcousticRay> rays;
     private LineRenderer[] lines;
     private LineRenderer[] intersectedLines;
@@ -17,8 +20,6 @@ public class RayGenerator : MonoBehaviour
     private RaysDrawer rayDrawer;
     private RaysDrawer intersectedRayDrawer;
     private MicrophoneSphere microphone;
-    public Material LineMaterial;
-    public GameObject ChartArea;
     private ChartDrawer chartDrawer;
 
     private void Start()
@@ -138,9 +139,23 @@ public class RayGenerator : MonoBehaviour
 
         List<float> yPressure = new List<float>();
         for (int index = 0; index < rays.Count; ++index)
-            yPressure.Add((float)rays[index].Intensities[rays[index].Intensities.Count - 1]);
+            yPressure.Add((float)PressureConverter.ConvertIntensityToPressure(
+                (float)rays[index].Intensities[rays[index].Intensities.Count - 1]));
+
+        WriteTimeAndPressure(xTime, yPressure);
 
         chartDrawer = new ChartDrawer(ChartArea);
         chartDrawer.Draw(xTime, yPressure);
     }
+
+    private void WriteTimeAndPressure(List<float> time, List<float> pressure)
+    {
+        using (System.IO.StreamWriter file =
+            new System.IO.StreamWriter("timePressure.txt", true))
+        {
+            for (int index = 0; index < time.Count; ++index)
+                file.WriteLine(time[index] + " " + pressure[index]);
+        }
+    }
+
 }

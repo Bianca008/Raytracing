@@ -31,7 +31,7 @@ public class ChartDrawer
         {
             chart = ChartArea.AddComponent<BarChart>();
         }
-
+        
         chart.title.show = true;
         chart.title.text = "Time-Pressure chart";
         chart.tooltip.show = true;

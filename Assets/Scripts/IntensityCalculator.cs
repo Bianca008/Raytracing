@@ -37,9 +37,17 @@ public class IntensityCalculator
 
         for (int indexPosition = 1; indexPosition < Rays[indexRay].ColissionPoints.Count; ++indexPosition)
         {
-            float currentDistance = previousDistance + System.Numerics.Vector3.Distance(
-                Rays[indexRay].ColissionPoints[indexPosition],
-                Rays[indexRay].ColissionPoints[indexPosition - 1]);
+            float currentDistance;
+            if (indexPosition != 1)
+                currentDistance = previousDistance + System.Numerics.Vector3.Distance(
+                   Rays[indexRay].ColissionPoints[indexPosition],
+                   Rays[indexRay].ColissionPoints[indexPosition - 1]);
+            else
+            {
+                currentDistance =  System.Numerics.Vector3.Distance(
+                    Rays[indexRay].ColissionPoints[indexPosition],
+                    Rays[indexRay].ColissionPoints[indexPosition - 1]);
+            }
             double currentIntensity = Math.Pow(previousDistance / currentDistance, 2) * previousIntensity;
             Rays[indexRay].Intensities.Add(currentIntensity);
             previousDistance = currentDistance;
