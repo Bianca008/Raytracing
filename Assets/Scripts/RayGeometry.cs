@@ -71,7 +71,7 @@ public class RayGeometry
         rayCaster.Direction = direction;
 
         while (rayCaster.TotalDistance <= maxDistance &&
-            rayCaster.NumberOfReflections < numberOfColissions)
+            rayCaster.NumberOfReflections <= numberOfColissions)
         {
             rayCaster.RayCast(Rays, numberOfRay);
         }
