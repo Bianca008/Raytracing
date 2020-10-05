@@ -8,6 +8,167 @@ namespace Tests
 {
     public class TestEditorMode
     {
+        [Test]
+        public void RayDistanceZeroColisionPoints_Test()
+        {
+            AcousticRay ray = new AcousticRay(new Vector3(0, 0, 0), new Vector3(1, 5, 7));
+
+            Assert.IsTrue(Math.Abs(ray.Distance - 8.66) < 1e-2);
+        }
+
+        [Test]
+        public void RayDistance_Test()
+        {
+            AcousticRay ray = new AcousticRay(new Vector3(0, 0, 0), new Vector3(1, 5, 7));
+            ray.ColissionPoints.Add(new Vector3(1, 5, 3));
+            ray.ColissionPoints.Add(new Vector3(1, 2, 6));
+
+            Assert.IsTrue(Math.Abs(ray.Distance - 10.16) < 1e-2);
+        }
+
+        [Test]
+        public void ZeroIntersectedRays_Test()
+        {
+            MicrophoneSphere microphone = new MicrophoneSphere(new System.Numerics.Vector3(2, 1.6f, 1.7f), 0.1f);
+            RayGeometry rayGeometryGenerator = new RayGeometry(new Vector3(0, 0, 0),
+                microphone.Center,
+                3,
+                3,
+                200);
+            rayGeometryGenerator.GenerateRays();
+
+            List<AcousticRay> newRays = rayGeometryGenerator.GetIntersectedRays(microphone);
+
+            newRays.Sort(delegate (AcousticRay first, AcousticRay second)
+            {
+                return first.Distance.CompareTo(second.Distance);
+
+            });
+
+            Assert.IsTrue(newRays.Count == 0);
+        }
+
+        [Test]
+        public void IntersectedRays_Test()
+        {
+            MicrophoneSphere microphone = new MicrophoneSphere(new System.Numerics.Vector3(0, 0, 1.976f), 0.1f);
+            RayGeometry rayGeometryGenerator = new RayGeometry(new Vector3(0, 0, 0),
+                microphone.Center,
+                3,
+                3,
+                200);
+            rayGeometryGenerator.GenerateRays();
+
+            List<AcousticRay> newRays = rayGeometryGenerator.GetIntersectedRays(microphone);
+
+            newRays.Sort(delegate (AcousticRay first, AcousticRay second)
+            {
+                return first.Distance.CompareTo(second.Distance);
+            });
+
+            Assert.IsTrue(newRays.Count == 1);
+            Assert.IsTrue(newRays[0].ColissionPoints.Count == 0);
+        }
+
+        [Test]
+        public void ComputeIntensityForDirectRay_Test()
+        {
+            MicrophoneSphere microphone = new MicrophoneSphere(new System.Numerics.Vector3(0, 0, 1.976f), 0.1f);
+            RayGeometry rayGeometryGenerator = new RayGeometry(new Vector3(0, 0, 0),
+                microphone.Center,
+                3,
+                3,
+                200);
+            rayGeometryGenerator.GenerateRays();
+
+            List<AcousticRay> rays = rayGeometryGenerator.GetIntersectedRays(microphone);
+
+            rays.Sort(delegate (AcousticRay first, AcousticRay second)
+            {
+                return first.Distance.CompareTo(second.Distance);
+            });
+
+            IntensityCalculator intensityCalculator = new IntensityCalculator(rays, 1);
+            intensityCalculator.ComputePower();
+
+            var value = PressureConverter.ConvertIntensityToPressure(rays[0].Intensities[0]);
+            Assert.IsTrue(Math.Abs(rays[0].Intensities[0] - 0.02038) < 1e-3);
+        }
+
+        [Test]
+        public void ComputeIntensityForRay_Test()
+        {
+            MicrophoneSphere microphone = new MicrophoneSphere(new System.Numerics.Vector3(0, 0, 1.976f), 0.1f);
+            RayGeometry rayGeometryGenerator = new RayGeometry(new Vector3(0, 0, 0),
+                microphone.Center,
+                500,
+                3,
+                200);
+            rayGeometryGenerator.GenerateRays();
+
+            List<AcousticRay> rays = rayGeometryGenerator.GetIntersectedRays(microphone);
+
+            rays.Sort(delegate (AcousticRay first, AcousticRay second)
+            {
+                return first.Distance.CompareTo(second.Distance);
+            });
+
+            IntensityCalculator intensityCalculator = new IntensityCalculator(rays, 1);
+            intensityCalculator.ComputePower();
+
+            double epsilon = 1e-7;
+            Assert.IsTrue(Math.Abs(rays[10].Intensities[0] - 0.005005355)< epsilon);
+            Assert.IsTrue(Math.Abs(rays[10].Intensities[1] - 0.00496007305)< epsilon);
+            Assert.IsTrue(Math.Abs(rays[10].Intensities[2] - 0.00126104706)< epsilon);
+        }
+
+        [Test]
+        public void CollisionPoints_Test()
+        {
+            Vector3 origin = new Vector3(0, 0, 0);
+            Vector3 microphone = new Vector3(1, 5, 3);
+
+            AcousticRay firstRay = new AcousticRay(origin, microphone);
+            AcousticRay secondRay = new AcousticRay(origin, microphone);
+            AcousticRay thirdRay = new AcousticRay(origin, microphone);
+
+            List<Vector3> firstRayVectors = new List<Vector3>()
+            {
+                new Vector3(1, 2, 3),
+                new Vector3(1, 2, 4),
+                new Vector3(1, 3, 3),
+                new Vector3(1, 5.02f, 3)
+            };
+
+            List<Vector3> secondRayVectors = new List<Vector3>()
+            {
+                new Vector3(1, 2, 3),
+                new Vector3(1, 2, 4),
+                new Vector3(1, 2, 5)
+            };
+
+            List<Vector3> thirdRayVectors = new List<Vector3>()
+            {
+                new Vector3(1, 2, 5),
+                new Vector3(1, 3, 5),
+                new Vector3(1, 4, 5),
+                new Vector3(1, 5, 5),
+                new Vector3(1, 6, 3.002f)
+            };
+
+            for (int index = 0; index < firstRayVectors.Count; ++index)
+                firstRay.ColissionPoints.Add(firstRayVectors[index]);
+
+            for (int index = 0; index < secondRayVectors.Count; ++index)
+                secondRay.ColissionPoints.Add(secondRayVectors[index]);
+
+            for (int index = 0; index < thirdRayVectors.Count; ++index)
+                thirdRay.ColissionPoints.Add(thirdRayVectors[index]);
+
+            Assert.IsTrue(firstRay.ColissionPoints.Count == 4);
+            Assert.IsTrue(secondRay.ColissionPoints.Count == 3);
+            Assert.IsTrue(thirdRay.ColissionPoints.Count == 5);
+        }
 
         //[Test]
         //public void OneRayTwoPointsIntensities_Test()
