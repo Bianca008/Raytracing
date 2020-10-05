@@ -71,7 +71,7 @@ public class RayGeometry
         rayCaster.Direction = direction;
 
         while (rayCaster.TotalDistance <= maxDistance &&
-            rayCaster.NumberOfReflections < numberOfColissions)
+            rayCaster.NumberOfReflections <= numberOfColissions)
         {
             rayCaster.RayCast(Rays, numberOfRay);
         }
@@ -82,12 +82,23 @@ public class RayGeometry
         List<AcousticRay> newRays = new List<AcousticRay>();
 
         for (int indexRay = 0; indexRay < Rays.Count; ++indexRay)
-            for (int indexPosition = 0; indexPosition < Rays[indexRay].ColissionPoints.Count - 1; ++indexPosition)
+        {
+            if (Rays[indexRay].ColissionPoints.Count > 0 &&
+                microphone.LineIntersectionWithSphere(Rays[indexRay].Source,
+                    Rays[indexRay].ColissionPoints[0]))
             {
-                if (microphone.LineIntersectionWithSphere(Rays[indexRay].ColissionPoints[indexPosition],
-                    Rays[indexRay].ColissionPoints[indexPosition + 1]))
-                    newRays.Add(Rays[indexRay].TruncateRay(indexPosition + 1, microphone.Center));
+                newRays.Add(Rays[indexRay].TruncateRay(0, microphone.Center));
             }
+            else
+            {
+                for (int indexPosition = 0; indexPosition < Rays[indexRay].ColissionPoints.Count - 1; ++indexPosition)
+                {
+                    if (microphone.LineIntersectionWithSphere(Rays[indexRay].ColissionPoints[indexPosition],
+                        Rays[indexRay].ColissionPoints[indexPosition + 1]))
+                        newRays.Add(Rays[indexRay].TruncateRay(indexPosition + 1, microphone.Center));
+                }
+            }
+        }
 
         return newRays;
     }
