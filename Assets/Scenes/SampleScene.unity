@@ -4742,7 +4742,7 @@ MonoBehaviour:
   NumberOfRays: 63000
   IntersectedRays: 0
   IntersectedRaysWithDuplicate: 0
-  LineMaterial: {fileID: 0}
+  LineMaterial: {fileID: 2100000, guid: 4f0845e0f49fd5d4eb24120d85a89ce5, type: 2}
   ChartArea: {fileID: 648088791}
 --- !u!135 &793960838
 SphereCollider:

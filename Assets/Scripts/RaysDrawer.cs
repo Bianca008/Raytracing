@@ -54,5 +54,8 @@ public class RaysDrawer
             lines[numberOfLine].positionCount = ++numberOfPoints;
             lines[numberOfLine].SetPosition(numberOfPoints - 1, VectorConverter.Convert(rays[numberOfLine].CollisionPoints[indexPosition]));
         }
+
+        lines[numberOfLine].positionCount = ++numberOfPoints;
+        lines[numberOfLine].SetPosition(numberOfPoints - 1, VectorConverter.Convert(rays[numberOfLine].MicrophonePosition));
     }
 }
