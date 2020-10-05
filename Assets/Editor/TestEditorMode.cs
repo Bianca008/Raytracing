@@ -20,8 +20,8 @@ namespace Tests
         public void RayDistance_Test()
         {
             AcousticRay ray = new AcousticRay(new Vector3(0, 0, 0), new Vector3(1, 5, 7));
-            ray.ColissionPoints.Add(new Vector3(1, 5, 3));
-            ray.ColissionPoints.Add(new Vector3(1, 2, 6));
+            ray.CollisionPoints.Add(new Vector3(1, 5, 3));
+            ray.CollisionPoints.Add(new Vector3(1, 2, 6));
 
             Assert.IsTrue(Math.Abs(ray.Distance - 10.16) < 1e-2);
         }
@@ -67,7 +67,7 @@ namespace Tests
             });
 
             Assert.IsTrue(newRays.Count == 1);
-            Assert.IsTrue(newRays[0].ColissionPoints.Count == 0);
+            Assert.IsTrue(newRays[0].CollisionPoints.Count == 0);
         }
 
         [Test]
@@ -157,17 +157,17 @@ namespace Tests
             };
 
             for (int index = 0; index < firstRayVectors.Count; ++index)
-                firstRay.ColissionPoints.Add(firstRayVectors[index]);
+                firstRay.CollisionPoints.Add(firstRayVectors[index]);
 
             for (int index = 0; index < secondRayVectors.Count; ++index)
-                secondRay.ColissionPoints.Add(secondRayVectors[index]);
+                secondRay.CollisionPoints.Add(secondRayVectors[index]);
 
             for (int index = 0; index < thirdRayVectors.Count; ++index)
-                thirdRay.ColissionPoints.Add(thirdRayVectors[index]);
+                thirdRay.CollisionPoints.Add(thirdRayVectors[index]);
 
-            Assert.IsTrue(firstRay.ColissionPoints.Count == 4);
-            Assert.IsTrue(secondRay.ColissionPoints.Count == 3);
-            Assert.IsTrue(thirdRay.ColissionPoints.Count == 5);
+            Assert.IsTrue(firstRay.CollisionPoints.Count == 4);
+            Assert.IsTrue(secondRay.CollisionPoints.Count == 3);
+            Assert.IsTrue(thirdRay.CollisionPoints.Count == 5);
         }
 
         //[Test]
@@ -175,7 +175,7 @@ namespace Tests
         //{
         //    Vector3 origin = new Vector3(0, 0, 0);
         //    AcousticRay ray = new AcousticRay(origin);
-        //    ray.ColissionPoints.Add(new Vector3(1, 1, 1));
+        //    ray.CollisionPoints.Add(new Vector3(1, 1, 1));
 
         //    List<AcousticRay> rays = new List<AcousticRay>();
         //    rays.Add(ray);
@@ -193,9 +193,9 @@ namespace Tests
         //{
         //    Vector3 origin = new Vector3(0, 0, 0);
         //    AcousticRay ray = new AcousticRay(origin);
-        //    ray.ColissionPoints.Add(new Vector3(1, 1, 1));
-        //    ray.ColissionPoints.Add(new Vector3(2, 1, 1));
-        //    ray.ColissionPoints.Add(new Vector3(1, 5, 1));
+        //    ray.CollisionPoints.Add(new Vector3(1, 1, 1));
+        //    ray.CollisionPoints.Add(new Vector3(2, 1, 1));
+        //    ray.CollisionPoints.Add(new Vector3(1, 5, 1));
 
         //    List<AcousticRay> rays = new List<AcousticRay>();
         //    rays.Add(ray);
@@ -215,16 +215,16 @@ namespace Tests
         //{
         //    Vector3 origin = new Vector3(0, 0, 0);
         //    AcousticRay first = new AcousticRay(origin);
-        //    first.ColissionPoints.Add(new Vector3(1, 1, 1));
-        //    first.ColissionPoints.Add(new Vector3(2, 1, 1));
-        //    first.ColissionPoints.Add(new Vector3(1, 5, 1));
+        //    first.CollisionPoints.Add(new Vector3(1, 1, 1));
+        //    first.CollisionPoints.Add(new Vector3(2, 1, 1));
+        //    first.CollisionPoints.Add(new Vector3(1, 5, 1));
 
         //    AcousticRay second = new AcousticRay(origin);
-        //    second.ColissionPoints.Add(new Vector3(1, 1, 1));
-        //    second.ColissionPoints.Add(new Vector3(2, 1, 1));
-        //    second.ColissionPoints.Add(new Vector3(1, 5, 1));
-        //    second.ColissionPoints.Add(new Vector3(1, 8, 2));
-        //    second.ColissionPoints.Add(new Vector3(3, 5, 3));
+        //    second.CollisionPoints.Add(new Vector3(1, 1, 1));
+        //    second.CollisionPoints.Add(new Vector3(2, 1, 1));
+        //    second.CollisionPoints.Add(new Vector3(1, 5, 1));
+        //    second.CollisionPoints.Add(new Vector3(1, 8, 2));
+        //    second.CollisionPoints.Add(new Vector3(3, 5, 3));
 
         //    List<AcousticRay> rays = new List<AcousticRay>();
         //    rays.Add(first);
@@ -251,9 +251,9 @@ namespace Tests
         //{
         //    Vector3 origin = new Vector3(0, 0, 0);
         //    AcousticRay ray = new AcousticRay(origin);
-        //    ray.ColissionPoints.Add(new Vector3(1, 1, 1));
-        //    ray.ColissionPoints.Add(new Vector3(2, 1, 1));
-        //    ray.ColissionPoints.Add(new Vector3(1, 5, 1));
+        //    ray.CollisionPoints.Add(new Vector3(1, 1, 1));
+        //    ray.CollisionPoints.Add(new Vector3(2, 1, 1));
+        //    ray.CollisionPoints.Add(new Vector3(1, 5, 1));
 
         //    List<AcousticRay> rays = new List<AcousticRay>();
         //    rays.Add(ray);
@@ -273,9 +273,9 @@ namespace Tests
         //{
         //    Vector3 origin = new Vector3(0, 0, 0);
         //    AcousticRay ray = new AcousticRay(origin);
-        //    ray.ColissionPoints.Add(new Vector3(1, 1, 1));
-        //    ray.ColissionPoints.Add(new Vector3(2, 1, 1));
-        //    ray.ColissionPoints.Add(new Vector3(1, 5, 1));
+        //    ray.CollisionPoints.Add(new Vector3(1, 1, 1));
+        //    ray.CollisionPoints.Add(new Vector3(2, 1, 1));
+        //    ray.CollisionPoints.Add(new Vector3(1, 5, 1));
 
         //    List<AcousticRay> rays = new List<AcousticRay>();
         //    rays.Add(ray);
@@ -339,14 +339,14 @@ namespace Tests
         ////{
         ////    Vector3 origin = new Vector3(0, 0, 0);
         ////    AcousticRay first = new AcousticRay(origin);
-        ////    first.ColissionPoints.Add(new Vector3(1, 1, 1));
-        ////    first.ColissionPoints.Add(new Vector3(1, 2, 1));
-        ////    first.ColissionPoints.Add(new Vector3(1, 3, 1));
+        ////    first.CollisionPoints.Add(new Vector3(1, 1, 1));
+        ////    first.CollisionPoints.Add(new Vector3(1, 2, 1));
+        ////    first.CollisionPoints.Add(new Vector3(1, 3, 1));
 
         ////    AcousticRay second = new AcousticRay(origin);
-        ////    second.ColissionPoints.Add(new Vector3(1, 1, 1));
-        ////    second.ColissionPoints.Add(new Vector3(1, 2.002f, 1));
-        ////    second.ColissionPoints.Add(new Vector3(1, 3, 1));
+        ////    second.CollisionPoints.Add(new Vector3(1, 1, 1));
+        ////    second.CollisionPoints.Add(new Vector3(1, 2.002f, 1));
+        ////    second.CollisionPoints.Add(new Vector3(1, 3, 1));
 
         ////    List<AcousticRay> rays = new List<AcousticRay>();
 
@@ -363,30 +363,30 @@ namespace Tests
         ////{
         ////    Vector3 origin = new Vector3(0, 0, 0);
         ////    AcousticRay first = new AcousticRay(origin);
-        ////    first.ColissionPoints.Add(new Vector3(1, 1, 1));
-        ////    first.ColissionPoints.Add(new Vector3(1, 2, 1));
-        ////    first.ColissionPoints.Add(new Vector3(1, 3, 1));
+        ////    first.CollisionPoints.Add(new Vector3(1, 1, 1));
+        ////    first.CollisionPoints.Add(new Vector3(1, 2, 1));
+        ////    first.CollisionPoints.Add(new Vector3(1, 3, 1));
 
         ////    AcousticRay second = new AcousticRay(origin);
-        ////    second.ColissionPoints.Add(new Vector3(1, 1, 1));
-        ////    second.ColissionPoints.Add(new Vector3(1, 2.002f, 1));
-        ////    second.ColissionPoints.Add(new Vector3(1, 3, 1));
+        ////    second.CollisionPoints.Add(new Vector3(1, 1, 1));
+        ////    second.CollisionPoints.Add(new Vector3(1, 2.002f, 1));
+        ////    second.CollisionPoints.Add(new Vector3(1, 3, 1));
 
         ////    AcousticRay third = new AcousticRay(origin);
-        ////    third.ColissionPoints.Add(new Vector3(1, 1, 1));
-        ////    third.ColissionPoints.Add(new Vector3(1, 2.002f, 1));
-        ////    third.ColissionPoints.Add(new Vector3(1, 3, 1));
-        ////    third.ColissionPoints.Add(new Vector3(1, 4, 1));
+        ////    third.CollisionPoints.Add(new Vector3(1, 1, 1));
+        ////    third.CollisionPoints.Add(new Vector3(1, 2.002f, 1));
+        ////    third.CollisionPoints.Add(new Vector3(1, 3, 1));
+        ////    third.CollisionPoints.Add(new Vector3(1, 4, 1));
 
         ////    AcousticRay fourth = new AcousticRay(origin);
-        ////    fourth.ColissionPoints.Add(new Vector3(1, 1, 1));
-        ////    fourth.ColissionPoints.Add(new Vector3(1, 2.002f, 1));
-        ////    fourth.ColissionPoints.Add(new Vector3(1, 3.002f, 1));
-        ////    fourth.ColissionPoints.Add(new Vector3(1, 4.0005f, 1));
+        ////    fourth.CollisionPoints.Add(new Vector3(1, 1, 1));
+        ////    fourth.CollisionPoints.Add(new Vector3(1, 2.002f, 1));
+        ////    fourth.CollisionPoints.Add(new Vector3(1, 3.002f, 1));
+        ////    fourth.CollisionPoints.Add(new Vector3(1, 4.0005f, 1));
 
         ////    AcousticRay fifth = new AcousticRay(origin);
-        ////    fifth.ColissionPoints.Add(new Vector3(1, 1, 1));
-        ////    fifth.ColissionPoints.Add(new Vector3(1, 2.002f, 1));
+        ////    fifth.CollisionPoints.Add(new Vector3(1, 1, 1));
+        ////    fifth.CollisionPoints.Add(new Vector3(1, 2.002f, 1));
 
         ////    List<AcousticRay> rays = new List<AcousticRay>();
 

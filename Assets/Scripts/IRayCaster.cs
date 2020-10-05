@@ -47,7 +47,7 @@ public class IRayCaster
             Position = VectorConverter.Convert(hit.point);
             ++NumberOfReflections;
             TotalDistance += hit.distance;
-            rays[numberOfRay].ColissionPoints.Add(VectorConverter.Convert(hit.point));
+            rays[numberOfRay].CollisionPoints.Add(VectorConverter.Convert(hit.point));
 
             if (acousticMaterial != null)
                 rays[numberOfRay].AcousticMaterials.Add(acousticMaterial);

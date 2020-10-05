@@ -32,7 +32,7 @@ public class IntensityCalculator
     private void ComputeRayIntensity(int indexRay)
     {
         /*Case for 0 CollisionPoints.*/
-        if (Rays[indexRay].ColissionPoints.Count == 0)
+        if (Rays[indexRay].CollisionPoints.Count == 0)
         {
             float distance = System.Numerics.Vector3.Distance(
                 Rays[indexRay].Source,
@@ -44,16 +44,16 @@ public class IntensityCalculator
         /*Usual case.*/
         float previousDistance = System.Numerics.Vector3.Distance(
             Rays[indexRay].Source,
-            Rays[indexRay].ColissionPoints[0]);
+            Rays[indexRay].CollisionPoints[0]);
         double previousIntensity = Math.Pow(1 / previousDistance, 2) * InitialIntensity;
         /*I0*/
         Rays[indexRay].Intensities.Add(previousIntensity);
 
-        for (int indexPosition = 1; indexPosition < Rays[indexRay].ColissionPoints.Count; ++indexPosition)
+        for (int indexPosition = 1; indexPosition < Rays[indexRay].CollisionPoints.Count; ++indexPosition)
         {
             float currentDistance = previousDistance + System.Numerics.Vector3.Distance(
-                Rays[indexRay].ColissionPoints[indexPosition],
-                Rays[indexRay].ColissionPoints[indexPosition - 1]);
+                Rays[indexRay].CollisionPoints[indexPosition],
+                Rays[indexRay].CollisionPoints[indexPosition - 1]);
             double currentIntensity = Math.Pow(previousDistance / currentDistance, 2) * previousIntensity;
             Rays[indexRay].Intensities.Add(currentIntensity);
 

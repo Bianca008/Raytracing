@@ -17,7 +17,7 @@ public class AcousticRay
         set;
     }
 
-    public List<Vector3> ColissionPoints
+    public List<Vector3> CollisionPoints
     {
         get;
         set;
@@ -53,7 +53,7 @@ public class AcousticRay
     {
         Source = source;
         MicrophonePosition = microphone;
-        ColissionPoints = new List<Vector3>();
+        CollisionPoints = new List<Vector3>();
         AcousticMaterials = new List<AcousticMaterial>();
         GameObject gameObject = new GameObject();
         Intensities = new List<double>();
@@ -64,7 +64,7 @@ public class AcousticRay
     {
         AcousticRay newRay = new AcousticRay(Source, microphonePos);
         /*index, number of elements to copy*/
-        newRay.ColissionPoints = ColissionPoints.GetRange(0, position);
+        newRay.CollisionPoints = CollisionPoints.GetRange(0, position);
         /* TODO: see acoustic material for last acoustic material */
         newRay.AcousticMaterials = AcousticMaterials.GetRange(0, position);
 
@@ -73,15 +73,15 @@ public class AcousticRay
 
     private float GetDistance()
     {
-        if (ColissionPoints.Count == 0)
+        if (CollisionPoints.Count == 0)
             return Vector3.Distance(Source, MicrophonePosition);
 
         float distance = Vector3.Distance(Source,
-            ColissionPoints[0]);
+            CollisionPoints[0]);
 
-        for (int index = 0; index < ColissionPoints.Count - 1; ++index)
+        for (int index = 0; index < CollisionPoints.Count - 1; ++index)
         {
-            distance += Vector3.Distance(ColissionPoints[index], ColissionPoints[index + 1]);
+            distance += Vector3.Distance(CollisionPoints[index], CollisionPoints[index + 1]);
         }
 
         return distance;

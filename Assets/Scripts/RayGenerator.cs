@@ -12,7 +12,7 @@ public class RayGenerator : MonoBehaviour
     public GameObject ChartArea;
 
     private readonly int maxDistance = 200;
-    private int numberOfColissions = 9;
+    private int numberOfReflections = 3;
     private List<AcousticRay> rays;
     private LineRenderer[] lines;
     private LineRenderer[] intersectedLines;
@@ -53,7 +53,7 @@ public class RayGenerator : MonoBehaviour
         rayGeometryGenerator = new RayGeometry(VectorConverter.Convert(transform.position),
             microphone.Center,
             NumberOfRays,
-            numberOfColissions,
+            numberOfReflections,
             maxDistance);
         rayGeometryGenerator.GenerateRays();
     }
@@ -63,17 +63,17 @@ public class RayGenerator : MonoBehaviour
         int indexRay = 0;
         while (indexRay < rays.Count - 1)
         {
-            if (rays[indexRay].ColissionPoints.Count == rays[indexRay + 1].ColissionPoints.Count)
+            if (rays[indexRay].CollisionPoints.Count == rays[indexRay + 1].CollisionPoints.Count)
             {
-                int size = rays[indexRay].ColissionPoints.Count;
+                int size = rays[indexRay].CollisionPoints.Count;
                 double epsilon = 1e-3;
                 int indexPointCompared = 0;
                 bool okToDelete = true;
                 while (indexPointCompared < size)
                 {
                     if (System.Numerics.Vector3.Distance
-                        (rays[indexRay].ColissionPoints[indexPointCompared],
-                        rays[indexRay + 1].ColissionPoints[indexPointCompared]) > epsilon)
+                        (rays[indexRay].CollisionPoints[indexPointCompared],
+                        rays[indexRay + 1].CollisionPoints[indexPointCompared]) > epsilon)
                     {
                         okToDelete = false;
                     }

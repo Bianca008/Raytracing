@@ -83,18 +83,18 @@ public class RayGeometry
 
         for (int indexRay = 0; indexRay < Rays.Count; ++indexRay)
         {
-            if (Rays[indexRay].ColissionPoints.Count > 0 &&
+            if (Rays[indexRay].CollisionPoints.Count > 0 &&
                 microphone.LineIntersectionWithSphere(Rays[indexRay].Source,
-                    Rays[indexRay].ColissionPoints[0]))
+                    Rays[indexRay].CollisionPoints[0]))
             {
                 newRays.Add(Rays[indexRay].TruncateRay(0, microphone.Center));
             }
             else
             {
-                for (int indexPosition = 0; indexPosition < Rays[indexRay].ColissionPoints.Count - 1; ++indexPosition)
+                for (int indexPosition = 0; indexPosition < Rays[indexRay].CollisionPoints.Count - 1; ++indexPosition)
                 {
-                    if (microphone.LineIntersectionWithSphere(Rays[indexRay].ColissionPoints[indexPosition],
-                        Rays[indexRay].ColissionPoints[indexPosition + 1]))
+                    if (microphone.LineIntersectionWithSphere(Rays[indexRay].CollisionPoints[indexPosition],
+                        Rays[indexRay].CollisionPoints[indexPosition + 1]))
                         newRays.Add(Rays[indexRay].TruncateRay(indexPosition + 1, microphone.Center));
                 }
             }

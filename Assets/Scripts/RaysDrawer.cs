@@ -26,17 +26,17 @@ public class RaysDrawer
         for (int indexLine = 0; indexLine < lines.Length; ++indexLine)
         {
             lines[indexLine].SetPosition(0, 
-                VectorConverter.Convert(rays[indexLine].ColissionPoints[0]));
+                VectorConverter.Convert(rays[indexLine].CollisionPoints[0]));
         }
 
         /* Add position for each colission.*/
         for (int indexLine = 0; indexLine < rays.Count; ++indexLine)
         {
             int numberOfPoints = 1;
-            for (int indexPosition = 1; indexPosition < rays[indexLine].ColissionPoints.Count; ++indexPosition)
+            for (int indexPosition = 1; indexPosition < rays[indexLine].CollisionPoints.Count; ++indexPosition)
             {
                 lines[indexLine].positionCount = ++numberOfPoints;
-                lines[indexLine].SetPosition(numberOfPoints - 1, VectorConverter.Convert(rays[indexLine].ColissionPoints[indexPosition]));
+                lines[indexLine].SetPosition(numberOfPoints - 1, VectorConverter.Convert(rays[indexLine].CollisionPoints[indexPosition]));
             }
         }
     }
@@ -46,13 +46,13 @@ public class RaysDrawer
         ResetLines();
         
         lines[numberOfLine].SetPosition(0,
-            VectorConverter.Convert(rays[numberOfLine].ColissionPoints[0]));
+            VectorConverter.Convert(rays[numberOfLine].CollisionPoints[0]));
 
         int numberOfPoints = 1;
-        for (int indexPosition = 1; indexPosition < rays[numberOfLine].ColissionPoints.Count; ++indexPosition)
+        for (int indexPosition = 1; indexPosition < rays[numberOfLine].CollisionPoints.Count; ++indexPosition)
         {
             lines[numberOfLine].positionCount = ++numberOfPoints;
-            lines[numberOfLine].SetPosition(numberOfPoints - 1, VectorConverter.Convert(rays[numberOfLine].ColissionPoints[indexPosition]));
+            lines[numberOfLine].SetPosition(numberOfPoints - 1, VectorConverter.Convert(rays[numberOfLine].CollisionPoints[indexPosition]));
         }
     }
 }

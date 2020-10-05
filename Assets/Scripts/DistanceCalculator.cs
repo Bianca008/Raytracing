@@ -22,11 +22,11 @@ public class DistanceCalculator
     private void ComputeDistance(int indexRay)
     {
         Rays[indexRay].Distances.Add(0);
-        for (int indexPosition = 1; indexPosition < Rays[indexRay].ColissionPoints.Count; ++indexPosition)
+        for (int indexPosition = 1; indexPosition < Rays[indexRay].CollisionPoints.Count; ++indexPosition)
         {
             float distanceBetweenTwoPoints = System.Numerics.Vector3.Distance(
-                Rays[indexRay].ColissionPoints[indexPosition],
-                Rays[indexRay].ColissionPoints[indexPosition - 1]);
+                Rays[indexRay].CollisionPoints[indexPosition],
+                Rays[indexRay].CollisionPoints[indexPosition - 1]);
             Rays[indexRay].Distances.Add(Rays[indexRay].Distances[Rays[indexRay].Distances.Count - 1] +
                                          distanceBetweenTwoPoints);
         }
