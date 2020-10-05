@@ -31,25 +31,32 @@ public class IntensityCalculator
 
     private void ComputeRayIntensity(int indexRay)
     {
-        double previousIntensity = InitialIntensity;
-        float previousDistance = 1;
-        Rays[indexRay].Intensities.Add(InitialIntensity);
+        /*Case for 0 CollisionPoints.*/
+        if (Rays[indexRay].ColissionPoints.Count == 0)
+        {
+            float distance = System.Numerics.Vector3.Distance(
+                Rays[indexRay].Source,
+                Rays[indexRay].MicrophonePosition);
+            Rays[indexRay].Intensities.Add(Math.Pow(1 / distance, 2) * InitialIntensity);
+            return;
+        }
+
+        /*Usual case.*/
+        float previousDistance = System.Numerics.Vector3.Distance(
+            Rays[indexRay].Source,
+            Rays[indexRay].ColissionPoints[0]);
+        double previousIntensity = Math.Pow(1 / previousDistance, 2) * InitialIntensity;
+        /*I0*/
+        Rays[indexRay].Intensities.Add(previousIntensity);
 
         for (int indexPosition = 1; indexPosition < Rays[indexRay].ColissionPoints.Count; ++indexPosition)
         {
-            float currentDistance;
-            if (indexPosition != 1)
-                currentDistance = previousDistance + System.Numerics.Vector3.Distance(
-                   Rays[indexRay].ColissionPoints[indexPosition],
-                   Rays[indexRay].ColissionPoints[indexPosition - 1]);
-            else
-            {
-                currentDistance =  System.Numerics.Vector3.Distance(
-                    Rays[indexRay].ColissionPoints[indexPosition],
-                    Rays[indexRay].ColissionPoints[indexPosition - 1]);
-            }
+            float currentDistance = previousDistance + System.Numerics.Vector3.Distance(
+                Rays[indexRay].ColissionPoints[indexPosition],
+                Rays[indexRay].ColissionPoints[indexPosition - 1]);
             double currentIntensity = Math.Pow(previousDistance / currentDistance, 2) * previousIntensity;
             Rays[indexRay].Intensities.Add(currentIntensity);
+
             previousDistance = currentDistance;
             previousIntensity = currentIntensity;
         }
