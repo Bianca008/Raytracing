@@ -46,10 +46,10 @@ public class RaysDrawer
         ResetLines();
         
         lines[numberOfLine].SetPosition(0,
-            VectorConverter.Convert(rays[numberOfLine].CollisionPoints[0]));
+            VectorConverter.Convert(rays[numberOfLine].Source));
 
         int numberOfPoints = 1;
-        for (int indexPosition = 1; indexPosition < rays[numberOfLine].CollisionPoints.Count; ++indexPosition)
+        for (int indexPosition = 0; indexPosition < rays[numberOfLine].CollisionPoints.Count; ++indexPosition)
         {
             lines[numberOfLine].positionCount = ++numberOfPoints;
             lines[numberOfLine].SetPosition(numberOfPoints - 1, VectorConverter.Convert(rays[numberOfLine].CollisionPoints[indexPosition]));
