@@ -729,7 +729,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f2456b8907bf164d95890752a1bc416, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AbsorbtionCoefficient: 0.1
+  AbsorbtionCoefficient: 0.2
 --- !u!1 &289046153
 GameObject:
   m_ObjectHideFlags: 1
@@ -1933,7 +1933,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f2456b8907bf164d95890752a1bc416, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AbsorbtionCoefficient: 0.1
+  AbsorbtionCoefficient: 0.2
 --- !u!1 &600574436
 GameObject:
   m_ObjectHideFlags: 0
@@ -4548,7 +4548,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f2456b8907bf164d95890752a1bc416, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AbsorbtionCoefficient: 0.3
+  AbsorbtionCoefficient: 0.2
 --- !u!1 &743588164
 GameObject:
   m_ObjectHideFlags: 0
