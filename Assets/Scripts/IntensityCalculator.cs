@@ -45,7 +45,9 @@ public class IntensityCalculator
         float previousDistance = System.Numerics.Vector3.Distance(
             Rays[indexRay].Source,
             Rays[indexRay].CollisionPoints[0]);
-        double previousIntensity = Math.Pow(1 / previousDistance, 2) * InitialIntensity;
+        double previousIntensity = Math.Pow(1 / previousDistance, 2) *
+                                   InitialIntensity *
+                                   Math.Pow(Rays[indexRay].AcousticMaterials[0].AbsorbtionCoefficient, 2);
         /*I0*/
         Rays[indexRay].Intensities.Add(previousIntensity);
 
@@ -54,7 +56,18 @@ public class IntensityCalculator
             float currentDistance = previousDistance + System.Numerics.Vector3.Distance(
                 Rays[indexRay].CollisionPoints[indexPosition],
                 Rays[indexRay].CollisionPoints[indexPosition - 1]);
-            double currentIntensity = Math.Pow(previousDistance / currentDistance, 2) * previousIntensity;
+            double currentIntensity;
+            if (indexPosition != Rays[indexRay].CollisionPoints.Count - 1)
+            {
+                currentIntensity = Math.Pow(previousDistance / currentDistance, 2) * previousIntensity *
+                                Math.Pow(Rays[indexRay].AcousticMaterials[indexPosition].AbsorbtionCoefficient, 2);
+
+            }
+            else
+            {
+                currentIntensity = Math.Pow(previousDistance / currentDistance, 2) * previousIntensity;
+            }
+
             Rays[indexRay].Intensities.Add(currentIntensity);
 
             previousDistance = currentDistance;
