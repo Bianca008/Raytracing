@@ -1641,7 +1641,7 @@ Canvas:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 544438494}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 0
   m_Camera: {fileID: 963194227}
@@ -4781,7 +4781,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NumberOfRay: 1
   InitialPower: 1
-  NumberOfRays: 63000
+  ChartForMicrophone: 1
+  NumberOfRays: 700
   IntersectedRays: 0
   IntersectedRaysWithDuplicate: 0
   LineMaterial: {fileID: 2100000, guid: 4f0845e0f49fd5d4eb24120d85a89ce5, type: 2}
