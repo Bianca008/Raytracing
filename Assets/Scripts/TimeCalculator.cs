@@ -14,9 +14,8 @@ public class TimeCalculator
         for (int indexRay = 0; indexRay < rays.Count; ++indexRay)
         {
             List<double> times = new List<double>();
-            times.Add(0);
 
-            for (int indexPosition = 1; indexPosition < rays[indexRay].Distances.Count; ++indexPosition)
+            for (int indexPosition = 0; indexPosition < rays[indexRay].Distances.Count; ++indexPosition)
                 times.Add(rays[indexRay].Distances[indexPosition]/ airSoundSpeed);
 
             rayTimes.Add(times);

@@ -21,7 +21,18 @@ public class DistanceCalculator
 
     private void ComputeDistance(int indexRay)
     {
-        Rays[indexRay].Distances.Add(0);
+        if (Rays[indexRay].CollisionPoints.Count == 0)
+        {
+            Rays[indexRay].Distances.Add(System.Numerics.Vector3.Distance(
+               Rays[indexRay].Source,
+               Rays[indexRay].MicrophonePosition));
+            return;
+        }
+
+        Rays[indexRay].Distances.Add(System.Numerics.Vector3.Distance(
+            Rays[indexRay].Source,
+            Rays[indexRay].CollisionPoints[0]));
+
         for (int indexPosition = 1; indexPosition < Rays[indexRay].CollisionPoints.Count; ++indexPosition)
         {
             float distanceBetweenTwoPoints = System.Numerics.Vector3.Distance(
@@ -30,6 +41,11 @@ public class DistanceCalculator
             Rays[indexRay].Distances.Add(Rays[indexRay].Distances[Rays[indexRay].Distances.Count - 1] +
                                          distanceBetweenTwoPoints);
         }
+
+        Rays[indexRay].Distances.Add(Rays[indexRay].Distances[Rays[indexRay].Distances.Count - 1] +
+                                     System.Numerics.Vector3.Distance(
+                                         Rays[indexRay].CollisionPoints[Rays[indexRay].CollisionPoints.Count - 1],
+                                         Rays[indexRay].MicrophonePosition));
     }
 
 }

@@ -47,7 +47,7 @@ public class IntensityCalculator
             Rays[indexRay].CollisionPoints[0]);
         double previousIntensity = Math.Pow(1 / previousDistance, 2) *
                                    InitialIntensity *
-                                   Math.Pow(Rays[indexRay].AcousticMaterials[0].AbsorbtionCoefficient, 2);
+                                   Math.Pow(1 - Rays[indexRay].AcousticMaterials[0].AbsorbtionCoefficient, 2);
         /*I0*/
         Rays[indexRay].Intensities.Add(previousIntensity);
 
@@ -56,22 +56,19 @@ public class IntensityCalculator
             float currentDistance = previousDistance + System.Numerics.Vector3.Distance(
                 Rays[indexRay].CollisionPoints[indexPosition],
                 Rays[indexRay].CollisionPoints[indexPosition - 1]);
-            double currentIntensity;
-            if (indexPosition != Rays[indexRay].CollisionPoints.Count - 1)
-            {
-                currentIntensity = Math.Pow(previousDistance / currentDistance, 2) * previousIntensity *
-                                Math.Pow(Rays[indexRay].AcousticMaterials[indexPosition].AbsorbtionCoefficient, 2);
-
-            }
-            else
-            {
-                currentIntensity = Math.Pow(previousDistance / currentDistance, 2) * previousIntensity;
-            }
+            double currentIntensity = Math.Pow(previousDistance / currentDistance, 2) * previousIntensity *
+                                Math.Pow(1 - Rays[indexRay].AcousticMaterials[indexPosition].AbsorbtionCoefficient, 2);
 
             Rays[indexRay].Intensities.Add(currentIntensity);
 
             previousDistance = currentDistance;
             previousIntensity = currentIntensity;
         }
+
+        /*In*/
+        Rays[indexRay].Intensities.Add(Math.Pow(previousDistance /
+            (previousDistance + System.Numerics.Vector3.Distance(
+                Rays[indexRay].CollisionPoints[Rays[indexRay].CollisionPoints.Count - 1],
+                Rays[indexRay].MicrophonePosition)), 2) * Rays[indexRay].Intensities[Rays[indexRay].Intensities.Count - 1]);
     }
 }

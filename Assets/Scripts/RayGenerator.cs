@@ -5,7 +5,7 @@ public class RayGenerator : MonoBehaviour
 {
     public int NumberOfRay;
     public float InitialPower = 1;
-    public int NumberOfRays = 100000;
+    public int NumberOfRays = 1000;
     public int IntersectedRays;
     public int IntersectedRaysWithDuplicate;
     public Material LineMaterial;

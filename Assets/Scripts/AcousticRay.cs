@@ -55,7 +55,6 @@ public class AcousticRay
         MicrophonePosition = microphone;
         CollisionPoints = new List<Vector3>();
         AcousticMaterials = new List<AcousticMaterial>();
-        GameObject gameObject = new GameObject();
         Intensities = new List<double>();
         Distances = new List<double>();
     }
@@ -83,6 +82,8 @@ public class AcousticRay
         {
             distance += Vector3.Distance(CollisionPoints[index], CollisionPoints[index + 1]);
         }
+
+        distance += Vector3.Distance(CollisionPoints[CollisionPoints.Count - 1], MicrophonePosition);
 
         return distance;
     }

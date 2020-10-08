@@ -889,6 +889,7 @@ GameObject:
   - component: {fileID: 339095399}
   - component: {fileID: 339095398}
   - component: {fileID: 339095397}
+  - component: {fileID: 339095401}
   m_Layer: 0
   m_Name: Lamp
   m_TagString: Untagged
@@ -971,6 +972,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &339095401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 339095396}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f2456b8907bf164d95890752a1bc416, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AbsorbtionCoefficient: 0.2
 --- !u!1 &406171028
 GameObject:
   m_ObjectHideFlags: 0
@@ -1552,6 +1566,8 @@ GameObject:
   - component: {fileID: 544438498}
   - component: {fileID: 544438497}
   - component: {fileID: 544438496}
+  - component: {fileID: 544438500}
+  - component: {fileID: 544438499}
   m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
@@ -1639,6 +1655,32 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &544438499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 544438494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f2456b8907bf164d95890752a1bc416, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AbsorbtionCoefficient: 0
+--- !u!114 &544438500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 544438494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f2456b8907bf164d95890752a1bc416, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AbsorbtionCoefficient: 0
 --- !u!1 &553670613
 GameObject:
   m_ObjectHideFlags: 0
@@ -5448,6 +5490,7 @@ GameObject:
   - component: {fileID: 1359162148}
   - component: {fileID: 1359162147}
   - component: {fileID: 1359162146}
+  - component: {fileID: 1359162150}
   m_Layer: 0
   m_Name: 'Lamp '
   m_TagString: Untagged
@@ -5530,6 +5573,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1359162150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1359162145}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f2456b8907bf164d95890752a1bc416, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AbsorbtionCoefficient: 0.2
 --- !u!1 &1391656564
 GameObject:
   m_ObjectHideFlags: 0
@@ -6694,6 +6750,7 @@ GameObject:
   - component: {fileID: 1824213564}
   - component: {fileID: 1824213563}
   - component: {fileID: 1824213562}
+  - component: {fileID: 1824213566}
   m_Layer: 0
   m_Name: Ceil
   m_TagString: Untagged
@@ -6775,6 +6832,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1824213566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1824213561}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f2456b8907bf164d95890752a1bc416, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AbsorbtionCoefficient: 0.2
 --- !u!1 &1853533383
 GameObject:
   m_ObjectHideFlags: 0
