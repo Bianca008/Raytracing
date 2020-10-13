@@ -3,6 +3,12 @@ using System.Numerics;
 
 public class MicrophoneSphere
 {
+    public int Id
+    {
+        get;
+        set;
+    }
+
     public Vector3 Center
     {
         get;
@@ -15,8 +21,11 @@ public class MicrophoneSphere
         set;
     }
 
+    private static int id = -1;
+
     public MicrophoneSphere(Vector3 center, float radius)
     {
+        GenerateId();
         Center = center;
         Radius = radius;
     }
@@ -40,6 +49,11 @@ public class MicrophoneSphere
             return true;
 
         return false;
+    }
+
+    private void GenerateId()
+    {
+        Id = ++id;
     }
 
 }

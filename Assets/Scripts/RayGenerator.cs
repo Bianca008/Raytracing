@@ -6,7 +6,7 @@ public class RayGenerator : MonoBehaviour
 {
     public int NumberOfRay;
     public float InitialPower = 1;
-    public int ChartForMicrophone;
+    public int NumberOfMicrophone;
     public int NumberOfRays = 1000;
     public int IntersectedRays;
     public int IntersectedRaysWithDuplicate;
@@ -16,8 +16,8 @@ public class RayGenerator : MonoBehaviour
     private int previousChartForMicrophone;
     private readonly int maxDistance = 200;
     private int numberOfReflections = 3;
-    private List<double> intensities;
-    private List<AcousticRay> rays;
+    private Dictionary<int, List<double>> intensities;
+    private Dictionary<int, List<AcousticRay>> rays;
     private LineRenderer[] lines;
     private LineRenderer[] intersectedLines;
     private RayGeometry rayGeometryGenerator;
@@ -39,15 +39,16 @@ public class RayGenerator : MonoBehaviour
 
     private void Update()
     {
-        if (NumberOfRay <= IntersectedRays && NumberOfRay >= 1)
-            intersectedRayDrawer.Draw(NumberOfRay - 1);
+        if (NumberOfRay <= IntersectedRays && NumberOfRay >= 1 &&
+            NumberOfMicrophone <= microphones.Count && NumberOfMicrophone >= 1)
+            intersectedRayDrawer.Draw(NumberOfMicrophone - 1, NumberOfRay - 1);
         else
-            Debug.Log("The number of ray does not exist...");
+            Debug.Log("The number of ray or the number of microphone does not exist...");
 
-        if (previousChartForMicrophone != ChartForMicrophone && ChartForMicrophone >= 1 && ChartForMicrophone <= microphones.Count)
+        if (previousChartForMicrophone != NumberOfMicrophone && NumberOfMicrophone >= 1 && NumberOfMicrophone <= microphones.Count)
         {
-            DrawChart(ChartForMicrophone);
-            previousChartForMicrophone = ChartForMicrophone;
+            DrawChart(NumberOfMicrophone);
+            previousChartForMicrophone = NumberOfMicrophone;
         }
         else
             Debug.Log("The chart you want to see does not exists.");
@@ -145,7 +146,7 @@ public class RayGenerator : MonoBehaviour
 
     private void CreateIntersectedRaysWithMicrophones()
     {
-        rays = new List<AcousticRay>();
+        rays = new Dictionary<int, List<AcousticRay>>();
         for (int indexMicrophone = 0; indexMicrophone < microphones.Count; ++indexMicrophone)
         {
             List<AcousticRay> newRays = rayGeometryGenerator.GetIntersectedRays(microphones[indexMicrophone]);
@@ -157,10 +158,13 @@ public class RayGenerator : MonoBehaviour
             });
             IntersectedRaysWithDuplicate += newRays.Count;
             List<AcousticRay> raysWithoutDuplicates = RemoveDuplicates(newRays);
-            for (int indexRay = 0; indexRay < raysWithoutDuplicates.Count; ++indexRay)
-                rays.Add(raysWithoutDuplicates[indexRay]);
+            rays[microphones[indexMicrophone].Id] = raysWithoutDuplicates;
         }
-        intersectedLines = LinesCreator.GenerateLines(rays.Count, transform, LineMaterial);
+
+        int count = 0;
+        for (int index = 0; index < rays.Count; ++index)
+            count += rays[index].Count;
+        intersectedLines = LinesCreator.GenerateLines(count, transform, LineMaterial);
         intersectedRayDrawer = new RaysDrawer(intersectedLines, rays);
     }
 
@@ -193,27 +197,18 @@ public class RayGenerator : MonoBehaviour
         DistanceCalculator distanceCalculator = new DistanceCalculator(rays);
         distanceCalculator.ComputeDistances();
 
-        List<List<double>> times = TimeCalculator.GetTime(rays);
-        int indexFile = 1;
-        List<float> xTime = new List<float>();
-        List<float> yPressure = new List<float>();
-        xTime.Add((float)times[0][times[0].Count - 1]);
-        yPressure.Add((float)PressureConverter.ConvertIntensityToPressure(
-            (float)intensities[0]));
-        for (int index = 1; index < times.Count; ++index)
+        Dictionary<int, List<float>> times = TimeCalculator.GetTime(rays);
+      
+        for (int indexMicro = 0; indexMicro < microphones.Count; ++indexMicro)
         {
-            if (rays[index].MicrophonePosition != rays[index - 1].MicrophonePosition)
-            {
-                WriteTimeAndPressure(xTime, yPressure, "timePressure" + indexFile.ToString() + ".txt");
-                ++indexFile;
-                xTime.Clear();
-                yPressure.Clear();
-            }
-            xTime.Add((float)times[index][times[index].Count - 1]);
-            yPressure.Add((float)PressureConverter.ConvertIntensityToPressure(
-                (float)intensities[index]));
+            List<float> xTime = times[indexMicro];
+            List<float> yPressure = new List<float>();
+            List<double> microphoneIntensities = intensities[indexMicro];
+            for (int index = 0; index < microphoneIntensities.Count; ++index)
+                yPressure.Add((float)PressureConverter.ConvertIntensityToPressure(microphoneIntensities[index]));
+
+            WriteTimeAndPressure(xTime, yPressure, "timePressure" + (indexMicro + 1).ToString() + ".txt");
         }
-        WriteTimeAndPressure(xTime, yPressure, "timePressure" + indexFile.ToString() + ".txt");
     }
 
     private void WriteTimeAndPressure(List<float> time, List<float> pressure, string fileName)
