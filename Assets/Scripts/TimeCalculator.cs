@@ -3,6 +3,7 @@
 public class TimeCalculator
 {
     public static Dictionary<int, List<float>> GetTime(Dictionary<int, List<AcousticRay>> rays,
+        List<MicrophoneSphere> microphones, 
         double airSoundSpeed = 343.21)
     {
         Dictionary<int, List<float>> rayTimes = new Dictionary<int, List<float>>();
@@ -13,15 +14,10 @@ public class TimeCalculator
          */
         for (int indexMicro = 0; indexMicro < rays.Count; ++indexMicro)
         {
-            List<float> times = new List<float>();
             rayTimes[indexMicro] = new List<float>();
-            for (int indexRay = 0; indexRay < rays[indexMicro].Count; ++indexRay)
-            {
-                for (int indexPosition = 0; indexPosition < rays[indexMicro][indexRay].Distances.Count; ++indexPosition)
-                    times.Add((float)(rays[indexMicro][indexRay].Distances[indexPosition] / airSoundSpeed));
-                rayTimes[indexMicro].Add((float)(rays[indexMicro][indexRay].Distance / airSoundSpeed));
-            }
-
+            for (int indexRay = 0; indexRay < rays[microphones[indexMicro].Id].Count; ++indexRay)
+                rayTimes[microphones[indexMicro].Id].Add(
+                    (float)(rays[microphones[indexMicro].Id][indexRay].Distance / airSoundSpeed));
         }
 
         return rayTimes;

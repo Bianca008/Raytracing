@@ -10,7 +10,7 @@ public class IntensityCalculator
         set;
     }
 
-    private double InitialIntensity
+    private List<MicrophoneSphere> Microphones
     {
         get;
         set;
@@ -22,11 +22,21 @@ public class IntensityCalculator
         set;
     }
 
-    public IntensityCalculator(Dictionary<int, List<AcousticRay>> rays, float initialPower)
+    private double InitialIntensity
+    {
+        get;
+        set;
+    }
+
+    public IntensityCalculator(
+        Dictionary<int, List<AcousticRay>> rays,
+        List<MicrophoneSphere> microphones,
+        float initialPower)
     {
         InitialIntensity = initialPower / (4.0 * Math.PI);
         Rays = rays;
         Intensities = new Dictionary<int, List<double>>();
+        Microphones = microphones;
     }
 
     public void ComputePower()
@@ -34,12 +44,12 @@ public class IntensityCalculator
         for (int indexMicro = 0; indexMicro < Rays.Count; ++indexMicro)
         {
             List<double> intensities = new List<double>();
-            for (int indexRay = 0; indexRay < Rays[indexMicro].Count; ++indexRay)
+            for (int indexRay = 0; indexRay < Rays[Microphones[indexMicro].Id].Count; ++indexRay)
             {
-                intensities.Add(ComputeRayIntensity(indexMicro, indexRay));
+                intensities.Add(ComputeRayIntensity(Microphones[indexMicro].Id, indexRay));
             }
 
-            Intensities[indexMicro] = intensities;
+            Intensities[Microphones[indexMicro].Id] = intensities;
         }
     }
 

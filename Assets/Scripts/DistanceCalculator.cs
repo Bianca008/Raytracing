@@ -9,16 +9,23 @@ public class DistanceCalculator
         set;
     }
 
-    public DistanceCalculator(Dictionary<int, List<AcousticRay>> rays)
+    private List<MicrophoneSphere> Microphones
     {
+        get;
+        set;
+    }
+
+    public DistanceCalculator(Dictionary<int, List<AcousticRay>> rays, List<MicrophoneSphere> microphones)
+    {
+        Microphones = microphones;
         Rays = rays;
     }
 
     public void ComputeDistances()
     {
         for (int indexMicro = 0; indexMicro < Rays.Count; ++indexMicro)
-            for (int indexRay = 0; indexRay < Rays[indexMicro].Count; ++indexRay)
-                ComputeDistance(indexMicro, indexRay);
+            for (int indexRay = 0; indexRay < Rays[Microphones[indexMicro].Id].Count; ++indexRay)
+                ComputeDistance(Microphones[indexMicro].Id, indexRay);
     }
 
     private void ComputeDistance(int indexMicro, int indexRay)

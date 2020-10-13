@@ -93,10 +93,10 @@ public class RayGenerator : MonoBehaviour
                 bool ok = false;
                 while (indexPointCompared < size && ok == false)
                 {
-                    if (System.Numerics.Vector3.Distance
+                    double distance = System.Numerics.Vector3.Distance
                     (rays[indexRay].CollisionPoints[indexPointCompared],
-                        rays[indexRay + 1].CollisionPoints[indexPointCompared]) <
-                        0.9 * rays[indexRay].Distance)
+                        rays[indexRay + 1].CollisionPoints[indexPointCompared]);
+                    if (distance < 0.2 * rays[indexRay].Distance)
                     {
                         ok = true;
                         rays.RemoveAt(indexRay);
@@ -191,27 +191,27 @@ public class RayGenerator : MonoBehaviour
 
     private void ComputeIntensities()
     {
-        IntensityCalculator intensityCalculator = new IntensityCalculator(rays, InitialPower);
+        IntensityCalculator intensityCalculator = new IntensityCalculator(rays, microphones, InitialPower);
         intensityCalculator.ComputePower();
         intensities = intensityCalculator.Intensities;
     }
 
     private void WriteToFileTimePressure()
     {
-        DistanceCalculator distanceCalculator = new DistanceCalculator(rays);
+        DistanceCalculator distanceCalculator = new DistanceCalculator(rays, microphones);
         distanceCalculator.ComputeDistances();
 
-        Dictionary<int, List<float>> times = TimeCalculator.GetTime(rays);
+        Dictionary<int, List<float>> times = TimeCalculator.GetTime(rays, microphones);
       
         for (int indexMicro = 0; indexMicro < microphones.Count; ++indexMicro)
         {
-            List<float> xTime = times[indexMicro];
+            List<float> xTime = times[microphones[indexMicro].Id];
             List<float> yPressure = new List<float>();
-            List<double> microphoneIntensities = intensities[indexMicro];
+            List<double> microphoneIntensities = intensities[microphones[indexMicro].Id];
             for (int index = 0; index < microphoneIntensities.Count; ++index)
                 yPressure.Add((float)PressureConverter.ConvertIntensityToPressure(microphoneIntensities[index]));
 
-            WriteTimeAndPressure(xTime, yPressure, "timePressure" + (indexMicro + 1).ToString() + ".txt");
+            WriteTimeAndPressure(xTime, yPressure, "timePressure" + (microphones[indexMicro].Id + 1).ToString() + ".txt");
         }
     }
 
