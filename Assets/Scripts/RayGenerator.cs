@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class RayGenerator : MonoBehaviour
@@ -42,7 +43,7 @@ public class RayGenerator : MonoBehaviour
         else
             Debug.Log("The number of ray does not exist...");
 
-        if (previousChartForMicrophone != ChartForMicrophone  && ChartForMicrophone >= 1 && ChartForMicrophone <= microphones.Count)
+        if (previousChartForMicrophone != ChartForMicrophone && ChartForMicrophone >= 1 && ChartForMicrophone <= microphones.Count)
         {
             DrawChart(ChartForMicrophone);
             previousChartForMicrophone = ChartForMicrophone;
@@ -69,6 +70,44 @@ public class RayGenerator : MonoBehaviour
     private List<AcousticRay> RemoveDuplicates(List<AcousticRay> rays)
     {
         int indexRay = 0;
+        while (indexRay < rays.Count - 1)
+        {
+            if (rays[indexRay].CollisionPoints.Count == rays[indexRay + 1].CollisionPoints.Count &&
+                rays[indexRay].CollisionPoints.Count == 0)
+            {
+                rays.RemoveAt(indexRay);
+            }
+            else
+            if (Math.Abs(rays[indexRay].Distance - rays[indexRay + 1].Distance) < 1e-5 &&
+                rays[indexRay].CollisionPoints.Count == rays[indexRay + 1].CollisionPoints.Count &&
+                rays[indexRay].CollisionPoints.Count > 0)
+            {
+                int size = rays[indexRay].CollisionPoints.Count;
+                int indexPointCompared = 0;
+                bool ok = false;
+                while (indexPointCompared < size && ok == false)
+                {
+                    if (System.Numerics.Vector3.Distance
+                    (rays[indexRay].CollisionPoints[indexPointCompared],
+                        rays[indexRay + 1].CollisionPoints[indexPointCompared]) <
+                        0.9 * rays[indexRay].Distance)
+                    {
+                        ok = true;
+                        rays.RemoveAt(indexRay);
+                    }
+
+                    ++indexPointCompared;
+                }
+                if (ok == false)
+                    ++indexRay;
+            }
+            else
+                ++indexRay;
+        }
+
+        IntersectedRays += rays.Count;
+        return rays;
+        /*int indexRay = 0;
         while (indexRay < rays.Count - 1)
         {
             if (rays[indexRay].CollisionPoints.Count == rays[indexRay + 1].CollisionPoints.Count)
@@ -100,7 +139,7 @@ public class RayGenerator : MonoBehaviour
 
         IntersectedRays += rays.Count;
 
-        return rays;
+        return rays;*/
     }
 
     private void CreateIntersectedRaysWithMicrophones()
@@ -191,7 +230,7 @@ public class RayGenerator : MonoBehaviour
         List<float> yPressure = new List<float>();
         using (System.IO.StreamReader file = new System.IO.StreamReader("timePressure" + indexMicrophone.ToString() + ".txt"))
         {
-            while(!file.EndOfStream)
+            while (!file.EndOfStream)
             {
                 string text = file.ReadLine();
                 string[] bits = text.Split(' ');
