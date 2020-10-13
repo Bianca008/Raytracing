@@ -35,13 +35,17 @@ public class RayGenerator : MonoBehaviour
 
         ComputeIntensities();
         WriteToFileTimePressure();
+        IntersectedRays = rays[NumberOfMicrophone - 1].Count;
     }
 
     private void Update()
     {
         if (NumberOfRay <= IntersectedRays && NumberOfRay >= 1 &&
             NumberOfMicrophone <= microphones.Count && NumberOfMicrophone >= 1)
+        {
             intersectedRayDrawer.Draw(NumberOfMicrophone - 1, NumberOfRay - 1);
+            IntersectedRays = rays[NumberOfMicrophone - 1].Count;
+        }
         else
             Debug.Log("The number of ray or the number of microphone does not exist...");
 
@@ -107,7 +111,7 @@ public class RayGenerator : MonoBehaviour
                 ++indexRay;
         }
 
-        IntersectedRays += rays.Count;
+        //IntersectedRays += rays.Count;
         return rays;
         /*int indexRay = 0;
         while (indexRay < rays.Count - 1)
