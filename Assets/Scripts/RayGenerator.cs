@@ -16,6 +16,7 @@ public class RayGenerator : MonoBehaviour
     private int previousChartForMicrophone;
     private readonly int maxDistance = 200;
     private int numberOfReflections = 3;
+    private List<double> intensities;
     private List<AcousticRay> rays;
     private LineRenderer[] lines;
     private LineRenderer[] intersectedLines;
@@ -184,6 +185,7 @@ public class RayGenerator : MonoBehaviour
     {
         IntensityCalculator intensityCalculator = new IntensityCalculator(rays, InitialPower);
         intensityCalculator.ComputePower();
+        intensities = intensityCalculator.Intensities;
     }
 
     private void WriteToFileTimePressure()
@@ -197,7 +199,7 @@ public class RayGenerator : MonoBehaviour
         List<float> yPressure = new List<float>();
         xTime.Add((float)times[0][times[0].Count - 1]);
         yPressure.Add((float)PressureConverter.ConvertIntensityToPressure(
-            (float)rays[0].Intensities[rays[0].Intensities.Count - 1]));
+            (float)intensities[0]));
         for (int index = 1; index < times.Count; ++index)
         {
             if (rays[index].MicrophonePosition != rays[index - 1].MicrophonePosition)
@@ -209,7 +211,7 @@ public class RayGenerator : MonoBehaviour
             }
             xTime.Add((float)times[index][times[index].Count - 1]);
             yPressure.Add((float)PressureConverter.ConvertIntensityToPressure(
-                (float)rays[index].Intensities[rays[index].Intensities.Count - 1]));
+                (float)intensities[index]));
         }
         WriteTimeAndPressure(xTime, yPressure, "timePressure" + indexFile.ToString() + ".txt");
     }

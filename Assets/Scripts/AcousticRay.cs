@@ -29,12 +29,6 @@ public class AcousticRay
         set;
     }
 
-    public List<double> Intensities
-    {
-        get;
-        set;
-    }
-
     public List<double> Distances
     {
         get;
@@ -55,7 +49,6 @@ public class AcousticRay
         MicrophonePosition = microphone;
         CollisionPoints = new List<Vector3>();
         AcousticMaterials = new List<AcousticMaterial>();
-        Intensities = new List<double>();
         Distances = new List<double>();
     }
 
