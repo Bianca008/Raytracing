@@ -84,7 +84,7 @@ public class RayGenerator : MonoBehaviour
                 rays.RemoveAt(indexRay);
             }
             else
-            if (Math.Abs(rays[indexRay].Distance - rays[indexRay + 1].Distance) < 1e-5 &&
+            if (Math.Abs(rays[indexRay].Distance - rays[indexRay + 1].Distance) < 1e-2 &&
                 rays[indexRay].CollisionPoints.Count == rays[indexRay + 1].CollisionPoints.Count &&
                 rays[indexRay].CollisionPoints.Count > 0)
             {
@@ -96,7 +96,7 @@ public class RayGenerator : MonoBehaviour
                     double distance = System.Numerics.Vector3.Distance
                     (rays[indexRay].CollisionPoints[indexPointCompared],
                         rays[indexRay + 1].CollisionPoints[indexPointCompared]);
-                    if (distance < 0.2 * rays[indexRay].Distance)
+                    if (distance < 0.06 * rays[indexRay].Distance)
                     {
                         ok = true;
                         rays.RemoveAt(indexRay);
@@ -111,41 +111,7 @@ public class RayGenerator : MonoBehaviour
                 ++indexRay;
         }
 
-        //IntersectedRays += rays.Count;
         return rays;
-        /*int indexRay = 0;
-        while (indexRay < rays.Count - 1)
-        {
-            if (rays[indexRay].CollisionPoints.Count == rays[indexRay + 1].CollisionPoints.Count)
-            {
-                int size = rays[indexRay].CollisionPoints.Count;
-                double epsilon = 1e-3;
-                int indexPointCompared = 0;
-                bool okToDelete = true;
-                while (indexPointCompared < size)
-                {
-                    if (System.Numerics.Vector3.Distance
-                        (rays[indexRay].CollisionPoints[indexPointCompared],
-                        rays[indexRay + 1].CollisionPoints[indexPointCompared]) > epsilon)
-                    {
-                        okToDelete = false;
-                    }
-
-                    ++indexPointCompared;
-                }
-
-                if (okToDelete == true)
-                    rays.RemoveAt(indexRay);
-                else
-                    ++indexRay;
-            }
-            else
-                ++indexRay;
-        }
-
-        IntersectedRays += rays.Count;
-
-        return rays;*/
     }
 
     private void CreateIntersectedRaysWithMicrophones()
@@ -176,7 +142,7 @@ public class RayGenerator : MonoBehaviour
     {
         microphones = new List<MicrophoneSphere>();
         microphones.Add(new MicrophoneSphere(new System.Numerics.Vector3(2, 1.6f, 1.7f), 0.1f));
-        microphones.Add(new MicrophoneSphere(new System.Numerics.Vector3(-2, 1.6f, 1.7f), 0.1f));
+        microphones.Add(new MicrophoneSphere(new System.Numerics.Vector3(-1.5f, 1.2f, 1.7f), 0.1f));
     }
 
     private void DrawMicrophones()
