@@ -97,7 +97,7 @@ namespace Tests
             IntensityCalculator intensityCalculator = new IntensityCalculator(myRays, microphone, 1);
             intensityCalculator.ComputePower();
 
-            Assert.IsTrue(Math.Abs(intensityCalculator.Intensities[0][0] - 0.0203805) < 1e-3);
+            Assert.IsTrue(Math.Abs(intensityCalculator.Intensities[0][0].Real - 0.0203805) < 1e-3);
         }
 
         [Test]
@@ -126,7 +126,7 @@ namespace Tests
             intensityCalculator.ComputePower();
 
             double epsilon = 1e-5;
-            Assert.IsTrue(Math.Abs(intensityCalculator.Intensities[0][9] - 0.0005087481) < epsilon);
+            Assert.IsTrue(Math.Abs(intensityCalculator.Intensities[0][9].Real - 0.0005087481) < epsilon);
         }
 
         [Test]
@@ -291,8 +291,8 @@ namespace Tests
             //List<List<double>> times = TimeCalculator.GetTime(myRays);
 
             double epsilon = 1e-4;
-            Assert.IsTrue(Math.Abs(intensityCalculator.Intensities[0][0] - 0.0098243202) < epsilon);
-            Assert.IsTrue(Math.Abs(intensityCalculator.Intensities[0][1] - 0.0049525) < epsilon);
+            Assert.IsTrue(Math.Abs(intensityCalculator.Intensities[0][0].Real - 0.0098243202) < epsilon);
+            Assert.IsTrue(Math.Abs(intensityCalculator.Intensities[0][1].Real - 0.0049525) < epsilon);
         }
     }
 }

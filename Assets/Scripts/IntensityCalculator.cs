@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 
 public class IntensityCalculator
 {
@@ -16,7 +17,7 @@ public class IntensityCalculator
         set;
     }
 
-    public Dictionary<int, List<double>> Intensities
+    public Dictionary<int, List<Complex>> Intensities
     {
         get;
         set;
@@ -35,7 +36,7 @@ public class IntensityCalculator
     {
         InitialIntensity = initialPower / (4.0 * Math.PI);
         Rays = rays;
-        Intensities = new Dictionary<int, List<double>>();
+        Intensities = new Dictionary<int, List<Complex>>();
         Microphones = microphones;
     }
 
@@ -43,10 +44,11 @@ public class IntensityCalculator
     {
         for (int indexMicro = 0; indexMicro < Rays.Count; ++indexMicro)
         {
-            List<double> intensities = new List<double>();
+            List<Complex> intensities = new List<Complex>();
             for (int indexRay = 0; indexRay < Rays[Microphones[indexMicro].Id].Count; ++indexRay)
             {
-                intensities.Add(ComputeRayIntensity(Microphones[indexMicro].Id, indexRay));
+                intensities.Add(new Complex(ComputeRayIntensity(Microphones[indexMicro].Id, indexRay),
+                    0));
             }
 
             Intensities[Microphones[indexMicro].Id] = intensities;

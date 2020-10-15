@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
 using UnityEngine;
 
 public class RayGenerator : MonoBehaviour
@@ -16,7 +17,7 @@ public class RayGenerator : MonoBehaviour
     private int previousChartForMicrophone;
     private readonly int maxDistance = 200;
     private int numberOfReflections = 3;
-    private Dictionary<int, List<double>> intensities;
+    private Dictionary<int, List<Complex>> intensities;
     private Dictionary<int, List<AcousticRay>> rays;
     private LineRenderer[] lines;
     private LineRenderer[] intersectedLines;
@@ -173,9 +174,9 @@ public class RayGenerator : MonoBehaviour
         {
             List<float> xTime = times[microphones[indexMicro].Id];
             List<float> yPressure = new List<float>();
-            List<double> microphoneIntensities = intensities[microphones[indexMicro].Id];
+            List<Complex> microphoneIntensities = intensities[microphones[indexMicro].Id];
             for (int index = 0; index < microphoneIntensities.Count; ++index)
-                yPressure.Add((float)PressureConverter.ConvertIntensityToPressure(microphoneIntensities[index]));
+                yPressure.Add((float)PressureConverter.ConvertIntensityToPressure(microphoneIntensities[index].Real));
 
             WriteTimeAndPressure(xTime, yPressure, "timePressure" + (microphones[indexMicro].Id + 1).ToString() + ".txt");
         }
