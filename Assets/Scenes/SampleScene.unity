@@ -4782,6 +4782,7 @@ MonoBehaviour:
   NumberOfRay: 1
   InitialPower: 1
   NumberOfMicrophone: 1
+  Frequencie: 1000
   NumberOfRays: 63000
   IntersectedRays: 0
   IntersectedRaysWithDuplicate: 0

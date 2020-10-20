@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Numerics;
 using UnityEngine;
 
+using Echogram = System.Collections.Generic.Dictionary<int, System.Collections.Generic.List<System.Numerics.Complex>>;
+
 public class RayGenerator : MonoBehaviour
 {
     public int NumberOfRay;
     public float InitialPower = 1;
     public int NumberOfMicrophone;
+    public int Frequencie;
     public int NumberOfRays = 1000;
     public int IntersectedRays;
     public int IntersectedRaysWithDuplicate;
@@ -15,9 +18,11 @@ public class RayGenerator : MonoBehaviour
     public GameObject ChartArea;
 
     private int previousChartForMicrophone;
+    private double previousCharFrequencie;
     private readonly int maxDistance = 200;
     private int numberOfReflections = 3;
-    private Dictionary<int, List<Complex>> intensities;
+    private Dictionary<double, Echogram> echograms;
+    private List<double> frequencies;
     private Dictionary<int, List<AcousticRay>> rays;
     private LineRenderer[] lines;
     private LineRenderer[] intersectedLines;
@@ -50,10 +55,15 @@ public class RayGenerator : MonoBehaviour
         else
             Debug.Log("The number of ray or the number of microphone does not exist...");
 
-        if (previousChartForMicrophone != NumberOfMicrophone && NumberOfMicrophone >= 1 && NumberOfMicrophone <= microphones.Count)
+        if ((previousChartForMicrophone != NumberOfMicrophone ||
+            previousCharFrequencie != Frequencie) &&
+            NumberOfMicrophone >= 1 &&
+            NumberOfMicrophone <= microphones.Count &&
+            frequencies.Contains(Frequencie) == true)
         {
-            DrawChart(NumberOfMicrophone);
+            DrawChart(NumberOfMicrophone, Frequencie);
             previousChartForMicrophone = NumberOfMicrophone;
+            previousCharFrequencie = Frequencie;
         }
         else
             Debug.Log("The chart you want to see does not exists.");
@@ -161,11 +171,15 @@ public class RayGenerator : MonoBehaviour
         IntensityCalculator intensityCalculator = new IntensityCalculator(rays, microphones, InitialPower);
         intensityCalculator.ComputePower();
         intensityCalculator.TransformIntensitiesToPressure();
-        intensities = intensityCalculator.Intensities;
+        Dictionary<int, List<double>> intensities = intensityCalculator.Intensities;
 
-        PhaseCalculator phaseCalculator = new PhaseCalculator(rays, microphones, intensities);
-        phaseCalculator.ComputePhase(1000);
-        intensities = phaseCalculator.Echogram;
+        frequencies = new List<double>() { 1000, 2000, 3000 };
+        echograms = new Dictionary<double, Echogram>();
+        for (int index = 0; index < frequencies.Count; ++index)
+        {
+            PhaseCalculator phaseCalculator = new PhaseCalculator(rays, microphones, intensities);
+            echograms[frequencies[index]] = phaseCalculator.ComputePhase(frequencies[index]);
+        }
     }
 
     private void WriteToFileTimePressure()
@@ -174,18 +188,26 @@ public class RayGenerator : MonoBehaviour
         distanceCalculator.ComputeDistances();
 
         Dictionary<int, List<float>> times = TimeCalculator.GetTime(rays, microphones);
-      
-        for (int indexMicro = 0; indexMicro < microphones.Count; ++indexMicro)
-        {
-            List<float> xTime = times[microphones[indexMicro].Id];
-            List<float> yPressure = new List<float>();
-            List<Complex> microphoneIntensities = intensities[microphones[indexMicro].Id];
-            for (int index = 0; index < microphoneIntensities.Count; ++index)
-                //yPressure.Add((float)(microphoneIntensities[index].Phase * 180/Math.PI));
-                yPressure.Add((float)microphoneIntensities[index].Magnitude);
 
-            WriteTimeAndPressure(xTime, yPressure, "timePressure" + (microphones[indexMicro].Id + 1).ToString() + ".txt");
-        }
+        for (int indexFrequencie = 0; indexFrequencie < frequencies.Count; ++indexFrequencie)
+            for (int indexMicro = 0; indexMicro < microphones.Count; ++indexMicro)
+            {
+                List<float> xTime = times[microphones[indexMicro].Id];
+                List<float> yMagnitude = new List<float>();
+                List<float> yPhase = new List<float>();
+                List<Complex> microphoneIntensities = echograms[frequencies[indexFrequencie]][microphones[indexMicro].Id];
+                for (int index = 0; index < microphoneIntensities.Count; ++index)
+                {
+                    yPhase.Add((float)(microphoneIntensities[index].Phase * 180 / Math.PI));
+                    yMagnitude.Add((float)microphoneIntensities[index].Magnitude);
+                }
+
+                WriteTimeAndPressure(xTime, yMagnitude, "timeMagnitude" +
+                    (microphones[indexMicro].Id + 1).ToString() + "M" + frequencies[indexFrequencie].ToString() + "Hz.txt");
+
+                WriteTimeAndPressure(xTime, yPhase, "timePhase" +
+                   (microphones[indexMicro].Id + 1).ToString() + "M" + frequencies[indexFrequencie].ToString() + "Hz.txt");
+            }
     }
 
     private void WriteTimeAndPressure(List<float> time, List<float> pressure, string fileName)
@@ -198,11 +220,13 @@ public class RayGenerator : MonoBehaviour
         }
     }
 
-    private void DrawChart(int indexMicrophone)
+    private void DrawChart(int indexMicrophone, double indexFrequencie)
     {
         List<float> xTime = new List<float>();
         List<float> yPressure = new List<float>();
-        using (System.IO.StreamReader file = new System.IO.StreamReader("timePressure" + indexMicrophone.ToString() + ".txt"))
+        using (System.IO.StreamReader file = new System.IO.StreamReader("timePhase" +
+                (indexMicrophone).ToString() + "M" +
+                indexFrequencie.ToString() + "Hz.txt"))
         {
             while (!file.EndOfStream)
             {

@@ -18,7 +18,7 @@ public class IntensityCalculator
         set;
     }
 
-    public Dictionary<int, List<Complex>> Intensities
+    public Dictionary<int, List<double>> Intensities
     {
         get;
         set;
@@ -37,7 +37,7 @@ public class IntensityCalculator
     {
         InitialIntensity = initialPower / (4.0 * Math.PI);
         Rays = rays;
-        Intensities = new Dictionary<int, List<Complex>>();
+        Intensities = new Dictionary<int, List<double>>();
         Microphones = microphones;
     }
 
@@ -45,11 +45,10 @@ public class IntensityCalculator
     {
         for (int indexMicro = 0; indexMicro < Rays.Count; ++indexMicro)
         {
-            List<Complex> intensities = new List<Complex>();
+            List<double> intensities = new List<double>();
             for (int indexRay = 0; indexRay < Rays[Microphones[indexMicro].Id].Count; ++indexRay)
             {
-                intensities.Add(new Complex(ComputeRayIntensity(Microphones[indexMicro].Id, indexRay),
-                    0));
+                intensities.Add(ComputeRayIntensity(Microphones[indexMicro].Id, indexRay));
             }
 
             Intensities[Microphones[indexMicro].Id] = intensities;
@@ -62,9 +61,8 @@ public class IntensityCalculator
         {
             for (int indexRay = 0; indexRay < Rays[Microphones[indexMicro].Id].Count; ++indexRay)
             {
-                Intensities[indexMicro][indexRay] = new Complex(
-                    PressureConverter.ConvertIntensityToPressure(Intensities[indexMicro][indexRay].Real),
-                    0);
+                Intensities[indexMicro][indexRay] = PressureConverter.
+                    ConvertIntensityToPressure(Intensities[indexMicro][indexRay]);
             }
         }
     }
