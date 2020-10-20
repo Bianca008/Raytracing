@@ -232,6 +232,9 @@ public class RayGenerator : MonoBehaviour
         Tuple<List<float>, List<float>> timePhase = FileReader.ReadFromFile(timePhaseFile);
         Tuple<List<float>, List<float>> timeMagnitude = FileReader.ReadFromFile(timeMagnitudeFile);
 
+        for (int index = 0; index < timeMagnitude.Item1.Count; ++index)
+            timeMagnitude.Item1[index] = (float)Math.Round(timeMagnitude.Item1[index] * 1000, 2);
+
         chartDrawer = new ChartDrawer(ChartArea);
         chartDrawer.Draw(timeMagnitude.Item1, timeMagnitude.Item2, timePhase.Item2);
     }

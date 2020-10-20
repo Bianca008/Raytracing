@@ -33,21 +33,9 @@ public class ChartDrawer
             if (barChart.name == "TimePhase")
                 timePhaseChart = barChart;
         }
-        //timeMagnitudeChart = ChartArea.GetComponent<BarChart>();
-        //timePhaseChart = ChartArea.GetComponent<BarChart>();
-
-        //if (timeMagnitudeChart == null)
-        //{
-        //    timeMagnitudeChart = ChartArea.AddComponent<BarChart>();
-        //}
-
-        //if(timePhaseChart == null)
-        //{
-        //    timePhaseChart = ChartArea.AddComponent<BarChart>();
-        //}
         
         timeMagnitudeChart.title.show = true;
-        timeMagnitudeChart.title.text = "Time-Magnitude chart";
+        timeMagnitudeChart.title.text = "Time(1e+3)-Magnitude chart";
         timeMagnitudeChart.tooltip.show = true;
         timeMagnitudeChart.legend.show = false;
         timeMagnitudeChart.xAxises[0].show = true;
@@ -59,7 +47,7 @@ public class ChartDrawer
         timeMagnitudeChart.xAxises[0].splitNumber = 10;
         timeMagnitudeChart.xAxises[0].boundaryGap = true;
         timeMagnitudeChart.RemoveData();
-        timeMagnitudeChart.AddSerie(SerieType.Bar);
+        timeMagnitudeChart.AddSerie(SerieType.Bar, "Magnitude");
 
         for (int index = 0; index < xTime.Count; ++index)
         {
@@ -68,7 +56,7 @@ public class ChartDrawer
         }
 
         timePhaseChart.title.show = true;
-        timePhaseChart.title.text = "Time-Phase chart";
+        timePhaseChart.title.text = "Time(1e+3)-Phase chart";
         timePhaseChart.tooltip.show = true;
         timePhaseChart.legend.show = false;
         timePhaseChart.xAxises[0].show = true;
@@ -80,7 +68,7 @@ public class ChartDrawer
         timePhaseChart.xAxises[0].splitNumber = 10;
         timePhaseChart.xAxises[0].boundaryGap = true;
         timePhaseChart.RemoveData();
-        timePhaseChart.AddSerie(SerieType.Bar);
+        timePhaseChart.AddSerie(SerieType.Bar, "Phase");
 
         for (int index = 0; index < xTime.Count; ++index)
         {
