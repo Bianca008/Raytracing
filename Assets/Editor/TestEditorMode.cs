@@ -97,7 +97,7 @@ namespace Tests
             IntensityCalculator intensityCalculator = new IntensityCalculator(myRays, microphone, 1);
             intensityCalculator.ComputePower();
 
-            Assert.IsTrue(Math.Abs(intensityCalculator.Intensities[0][0].Real - 0.0203805) < 1e-3);
+            Assert.IsTrue(Math.Abs(intensityCalculator.Intensities[0][0].Real - 0.02038056768) < 1e-3);
         }
 
         [Test]
@@ -291,8 +291,103 @@ namespace Tests
             //List<List<double>> times = TimeCalculator.GetTime(myRays);
 
             double epsilon = 1e-4;
-            Assert.IsTrue(Math.Abs(intensityCalculator.Intensities[0][0].Real - 0.0098243202) < epsilon);
-            Assert.IsTrue(Math.Abs(intensityCalculator.Intensities[0][1].Real - 0.0049525) < epsilon);
+            Assert.IsTrue(Math.Abs(intensityCalculator.Intensities[0][0].Real - 0.0098243) < epsilon);
+            Assert.IsTrue(Math.Abs(intensityCalculator.Intensities[0][1].Real - 0.0049536) < epsilon);
+        }
+
+        [Test]
+        public void Rays11Phase_Test()
+        {
+            List<MicrophoneSphere> microphone = new List<MicrophoneSphere>() {
+                new MicrophoneSphere(new System.Numerics.Vector3(2, 1.6f, 1.7f), 0.1f) };
+            RayGeometry rayGeometryGenerator = new RayGeometry(new Vector3(0, 0.5f, 0),
+                microphone,
+                1000,
+                3,
+                200);
+            rayGeometryGenerator.GenerateRays();
+
+            List<AcousticRay> rays = rayGeometryGenerator.GetIntersectedRays(microphone[0]);
+
+            rays.Sort(delegate (AcousticRay first, AcousticRay second)
+            {
+                return first.Distance.CompareTo(second.Distance);
+            });
+
+            Dictionary<int, List<AcousticRay>> myRays = new Dictionary<int, List<AcousticRay>>();
+            myRays.Add(microphone[0].Id, rays);
+
+            IntensityCalculator intensityCalculator = new IntensityCalculator(myRays, microphone, 1);
+            intensityCalculator.ComputePower();
+
+            PhaseCalculator phaseCalculator = new PhaseCalculator(myRays, microphone, intensityCalculator.Intensities);
+            phaseCalculator.ComputePhase(1000);
+
+            double epsilon = 1e-4;
+            Assert.IsTrue(Math.Abs(phaseCalculator.Echogram[0][0].Real + 0.002589105375) < epsilon);
+        }
+
+        [Test]
+        public void RaysPhase_Test()
+        {
+            List<MicrophoneSphere> microphone = new List<MicrophoneSphere>() {
+                new MicrophoneSphere(new System.Numerics.Vector3(2, 1.6f, 1.7f), 0.1f) };
+            RayGeometry rayGeometryGenerator = new RayGeometry(new Vector3(0, 0.5f, 0),
+                microphone,
+                63000,
+                3,
+                200);
+            rayGeometryGenerator.GenerateRays();
+
+            List<AcousticRay> rays = rayGeometryGenerator.GetIntersectedRays(microphone[0]);
+
+            rays.Sort(delegate (AcousticRay first, AcousticRay second)
+            {
+                return first.Distance.CompareTo(second.Distance);
+            });
+
+            Dictionary<int, List<AcousticRay>> myRays = new Dictionary<int, List<AcousticRay>>();
+            myRays.Add(microphone[0].Id, rays);
+
+            IntensityCalculator intensityCalculator = new IntensityCalculator(myRays, microphone, 1);
+            intensityCalculator.ComputePower();
+            intensityCalculator.TransformIntensitiesToPressure();
+
+            PhaseCalculator phaseCalculator = new PhaseCalculator(myRays, microphone, intensityCalculator.Intensities);
+            phaseCalculator.ComputePhase(1000);
+
+            double epsilon = 1e-4;
+            Assert.IsTrue(Math.Abs(phaseCalculator.Echogram[0][0].Real + 0.002589105375) < epsilon);
+        }
+
+        [Test]
+        public void GetPolarCoordinates_Test()
+        {
+            Vector3 point = new Vector3(3, 4, 5);
+
+            Vector3 polarCoordinates = DegreesRadiansConverter.TransformToPolarCoordinates(point);
+
+            double[] expectedValues = { 7.0710678118655, 0.92729521800161, 0.78539816339745 };
+            double epsilon = 1e-5;
+            Assert.IsTrue(Math.Abs(expectedValues[0] - polarCoordinates.X) < epsilon);
+            Assert.IsTrue(Math.Abs(expectedValues[1] - polarCoordinates.Y) < epsilon);
+            Assert.IsTrue(Math.Abs(expectedValues[2] - polarCoordinates.Z) < epsilon);
+        }
+
+        [Test]
+        public void GetCartesianCoordinates_Test()
+        {
+            Vector3 point = new Vector3(3, 4, 5);
+
+            Vector3 polarCoordinates = DegreesRadiansConverter.TransformToPolarCoordinates(point);
+            Vector3 recalculatedPoint = DegreesRadiansConverter.TransformToCartesianCoordinates(polarCoordinates.X,
+                polarCoordinates.Y,
+                polarCoordinates.Z);
+
+            double epsilon = 1e-8;
+            Assert.IsTrue(Math.Abs(recalculatedPoint.X - point.X) < epsilon);
+            Assert.IsTrue(Math.Abs(recalculatedPoint.Y - point.Y) < epsilon);
+            Assert.IsTrue(Math.Abs(recalculatedPoint.Z - point.Z) < epsilon);
         }
     }
 }

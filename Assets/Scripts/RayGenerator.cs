@@ -160,7 +160,12 @@ public class RayGenerator : MonoBehaviour
     {
         IntensityCalculator intensityCalculator = new IntensityCalculator(rays, microphones, InitialPower);
         intensityCalculator.ComputePower();
+        intensityCalculator.TransformIntensitiesToPressure();
         intensities = intensityCalculator.Intensities;
+
+        PhaseCalculator phaseCalculator = new PhaseCalculator(rays, microphones, intensities);
+        phaseCalculator.ComputePhase(1000);
+        intensities = phaseCalculator.Echogram;
     }
 
     private void WriteToFileTimePressure()
@@ -176,7 +181,8 @@ public class RayGenerator : MonoBehaviour
             List<float> yPressure = new List<float>();
             List<Complex> microphoneIntensities = intensities[microphones[indexMicro].Id];
             for (int index = 0; index < microphoneIntensities.Count; ++index)
-                yPressure.Add((float)PressureConverter.ConvertIntensityToPressure(microphoneIntensities[index].Real));
+                //yPressure.Add((float)(microphoneIntensities[index].Phase * 180/Math.PI));
+                yPressure.Add((float)microphoneIntensities[index].Magnitude);
 
             WriteTimeAndPressure(xTime, yPressure, "timePressure" + (microphones[indexMicro].Id + 1).ToString() + ".txt");
         }

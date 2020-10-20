@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using UnityEngine;
 
 public class IntensityCalculator
 {
@@ -52,6 +53,19 @@ public class IntensityCalculator
             }
 
             Intensities[Microphones[indexMicro].Id] = intensities;
+        }
+    }
+
+    public void TransformIntensitiesToPressure()
+    {
+        for (int indexMicro = 0; indexMicro < Rays.Count; ++indexMicro)
+        {
+            for (int indexRay = 0; indexRay < Rays[Microphones[indexMicro].Id].Count; ++indexRay)
+            {
+                Intensities[indexMicro][indexRay] = new Complex(
+                    PressureConverter.ConvertIntensityToPressure(Intensities[indexMicro][indexRay].Real),
+                    0);
+            }
         }
     }
 
