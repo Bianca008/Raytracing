@@ -222,21 +222,17 @@ public class RayGenerator : MonoBehaviour
 
     private void DrawChart(int indexMicrophone, double indexFrequencie)
     {
-        List<float> xTime = new List<float>();
-        List<float> yPressure = new List<float>();
-        using (System.IO.StreamReader file = new System.IO.StreamReader("timePhase" +
+        string timeMagnitudeFile = "timeMagnitude" +
                 (indexMicrophone).ToString() + "M" +
-                indexFrequencie.ToString() + "Hz.txt"))
-        {
-            while (!file.EndOfStream)
-            {
-                string text = file.ReadLine();
-                string[] bits = text.Split(' ');
-                xTime.Add(System.Single.Parse(bits[0]));
-                yPressure.Add(System.Single.Parse(bits[1]));
-            }
-        }
+                indexFrequencie.ToString() + "Hz.txt";
+        string timePhaseFile = "timePhase" +
+                (indexMicrophone).ToString() + "M" +
+                indexFrequencie.ToString() + "Hz.txt";
+
+        Tuple<List<float>, List<float>> timePhase = FileReader.ReadFromFile(timePhaseFile);
+        Tuple<List<float>, List<float>> timeMagnitude = FileReader.ReadFromFile(timeMagnitudeFile);
+
         chartDrawer = new ChartDrawer(ChartArea);
-        chartDrawer.Draw(xTime, yPressure);
+        chartDrawer.Draw(timeMagnitude.Item1, timeMagnitude.Item2, timePhase.Item2);
     }
 }
