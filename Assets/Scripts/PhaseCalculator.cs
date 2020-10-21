@@ -64,6 +64,12 @@ public class PhaseCalculator
 
     private void ComputePhase(int indexMicro, int indexRay, double frequency, double airSoundSpeed = 343.21)
     {
+        if(frequency == 0)
+        {
+            EchogramMagnitudePhase[indexMicro][indexRay] = new Complex(EchogramMagnitudePhase[indexMicro][indexRay].Real, 0);
+            return;
+        }
+
         float distance = Rays[indexMicro][indexRay].Distance;
         double waveLength = airSoundSpeed / frequency;
         double waveNumber = 2 * Math.PI / waveLength;
