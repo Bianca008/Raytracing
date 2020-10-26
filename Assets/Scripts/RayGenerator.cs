@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using UnityEngine;
+using NWaves.Signals;
 
 using Echogram = System.Collections.Generic.Dictionary<int, System.Collections.Generic.List<System.Numerics.Complex>>;
+using System.IO;
+using NWaves.Audio;
+using NWaves.Operations;
 
 public class RayGenerator : MonoBehaviour
 {
@@ -33,9 +37,12 @@ public class RayGenerator : MonoBehaviour
     private RaysDrawer intersectedRayDrawer;
     private List<MicrophoneSphere> microphones;
     private ChartDrawer chartDrawer;
+    private AudioSource audioSource;
 
     private void Start()
     {
+        audioSource = GetComponent<AudioSource>();
+
         CreateMicrophones();
         CreateRays();
         CreateIntersectedRaysWithMicrophones();
@@ -47,6 +54,8 @@ public class RayGenerator : MonoBehaviour
 
         ComputeFrequencyReponse();
         WriteFrquencies();
+
+        ConvolveSound();
     }
 
     private void Update()
@@ -307,6 +316,29 @@ public class RayGenerator : MonoBehaviour
                 y.Add((float)frequencyReponse[microphones[indexMicro].Id][index].Phase);
             }
             WriteToFile(x, y, microphones[indexMicro].Id.ToString() + "M.txt");
+        }
+    }
+
+    private void ConvolveSound()
+    {
+        DiscreteSignal attention;
+
+        // load
+        using (var stream = new FileStream(audioSource.name, FileMode.Open))
+        {
+            var waveFile = new WaveFile(stream);
+            attention = waveFile[Channels.Left];
+        }
+      
+        //Transforms
+        DiscreteSignal impulseResponse = new DiscreteSignal();
+        DiscreteSignal convolutionResult = Operation.Convolve(attention, impulseRespone);
+
+        // save
+        using (var stream = new FileStream("convolutionAttentionOverlap.wav", FileMode.Create))
+        {
+            var waveFile = new WaveFile(convolutionResult);
+            waveFile.SaveTo(stream);
         }
     }
 }
