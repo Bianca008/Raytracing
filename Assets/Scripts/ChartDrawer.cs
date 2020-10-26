@@ -89,7 +89,7 @@ public class ChartDrawer
             if (lineChart.name == "FrequencyPhase")
                 timePhaseLineChart = lineChart;
         }
-
+        
         timeMagnitudeLineChart.title.show = true;
         timeMagnitudeLineChart.title.text = "Frequency(Hz)-Magnitude chart";
         timeMagnitudeLineChart.tooltip.show = true;
@@ -103,8 +103,8 @@ public class ChartDrawer
         timeMagnitudeLineChart.xAxises[0].splitNumber = 10;
         timeMagnitudeLineChart.xAxises[0].boundaryGap = true;
         timeMagnitudeLineChart.RemoveData();
-        timeMagnitudeLineChart.AddSerie(SerieType.Line, "Magnitude");
-
+        timeMagnitudeLineChart.AddSerie(SerieType.Line, "Magnitude").sampleDist = 1;
+    
         for (int index = 0; index < xFrquencies.Count; ++index)
         {
             timeMagnitudeLineChart.AddXAxisData(xFrquencies[index].ToString());
@@ -124,7 +124,7 @@ public class ChartDrawer
         timePhaseLineChart.xAxises[0].splitNumber = 10;
         timePhaseLineChart.xAxises[0].boundaryGap = true;
         timePhaseLineChart.RemoveData();
-        timePhaseLineChart.AddSerie(SerieType.Line, "Phase");
+        timePhaseLineChart.AddSerie(SerieType.Line, "Phase").sampleDist = 1;
 
         for (int index = 0; index < xFrquencies.Count; ++index)
         {

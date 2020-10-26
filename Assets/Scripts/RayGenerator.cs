@@ -21,7 +21,7 @@ public class RayGenerator : MonoBehaviour
     private int previousChartForMicrophone;
     private double previousCharFrequencie;
     private readonly int maxDistance = 200;
-    private int numberOfReflections = 6;
+    private int numberOfReflections = 8;
     private Dictionary<double, Echogram> echograms;
     private Dictionary<int, List<Complex>> frequencyReponse;
     private List<double> frequencies;
@@ -283,7 +283,7 @@ public class RayGenerator : MonoBehaviour
         }
 
         //using (System.IO.StreamWriter file =
-        //   new System.IO.StreamWriter("frecvReIm.txt", false))
+        //   new System.IO.StreamWriter("frecvReIm8Fr.txt", false))
         //{
         //    //for (int indexFrequencie = 0; indexFrequencie < frequencies.Count; ++indexFrequencie)
         //    for (int index = 0; index < frequencyReponse[microphones[0].Id].Count; ++index)
