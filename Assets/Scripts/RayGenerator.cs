@@ -42,7 +42,7 @@ public class RayGenerator : MonoBehaviour
     private void Start()
     {
         audioSource = GetComponent<AudioSource>();
-        
+
         CreateMicrophones();
         CreateRays();
         CreateIntersectedRaysWithMicrophones();
@@ -180,11 +180,13 @@ public class RayGenerator : MonoBehaviour
 
     private void DrawMicrophones()
     {
-        for (int index = 0; index < microphones.Count; ++index)
+        foreach (var microphone in microphones)
         {
             GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            sphere.transform.position = VectorConverter.Convert(microphones[0].Center);
-            sphere.transform.localScale = new UnityEngine.Vector3(microphones[0].Radius, microphones[0].Radius, microphones[0].Radius);
+            sphere.transform.position = VectorConverter.Convert(microphone.Center);
+            sphere.transform.localScale = new UnityEngine.Vector3(microphone.Radius,
+                microphone.Radius,
+                microphone.Radius);
         }
     }
 
@@ -202,10 +204,10 @@ public class RayGenerator : MonoBehaviour
         Debug.Log(frequencies.Count);
 
         echograms = new Dictionary<double, Echogram>();
-        for (int index = 0; index < frequencies.Count; ++index)
+        foreach (double frequency in frequencies)
         {
             PhaseCalculator phaseCalculator = new PhaseCalculator(rays, microphones, intensities);
-            echograms[frequencies[index]] = phaseCalculator.ComputePhase(frequencies[index]);
+            echograms[frequency] = phaseCalculator.ComputePhase(frequency);
         }
     }
 
@@ -271,8 +273,10 @@ public class RayGenerator : MonoBehaviour
         string file = indexMicrophone.ToString() + "M.txt";
         Tuple<List<float>, List<float>> magnitudeAndPhse = FileReader.ReadFromFile(file);
         List<float> freq = new List<float>();
-        for (int index = 0; index < frequencies.Count; ++index)
-            freq.Add((float)frequencies[index]);
+
+        foreach (double frequency in frequencies)
+            freq.Add((float)frequency);
+
         chartDrawer = new ChartDrawer(ChartArea);
         chartDrawer.DrawFrequencieChart(freq, magnitudeAndPhse.Item1, magnitudeAndPhse.Item2);
     }
@@ -323,42 +327,50 @@ public class RayGenerator : MonoBehaviour
 
     private void ConvolveSound()
     {
-        DiscreteSignal attention;
-
-        // load
-        using (var stream = new FileStream(audioSource.clip.name + ".wav", FileMode.Open))
+        for (int indexMicro = 0; indexMicro < microphones.Count; ++indexMicro)
         {
-            var waveFile = new WaveFile(stream);
-            attention = waveFile[Channels.Left];
-        }
+            DiscreteSignal attention;
 
-        Debug.Log(frequencyReponse[0].Count);
-        NWaves.Transforms.RealFft value = new NWaves.Transforms.RealFft(frequencyReponse[0].Count);
+            // load
+            using (var stream = new FileStream(audioSource.clip.name + ".wav", FileMode.Open))
+            {
+                var waveFile = new WaveFile(stream);
+                attention = waveFile[Channels.Left];
+            }
 
-        List<float> re = new List<float>();
-        List<float> im = new List<float>();
+            Debug.Log(frequencyReponse[microphones[indexMicro].Id].Count);
+            NWaves.Transforms.RealFft value = new NWaves.Transforms.RealFft(frequencyReponse[0].Count);
 
-        for(int index=0;index<frequencyReponse[0].Count;++index)
-        {
-            re.Add((float)frequencyReponse[0][index].Real);
-            im.Add((float)frequencyReponse[0][index].Imaginary);
-        }
+            List<float> re = new List<float>();
+            List<float> im = new List<float>();
 
-        float[] outputArray = new float[re.Count];
-        value.Inverse(re.ToArray(), im.ToArray(), outputArray);
-        float maxi = outputArray.Max();
-        for (int index = 0; index < outputArray.Length; ++index)
-            outputArray[index] /= maxi;
+            foreach (Complex response in frequencyReponse[0])
+            {
+                re.Add((float)response.Real);
+                im.Add((float)response.Imaginary);
+            }
 
-        Debug.Log(outputArray[0]);
-        DiscreteSignal impulseRespone = new DiscreteSignal(22050, outputArray);
-        DiscreteSignal convolutionResult = Operation.Convolve(attention, impulseRespone);
+            float[] outputArray = new float[re.Count];
+            value.Inverse(re.ToArray(), im.ToArray(), outputArray);
+            float maxi = outputArray.Max();
 
-        // save
-        using (var stream = new FileStream("convolutionAttention.wav", FileMode.Create))
-        {
-            var waveFile = new WaveFile(convolutionResult);
-            waveFile.SaveTo(stream);
+            for (int index = 0; index < outputArray.Length; ++index)
+                outputArray[index] /= maxi;
+
+            for (int index = 0; index < outputArray.Length; ++index)
+                outputArray[index] *= 0.5f;
+
+            DiscreteSignal impulseRespone = new DiscreteSignal(22050, outputArray);
+            DiscreteSignal convolutionResult = Operation.Convolve(attention, impulseRespone);
+
+            // save
+            using (var stream = new FileStream("results/convolutionAttention" +
+                microphones[indexMicro].Id.ToString() +
+                ".wav", FileMode.Create))
+            {
+                var waveFile = new WaveFile(convolutionResult);
+                waveFile.SaveTo(stream);
+            }
         }
     }
 }
