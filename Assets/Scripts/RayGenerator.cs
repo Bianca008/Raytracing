@@ -42,7 +42,7 @@ public class RayGenerator : MonoBehaviour
     private void Start()
     {
         audioSource = GetComponent<AudioSource>();
-
+        
         CreateMicrophones();
         CreateRays();
         CreateIntersectedRaysWithMicrophones();
@@ -196,8 +196,10 @@ public class RayGenerator : MonoBehaviour
         Dictionary<int, List<double>> intensities = intensityCalculator.Intensities;
 
         frequencies = new List<double>();
-        for (double index = 0; index <= 22052; index += 22050.0 / 8192.0)
+        for (double index = 0; index < 22050; index += 22050.0 / 8192.0)
             frequencies.Add(index);
+
+        Debug.Log(frequencies.Count);
 
         echograms = new Dictionary<double, Echogram>();
         for (int index = 0; index < frequencies.Count; ++index)
@@ -324,18 +326,36 @@ public class RayGenerator : MonoBehaviour
         DiscreteSignal attention;
 
         // load
-        using (var stream = new FileStream(audioSource.name, FileMode.Open))
+        using (var stream = new FileStream(audioSource.clip.name + ".wav", FileMode.Open))
         {
             var waveFile = new WaveFile(stream);
             attention = waveFile[Channels.Left];
         }
-      
-        //Transforms
-        DiscreteSignal impulseResponse = new DiscreteSignal();
+
+        Debug.Log(frequencyReponse[0].Count);
+        NWaves.Transforms.RealFft value = new NWaves.Transforms.RealFft(frequencyReponse[0].Count);
+
+        List<float> re = new List<float>();
+        List<float> im = new List<float>();
+
+        for(int index=0;index<frequencyReponse[0].Count;++index)
+        {
+            re.Add((float)frequencyReponse[0][index].Real);
+            im.Add((float)frequencyReponse[0][index].Imaginary);
+        }
+
+        float[] outputArray = new float[re.Count];
+        value.Inverse(re.ToArray(), im.ToArray(), outputArray);
+        float maxi = outputArray.Max();
+        for (int index = 0; index < outputArray.Length; ++index)
+            outputArray[index] /= maxi;
+
+        Debug.Log(outputArray[0]);
+        DiscreteSignal impulseRespone = new DiscreteSignal(22050, outputArray);
         DiscreteSignal convolutionResult = Operation.Convolve(attention, impulseRespone);
 
         // save
-        using (var stream = new FileStream("convolutionAttentionOverlap.wav", FileMode.Create))
+        using (var stream = new FileStream("convolutionAttention.wav", FileMode.Create))
         {
             var waveFile = new WaveFile(convolutionResult);
             waveFile.SaveTo(stream);
