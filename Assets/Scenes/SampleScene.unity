@@ -14488,7 +14488,10 @@ MonoBehaviour:
   IntersectedRays: 0
   IntersectedRaysWithDuplicate: 0
   LineMaterial: {fileID: 2100000, guid: 4f0845e0f49fd5d4eb24120d85a89ce5, type: 2}
-  ChartArea: {fileID: 1340231589}
+  MenuCanvas: {fileID: 1340231589}
+  ShowButton: {fileID: 1384628419}
+  numberOfMicrophoneInputField: {fileID: 48302939}
+  frequencyInputField: {fileID: 1287211177}
 --- !u!135 &793960838
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -21736,8 +21739,8 @@ MonoBehaviour:
   m_ChartList:
   - {fileID: 1529742214}
   - {fileID: 1541761756}
-  - {fileID: 463302348}
   - {fileID: 2031959918}
+  - {fileID: 463302348}
 --- !u!4 &1204844439
 Transform:
   m_ObjectHideFlags: 0

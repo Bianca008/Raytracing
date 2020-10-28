@@ -23,6 +23,8 @@ public class RayGenerator : MonoBehaviour
     public Material LineMaterial;
     public GameObject MenuCanvas;
     public Button ShowButton;
+    public InputField numberOfMicrophoneInputField;
+    public InputField frequencyInputField;
 
     private int previousChartForMicrophone;
     private double previousCharFrequencie;
@@ -85,13 +87,13 @@ public class RayGenerator : MonoBehaviour
         //else
         //    Debug.Log("The chart you want to see does not exists.");
 
-        if (previousChartForMicrophone != NumberOfMicrophone &&
-            NumberOfMicrophone >= 1 &&
-            NumberOfMicrophone <= microphones.Count)
-        {
-            DrawChartFrequency(NumberOfMicrophone);
-            previousChartForMicrophone = NumberOfMicrophone;
-        }
+        //if (previousChartForMicrophone != NumberOfMicrophone &&
+        //    NumberOfMicrophone >= 1 &&
+        //    NumberOfMicrophone <= microphones.Count)
+        //{
+        //    DrawChartFrequency(NumberOfMicrophone);
+        //    previousChartForMicrophone = NumberOfMicrophone;
+        //}
 
         if (Input.GetKey("i"))
             chartDrawer.Enable = false;
@@ -384,6 +386,24 @@ public class RayGenerator : MonoBehaviour
 
     void TaskOnClick()
     {
-        Debug.Log("You have clicked the button!");
+        string numberOfMicrophoneStr = numberOfMicrophoneInputField.text;
+        int numberOfMicrophone = 0;
+
+        if (numberOfMicrophoneStr.All(char.IsDigit) == true)
+            numberOfMicrophone = Int32.Parse(numberOfMicrophoneStr) - 1;
+
+        bool okToDraw = false;
+        foreach (MicrophoneSphere micro in microphones)
+        {
+            Debug.Log(micro.Id);
+            if (micro.Id == numberOfMicrophone)
+                okToDraw = true;
+        }
+
+        if (okToDraw == true)
+        {
+            DrawChartFrequency(numberOfMicrophone);
+            Debug.Log("You have clicked the button!");
+        }
     }
 }
