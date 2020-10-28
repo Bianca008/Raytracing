@@ -776,7 +776,7 @@ RectTransform:
   - {fileID: 1685384513}
   - {fileID: 514266017}
   m_Father: {fileID: 1306366038}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1728,7 +1728,7 @@ RectTransform:
   m_LocalScale: {x: 2, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1306366038}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -14483,7 +14483,6 @@ MonoBehaviour:
   NumberOfRay: 1
   InitialPower: 1
   NumberOfMicrophone: 1
-  Frequencie: 1000
   NumberOfRays: 63000
   IntersectedRays: 0
   IntersectedRaysWithDuplicate: 0
@@ -22931,8 +22930,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.3, y: 1, z: 1}
   m_Children:
-  - {fileID: 48302938}
   - {fileID: 84012647}
+  - {fileID: 48302938}
   - {fileID: 2139639050}
   - {fileID: 1287211176}
   - {fileID: 1384628418}
@@ -22957,7 +22956,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.9245283, g: 0.24147059, b: 0.22241008, a: 0.392}
+  m_Color: {r: 0.7490196, g: 0.19215687, b: 0, a: 0.392}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -31260,7 +31259,7 @@ RectTransform:
   m_GameObject: {fileID: 1657291831}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 1, z: 1}
+  m_LocalScale: {x: 3, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1384628418}
   m_RootOrder: 0

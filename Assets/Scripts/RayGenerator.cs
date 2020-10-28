@@ -16,7 +16,6 @@ public class RayGenerator : MonoBehaviour
     public int NumberOfRay;
     public float InitialPower = 1;
     public int NumberOfMicrophone;
-    public int Frequencie;
     public int NumberOfRays = 1000;
     public int IntersectedRays;
     public int IntersectedRaysWithDuplicate;
@@ -26,22 +25,19 @@ public class RayGenerator : MonoBehaviour
     public InputField numberOfMicrophoneInputField;
     public InputField frequencyInputField;
 
-    private int previousChartForMicrophone;
-    private double previousCharFrequencie;
     private readonly int maxDistance = 200;
     private int numberOfReflections = 8;
     private Dictionary<double, Echogram> echograms;
     private Dictionary<int, List<Complex>> frequencyReponse;
     private List<double> frequencies;
     private Dictionary<int, List<AcousticRay>> rays;
-    private LineRenderer[] lines;
     private LineRenderer[] intersectedLines;
     private RayGeometry rayGeometryGenerator;
-    private RaysDrawer rayDrawer;
     private RaysDrawer intersectedRayDrawer;
     private List<MicrophoneSphere> microphones;
     private ChartDrawer chartDrawer;
     private AudioSource audioSource;
+    private ButtonHandler buttonHandler;
 
     private void Start()
     {
@@ -74,31 +70,10 @@ public class RayGenerator : MonoBehaviour
         else
             Debug.Log("The number of ray or the number of microphone does not exist...");
 
-        //if ((previousChartForMicrophone != NumberOfMicrophone ||
-        //    previousCharFrequencie != Frequencie) &&
-        //    NumberOfMicrophone >= 1 &&
-        //    NumberOfMicrophone <= microphones.Count &&
-        //    frequencies.Contains(Frequencie) == true)
-        //{
-        //    DrawChart(NumberOfMicrophone, Frequencie);
-        //    previousChartForMicrophone = NumberOfMicrophone;
-        //    previousCharFrequencie = Frequencie;
-        //}
-        //else
-        //    Debug.Log("The chart you want to see does not exists.");
-
-        //if (previousChartForMicrophone != NumberOfMicrophone &&
-        //    NumberOfMicrophone >= 1 &&
-        //    NumberOfMicrophone <= microphones.Count)
-        //{
-        //    DrawChartFrequency(NumberOfMicrophone);
-        //    previousChartForMicrophone = NumberOfMicrophone;
-        //}
-
         if (Input.GetKey("i"))
-            chartDrawer.Enable = false;
+            MenuCanvas.SetActive(false);
         if (Input.GetKey("o"))
-            chartDrawer.Enable = true;
+            MenuCanvas.SetActive(true);
     }
 
     private void CreateRays()
@@ -273,19 +248,6 @@ public class RayGenerator : MonoBehaviour
         chartDrawer.Draw(timeMagnitude.Item1, timeMagnitude.Item2, timePhase.Item2);
     }
 
-    private void DrawChartFrequency(int indexMicrophone)
-    {
-        string file = indexMicrophone.ToString() + "M.txt";
-        Tuple<List<float>, List<float>> magnitudeAndPhse = FileReader.ReadFromFile(file);
-        List<float> freq = new List<float>();
-
-        foreach (double frequency in frequencies)
-            freq.Add((float)frequency);
-
-        chartDrawer = new ChartDrawer(MenuCanvas);
-        chartDrawer.DrawFrequencieChart(freq, magnitudeAndPhse.Item1, magnitudeAndPhse.Item2);
-    }
-
     private void ComputeFrequencyReponse()
     {
         frequencyReponse = new Dictionary<int, List<Complex>>();
@@ -301,18 +263,6 @@ public class RayGenerator : MonoBehaviour
             }
             frequencyReponse[microphones[indexMicro].Id] = values;
         }
-
-        //using (System.IO.StreamWriter file =
-        //   new System.IO.StreamWriter("frecvReIm8Fr.txt", false))
-        //{
-        //    //for (int indexFrequencie = 0; indexFrequencie < frequencies.Count; ++indexFrequencie)
-        //    for (int index = 0; index < frequencyReponse[microphones[0].Id].Count; ++index)
-        //    {
-        //        file.WriteLine(frequencies[index] + " " +
-        //            frequencyReponse[microphones[0].Id][index].Real + " " +
-        //            frequencyReponse[microphones[0].Id][index].Imaginary + " ");
-        //    }
-        //}
     }
 
     private void WriteFrquencies()
@@ -381,29 +331,11 @@ public class RayGenerator : MonoBehaviour
 
     private void AddListeneForShowButton()
     {
-        ShowButton.onClick.AddListener(TaskOnClick);
-    }
+        buttonHandler = new ButtonHandler(numberOfMicrophoneInputField, ShowButton);
 
-    void TaskOnClick()
-    {
-        string numberOfMicrophoneStr = numberOfMicrophoneInputField.text;
-        int numberOfMicrophone = 0;
-
-        if (numberOfMicrophoneStr.All(char.IsDigit) == true)
-            numberOfMicrophone = Int32.Parse(numberOfMicrophoneStr) - 1;
-
-        bool okToDraw = false;
-        foreach (MicrophoneSphere micro in microphones)
-        {
-            Debug.Log(micro.Id);
-            if (micro.Id == numberOfMicrophone)
-                okToDraw = true;
-        }
-
-        if (okToDraw == true)
-        {
-            DrawChartFrequency(numberOfMicrophone);
-            Debug.Log("You have clicked the button!");
-        }
+        ShowButton.onClick.AddListener(() => { buttonHandler.TaskOnClick(MenuCanvas,
+            chartDrawer,
+            frequencies,
+            microphones); });
     }
 }
