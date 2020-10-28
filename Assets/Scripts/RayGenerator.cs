@@ -191,63 +191,6 @@ public class RayGenerator : MonoBehaviour
         }
     }
 
-    private void WriteToFileTimePressure()
-    {
-        DistanceCalculator distanceCalculator = new DistanceCalculator(rays, microphones);
-        distanceCalculator.ComputeDistances();
-
-        Dictionary<int, List<float>> times = TimeCalculator.GetTime(rays, microphones);
-
-        for (int indexFrequencie = 0; indexFrequencie < frequencies.Count; ++indexFrequencie)
-            for (int indexMicro = 0; indexMicro < microphones.Count; ++indexMicro)
-            {
-                List<float> xTime = times[microphones[indexMicro].Id];
-                List<float> yMagnitude = new List<float>();
-                List<float> yPhase = new List<float>();
-                List<Complex> microphoneIntensities = echograms[frequencies[indexFrequencie]][microphones[indexMicro].Id];
-                for (int index = 0; index < microphoneIntensities.Count; ++index)
-                {
-                    yPhase.Add((float)(microphoneIntensities[index].Phase * 180 / Math.PI));
-                    yMagnitude.Add((float)microphoneIntensities[index].Magnitude);
-                }
-
-                WriteToFile(xTime, yMagnitude, "timeMagnitude" +
-                    (microphones[indexMicro].Id + 1).ToString() + "M" + frequencies[indexFrequencie].ToString() + "Hz.txt");
-
-                WriteToFile(xTime, yPhase, "timePhase" +
-                   (microphones[indexMicro].Id + 1).ToString() + "M" + frequencies[indexFrequencie].ToString() + "Hz.txt");
-            }
-    }
-
-    private void WriteToFile(List<float> x, List<float> y, string fileName)
-    {
-        using (System.IO.StreamWriter file =
-            new System.IO.StreamWriter(fileName, false))
-        {
-            for (int index = 0; index < x.Count; ++index)
-                file.WriteLine(x[index] + " " + y[index]);
-        }
-    }
-
-    private void DrawChart(int indexMicrophone, double indexFrequencie)
-    {
-        string timeMagnitudeFile = "timeMagnitude" +
-                (indexMicrophone).ToString() + "M" +
-                indexFrequencie.ToString() + "Hz.txt";
-        string timePhaseFile = "timePhase" +
-                (indexMicrophone).ToString() + "M" +
-                indexFrequencie.ToString() + "Hz.txt";
-
-        Tuple<List<float>, List<float>> timePhase = FileReader.ReadFromFile(timePhaseFile);
-        Tuple<List<float>, List<float>> timeMagnitude = FileReader.ReadFromFile(timeMagnitudeFile);
-
-        for (int index = 0; index < timeMagnitude.Item1.Count; ++index)
-            timeMagnitude.Item1[index] = (float)Math.Round(timeMagnitude.Item1[index] * 1000, 2);
-
-        chartDrawer = new ChartDrawer(MenuCanvas);
-        chartDrawer.Draw(timeMagnitude.Item1, timeMagnitude.Item2, timePhase.Item2);
-    }
-
     private void ComputeFrequencyReponse()
     {
         frequencyReponse = new Dictionary<int, List<Complex>>();
@@ -276,7 +219,7 @@ public class RayGenerator : MonoBehaviour
                 x.Add((float)frequencyReponse[microphones[indexMicro].Id][index].Magnitude);
                 y.Add((float)frequencyReponse[microphones[indexMicro].Id][index].Phase);
             }
-            WriteToFile(x, y, microphones[indexMicro].Id.ToString() + "M.txt");
+            FileHandler.WriteToFile(x, y, microphones[indexMicro].Id.ToString() + "M.txt");
         }
     }
 
@@ -331,11 +274,60 @@ public class RayGenerator : MonoBehaviour
 
     private void AddListeneForShowButton()
     {
-        buttonHandler = new ButtonHandler(numberOfMicrophoneInputField, ShowButton);
+        ButtonHandler buttonHandler = new ButtonHandler();
 
-        ShowButton.onClick.AddListener(() => { buttonHandler.TaskOnClick(MenuCanvas,
-            chartDrawer,
-            frequencies,
-            microphones); });
+        ShowButton.onClick.AddListener(() => {
+            buttonHandler.TaskOnClick(numberOfMicrophoneInputField,
+                                      MenuCanvas,
+                                      chartDrawer,
+                                      frequencies,
+                                      microphones); });
+    }
+
+    private void WriteToFileTimePressure()
+    {
+        DistanceCalculator distanceCalculator = new DistanceCalculator(rays, microphones);
+        distanceCalculator.ComputeDistances();
+
+        Dictionary<int, List<float>> times = TimeCalculator.GetTime(rays, microphones);
+
+        for (int indexFrequencie = 0; indexFrequencie < frequencies.Count; ++indexFrequencie)
+            for (int indexMicro = 0; indexMicro < microphones.Count; ++indexMicro)
+            {
+                List<float> xTime = times[microphones[indexMicro].Id];
+                List<float> yMagnitude = new List<float>();
+                List<float> yPhase = new List<float>();
+                List<Complex> microphoneIntensities = echograms[frequencies[indexFrequencie]][microphones[indexMicro].Id];
+                for (int index = 0; index < microphoneIntensities.Count; ++index)
+                {
+                    yPhase.Add((float)(microphoneIntensities[index].Phase * 180 / Math.PI));
+                    yMagnitude.Add((float)microphoneIntensities[index].Magnitude);
+                }
+
+                FileHandler.WriteToFile(xTime, yMagnitude, "timeMagnitude" +
+                    (microphones[indexMicro].Id + 1).ToString() + "M" + frequencies[indexFrequencie].ToString() + "Hz.txt");
+
+                FileHandler.WriteToFile(xTime, yPhase, "timePhase" +
+                   (microphones[indexMicro].Id + 1).ToString() + "M" + frequencies[indexFrequencie].ToString() + "Hz.txt");
+            }
+    }
+
+    private void DrawChart(int indexMicrophone, double indexFrequencie)
+    {
+        string timeMagnitudeFile = "timeMagnitude" +
+                (indexMicrophone).ToString() + "M" +
+                indexFrequencie.ToString() + "Hz.txt";
+        string timePhaseFile = "timePhase" +
+                (indexMicrophone).ToString() + "M" +
+                indexFrequencie.ToString() + "Hz.txt";
+
+        Tuple<List<float>, List<float>> timePhase = FileHandler.ReadFromFile(timePhaseFile);
+        Tuple<List<float>, List<float>> timeMagnitude = FileHandler.ReadFromFile(timeMagnitudeFile);
+
+        for (int index = 0; index < timeMagnitude.Item1.Count; ++index)
+            timeMagnitude.Item1[index] = (float)Math.Round(timeMagnitude.Item1[index] * 1000, 2);
+
+        chartDrawer = new ChartDrawer(MenuCanvas);
+        chartDrawer.Draw(timeMagnitude.Item1, timeMagnitude.Item2, timePhase.Item2);
     }
 }
