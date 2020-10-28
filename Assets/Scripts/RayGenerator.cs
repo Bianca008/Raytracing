@@ -9,6 +9,7 @@ using Echogram = System.Collections.Generic.Dictionary<int, System.Collections.G
 using System.IO;
 using NWaves.Audio;
 using NWaves.Operations;
+using UnityEngine.UI;
 
 public class RayGenerator : MonoBehaviour
 {
@@ -20,7 +21,8 @@ public class RayGenerator : MonoBehaviour
     public int IntersectedRays;
     public int IntersectedRaysWithDuplicate;
     public Material LineMaterial;
-    public GameObject ChartArea;
+    public GameObject MenuCanvas;
+    public Button ShowButton;
 
     private int previousChartForMicrophone;
     private double previousCharFrequencie;
@@ -41,6 +43,7 @@ public class RayGenerator : MonoBehaviour
 
     private void Start()
     {
+        AddListeneForShowButton();
         audioSource = GetComponent<AudioSource>();
 
         CreateMicrophones();
@@ -264,7 +267,7 @@ public class RayGenerator : MonoBehaviour
         for (int index = 0; index < timeMagnitude.Item1.Count; ++index)
             timeMagnitude.Item1[index] = (float)Math.Round(timeMagnitude.Item1[index] * 1000, 2);
 
-        chartDrawer = new ChartDrawer(ChartArea);
+        chartDrawer = new ChartDrawer(MenuCanvas);
         chartDrawer.Draw(timeMagnitude.Item1, timeMagnitude.Item2, timePhase.Item2);
     }
 
@@ -277,7 +280,7 @@ public class RayGenerator : MonoBehaviour
         foreach (double frequency in frequencies)
             freq.Add((float)frequency);
 
-        chartDrawer = new ChartDrawer(ChartArea);
+        chartDrawer = new ChartDrawer(MenuCanvas);
         chartDrawer.DrawFrequencieChart(freq, magnitudeAndPhse.Item1, magnitudeAndPhse.Item2);
     }
 
@@ -372,5 +375,15 @@ public class RayGenerator : MonoBehaviour
                 waveFile.SaveTo(stream);
             }
         }
+    }
+
+    private void AddListeneForShowButton()
+    {
+        ShowButton.onClick.AddListener(TaskOnClick);
+    }
+
+    void TaskOnClick()
+    {
+        Debug.Log("You have clicked the button!");
     }
 }
