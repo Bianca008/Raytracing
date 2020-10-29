@@ -13047,7 +13047,7 @@ GameObject:
   - component: {fileID: 670695296}
   - component: {fileID: 670695295}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: ChartPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14333,6 +14333,7 @@ MonoBehaviour:
   LineMaterial: {fileID: 2100000, guid: 4f0845e0f49fd5d4eb24120d85a89ce5, type: 2}
   MenuCanvas: {fileID: 1340231589}
   ShowButton: {fileID: 1384628419}
+  ShowFrequencyEchogramButton: {fileID: 1595443307}
   numberOfMicrophoneInputField: {fileID: 48302939}
   frequencyInputField: {fileID: 0}
 --- !u!135 &793960838
@@ -22617,7 +22618,7 @@ GameObject:
   - component: {fileID: 1306366040}
   - component: {fileID: 1306366039}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: InputPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -33137,7 +33138,7 @@ GameObject:
   - component: {fileID: 1897806809}
   - component: {fileID: 1897806808}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: ButtonsAndPlotPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

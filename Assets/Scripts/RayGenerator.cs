@@ -18,6 +18,7 @@ public class RayGenerator : MonoBehaviour
     public Material LineMaterial;
     public GameObject MenuCanvas;
     public Button ShowButton;
+    public Button ShowFrequencyEchogramButton;
     public InputField numberOfMicrophoneInputField;
     public InputField frequencyInputField;
 
@@ -36,7 +37,6 @@ public class RayGenerator : MonoBehaviour
 
     private void Start()
     {
-        AddListeneForShowButton();
         audioSource = GetComponent<AudioSource>();
 
         CreateMicrophones();
@@ -52,6 +52,7 @@ public class RayGenerator : MonoBehaviour
         FileHandler.WriteFrquencies(frequencyReponse, microphones);
 
         SoundConvolver.ConvolveSound(audioSource, frequencyReponse, microphones);
+        InitializeUi();
     }
 
     private void Update()
@@ -215,6 +216,34 @@ public class RayGenerator : MonoBehaviour
                                       frequencies,
                                       microphones);
         });
+    }
+
+    private void AddListeneForShowFrequencyEchogram()
+    {
+        ButtonHandler buttonHandler = new ButtonHandler();
+
+        ShowFrequencyEchogramButton.onClick.AddListener(SetActiveFrequncyEchogramUi);
+    }
+
+    private void InitializeUi()
+    {
+        GameObject inputPanel = GameObject.Find("InputPanel");
+        inputPanel.SetActive(false);
+        GameObject chartPanel = GameObject.Find("ChartPanel");
+        chartPanel.SetActive(false);
+
+        AddListeneForShowFrequencyEchogram();
+        AddListeneForShowButton();
+    }
+
+    private void SetActiveFrequncyEchogramUi()
+    {
+        GameObject inputPanel = MenuCanvas.transform.Find("InputPanel").gameObject;
+        Debug.Log(inputPanel);
+        inputPanel.SetActive(true);
+        GameObject buttonsAndPlotPanel= MenuCanvas.transform.Find("ButtonsAndPlotPanel").gameObject;
+        GameObject chartPanel = buttonsAndPlotPanel.transform.Find("ChartPanel").gameObject;
+        chartPanel.SetActive(true);
     }
 
     private void DrawChart(int indexMicrophone, double indexFrequencie)
