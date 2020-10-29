@@ -23,7 +23,7 @@ public class ButtonHandler
         chartDrawer.DrawFrequencieChart(freq, magnitudeAndPhse.Item1, magnitudeAndPhse.Item2);
     }
 
-    public void TaskOnClick(
+    public void ShowFrequencyChart(
         InputField microphoneField,
         GameObject menuCanvas,
         ChartDrawer chartDrawer,

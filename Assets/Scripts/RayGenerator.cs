@@ -3,12 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using UnityEngine;
-using NWaves.Signals;
 
 using Echogram = System.Collections.Generic.Dictionary<int, System.Collections.Generic.List<System.Numerics.Complex>>;
-using System.IO;
-using NWaves.Audio;
-using NWaves.Operations;
 using UnityEngine.UI;
 
 public class RayGenerator : MonoBehaviour
@@ -37,7 +33,6 @@ public class RayGenerator : MonoBehaviour
     private List<MicrophoneSphere> microphones;
     private ChartDrawer chartDrawer;
     private AudioSource audioSource;
-    private ButtonHandler buttonHandler;
 
     private void Start()
     {
@@ -54,9 +49,9 @@ public class RayGenerator : MonoBehaviour
         IntersectedRays = rays[NumberOfMicrophone - 1].Count;
 
         ComputeFrequencyReponse();
-        WriteFrquencies();
+        FileHandler.WriteFrquencies(frequencyReponse, microphones);
 
-        ConvolveSound();
+        SoundConvolver.ConvolveSound(audioSource, frequencyReponse, microphones);
     }
 
     private void Update()
@@ -208,116 +203,26 @@ public class RayGenerator : MonoBehaviour
         }
     }
 
-    private void WriteFrquencies()
-    {
-        for (int indexMicro = 0; indexMicro < frequencyReponse.Count; ++indexMicro)
-        {
-            List<float> x = new List<float>();
-            List<float> y = new List<float>();
-            for (int index = 0; index < frequencyReponse[microphones[indexMicro].Id].Count; ++index)
-            {
-                x.Add((float)frequencyReponse[microphones[indexMicro].Id][index].Magnitude);
-                y.Add((float)frequencyReponse[microphones[indexMicro].Id][index].Phase);
-            }
-            FileHandler.WriteToFile(x, y, microphones[indexMicro].Id.ToString() + "M.txt");
-        }
-    }
-
-    private void ConvolveSound()
-    {
-        for (int indexMicro = 0; indexMicro < microphones.Count; ++indexMicro)
-        {
-            DiscreteSignal attention;
-
-            // load
-            using (var stream = new FileStream(audioSource.clip.name + ".wav", FileMode.Open))
-            {
-                var waveFile = new WaveFile(stream);
-                attention = waveFile[Channels.Left];
-            }
-
-            Debug.Log(frequencyReponse[microphones[indexMicro].Id].Count);
-            NWaves.Transforms.RealFft value = new NWaves.Transforms.RealFft(frequencyReponse[0].Count);
-
-            List<float> re = new List<float>();
-            List<float> im = new List<float>();
-
-            foreach (Complex response in frequencyReponse[0])
-            {
-                re.Add((float)response.Real);
-                im.Add((float)response.Imaginary);
-            }
-
-            float[] outputArray = new float[re.Count];
-            value.Inverse(re.ToArray(), im.ToArray(), outputArray);
-            float maxi = outputArray.Max();
-
-            for (int index = 0; index < outputArray.Length; ++index)
-                outputArray[index] /= maxi;
-
-            for (int index = 0; index < outputArray.Length; ++index)
-                outputArray[index] *= 0.5f;
-
-            DiscreteSignal impulseRespone = new DiscreteSignal(22050, outputArray);
-            DiscreteSignal convolutionResult = Operation.Convolve(attention, impulseRespone);
-
-            // save
-            using (var stream = new FileStream("results/convolutionAttention" +
-                microphones[indexMicro].Id.ToString() +
-                ".wav", FileMode.Create))
-            {
-                var waveFile = new WaveFile(convolutionResult);
-                waveFile.SaveTo(stream);
-            }
-        }
-    }
-
     private void AddListeneForShowButton()
     {
         ButtonHandler buttonHandler = new ButtonHandler();
 
-        ShowButton.onClick.AddListener(() => {
-            buttonHandler.TaskOnClick(numberOfMicrophoneInputField,
+        ShowButton.onClick.AddListener(() =>
+        {
+            buttonHandler.ShowFrequencyChart(numberOfMicrophoneInputField,
                                       MenuCanvas,
                                       chartDrawer,
                                       frequencies,
-                                      microphones); });
-    }
-
-    private void WriteToFileTimePressure()
-    {
-        DistanceCalculator distanceCalculator = new DistanceCalculator(rays, microphones);
-        distanceCalculator.ComputeDistances();
-
-        Dictionary<int, List<float>> times = TimeCalculator.GetTime(rays, microphones);
-
-        for (int indexFrequencie = 0; indexFrequencie < frequencies.Count; ++indexFrequencie)
-            for (int indexMicro = 0; indexMicro < microphones.Count; ++indexMicro)
-            {
-                List<float> xTime = times[microphones[indexMicro].Id];
-                List<float> yMagnitude = new List<float>();
-                List<float> yPhase = new List<float>();
-                List<Complex> microphoneIntensities = echograms[frequencies[indexFrequencie]][microphones[indexMicro].Id];
-                for (int index = 0; index < microphoneIntensities.Count; ++index)
-                {
-                    yPhase.Add((float)(microphoneIntensities[index].Phase * 180 / Math.PI));
-                    yMagnitude.Add((float)microphoneIntensities[index].Magnitude);
-                }
-
-                FileHandler.WriteToFile(xTime, yMagnitude, "timeMagnitude" +
-                    (microphones[indexMicro].Id + 1).ToString() + "M" + frequencies[indexFrequencie].ToString() + "Hz.txt");
-
-                FileHandler.WriteToFile(xTime, yPhase, "timePhase" +
-                   (microphones[indexMicro].Id + 1).ToString() + "M" + frequencies[indexFrequencie].ToString() + "Hz.txt");
-            }
+                                      microphones);
+        });
     }
 
     private void DrawChart(int indexMicrophone, double indexFrequencie)
     {
-        string timeMagnitudeFile = "timeMagnitude" +
+        string timeMagnitudeFile = "results/timeMagnitude" +
                 (indexMicrophone).ToString() + "M" +
                 indexFrequencie.ToString() + "Hz.txt";
-        string timePhaseFile = "timePhase" +
+        string timePhaseFile = "results/timePhase" +
                 (indexMicrophone).ToString() + "M" +
                 indexFrequencie.ToString() + "Hz.txt";
 
