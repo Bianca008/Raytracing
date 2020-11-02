@@ -4,132 +4,142 @@ using XCharts;
 
 public class ChartDrawer
 {
-    public GameObject ChartArea
+    public GameObject chartArea
     {
         get;
         set;
     }
 
-    public bool Enable
+    public bool enable
     {
-        get => timeMagnitudeChart.enabled;
-        set => timeMagnitudeChart.enabled = value;
+        get => m_TimeMagnitudeChart.enabled;
+        set => m_TimeMagnitudeChart.enabled = value;
     }
 
-    private BarChart timePhaseChart;
-    private BarChart timeMagnitudeChart;
+    private BarChart m_TimePhaseChart;
+    private BarChart m_TimeMagnitudeChart;
 
-    private LineChart timePhaseLineChart;
-    private LineChart timeMagnitudeLineChart;
+    private LineChart m_TimePhaseLineChart;
+    private LineChart m_TimeMagnitudeLineChart;
 
     public ChartDrawer(GameObject canvas)
     {
-        ChartArea = canvas;
+        chartArea = canvas;
     }
 
     public void Draw(List<float> xTime, List<float> yMagnitude, List<float> yPhase)
     {
-        foreach(BarChart barChart in ChartArea.GetComponentsInChildren<BarChart>())
+        foreach(var barChart in chartArea.GetComponentsInChildren<BarChart>())
         {
-            if (barChart.name == "TimeMagnitude")
-                timeMagnitudeChart = barChart;
-            if (barChart.name == "TimePhase")
-                timePhaseChart = barChart;
+            switch (barChart.name)
+            {
+                case "TimeMagnitude":
+                    m_TimeMagnitudeChart = barChart;
+                    break;
+                case "TimePhase":
+                    m_TimePhaseChart = barChart;
+                    break;
+            }
         }
         
-        timeMagnitudeChart.title.show = true;
-        timeMagnitudeChart.title.text = "Time(1e+3)-Magnitude chart";
-        timeMagnitudeChart.tooltip.show = true;
-        timeMagnitudeChart.legend.show = false;
-        timeMagnitudeChart.xAxises[0].show = true;
-        timeMagnitudeChart.xAxises[1].show = false;
-        timeMagnitudeChart.yAxises[0].show = true;
-        timeMagnitudeChart.yAxises[1].show = false;
-        timeMagnitudeChart.xAxises[0].type = Axis.AxisType.Category;
-        timeMagnitudeChart.yAxises[0].type = Axis.AxisType.Value;
-        timeMagnitudeChart.xAxises[0].splitNumber = 10;
-        timeMagnitudeChart.xAxises[0].boundaryGap = true;
-        timeMagnitudeChart.RemoveData();
-        timeMagnitudeChart.AddSerie(SerieType.Bar, "Magnitude");
+        m_TimeMagnitudeChart.title.show = true;
+        m_TimeMagnitudeChart.title.text = "Time(1e+3)-Magnitude chart";
+        m_TimeMagnitudeChart.tooltip.show = true;
+        m_TimeMagnitudeChart.legend.show = false;
+        m_TimeMagnitudeChart.xAxises[0].show = true;
+        m_TimeMagnitudeChart.xAxises[1].show = false;
+        m_TimeMagnitudeChart.yAxises[0].show = true;
+        m_TimeMagnitudeChart.yAxises[1].show = false;
+        m_TimeMagnitudeChart.xAxises[0].type = Axis.AxisType.Category;
+        m_TimeMagnitudeChart.yAxises[0].type = Axis.AxisType.Value;
+        m_TimeMagnitudeChart.xAxises[0].splitNumber = 10;
+        m_TimeMagnitudeChart.xAxises[0].boundaryGap = true;
+        m_TimeMagnitudeChart.RemoveData();
+        m_TimeMagnitudeChart.AddSerie(SerieType.Bar, "Magnitude");
 
         for (int index = 0; index < xTime.Count; ++index)
         {
-            timeMagnitudeChart.AddXAxisData(xTime[index].ToString());
-            timeMagnitudeChart.AddData(0, yMagnitude[index]);
+            m_TimeMagnitudeChart.AddXAxisData(xTime[index].ToString());
+            m_TimeMagnitudeChart.AddData(0, yMagnitude[index]);
         }
 
-        timePhaseChart.title.show = true;
-        timePhaseChart.title.text = "Time(1e+3)-Phase chart";
-        timePhaseChart.tooltip.show = true;
-        timePhaseChart.legend.show = false;
-        timePhaseChart.xAxises[0].show = true;
-        timePhaseChart.xAxises[1].show = false;
-        timePhaseChart.yAxises[0].show = true;
-        timePhaseChart.yAxises[1].show = false;
-        timePhaseChart.xAxises[0].type = Axis.AxisType.Category;
-        timePhaseChart.yAxises[0].type = Axis.AxisType.Value;
-        timePhaseChart.xAxises[0].splitNumber = 10;
-        timePhaseChart.xAxises[0].boundaryGap = true;
-        timePhaseChart.RemoveData();
-        timePhaseChart.AddSerie(SerieType.Bar, "Phase");
+        m_TimePhaseChart.title.show = true;
+        m_TimePhaseChart.title.text = "Time(1e+3)-Phase chart";
+        m_TimePhaseChart.tooltip.show = true;
+        m_TimePhaseChart.legend.show = false;
+        m_TimePhaseChart.xAxises[0].show = true;
+        m_TimePhaseChart.xAxises[1].show = false;
+        m_TimePhaseChart.yAxises[0].show = true;
+        m_TimePhaseChart.yAxises[1].show = false;
+        m_TimePhaseChart.xAxises[0].type = Axis.AxisType.Category;
+        m_TimePhaseChart.yAxises[0].type = Axis.AxisType.Value;
+        m_TimePhaseChart.xAxises[0].splitNumber = 10;
+        m_TimePhaseChart.xAxises[0].boundaryGap = true;
+        m_TimePhaseChart.RemoveData();
+        m_TimePhaseChart.AddSerie(SerieType.Bar, "Phase");
 
         for (int index = 0; index < xTime.Count; ++index)
         {
-            timePhaseChart.AddXAxisData(xTime[index].ToString());
-            timePhaseChart.AddData(0, yPhase[index]);
+            m_TimePhaseChart.AddXAxisData(xTime[index].ToString());
+            m_TimePhaseChart.AddData(0, yPhase[index]);
         }
     }
 
-    public void DrawFrequencieChart(List<float> xFrquencies, List<float> yMagnitude, List<float> yPhase)
+    public void DrawFrequencyChart(List<float> xFrequency, List<float> yMagnitude, List<float> yPhase)
     {
-        foreach (LineChart lineChart in ChartArea.GetComponentsInChildren<LineChart>())
+        foreach (var lineChart in chartArea.GetComponentsInChildren<LineChart>())
         {
-            if (lineChart.name == "FrequencyMagnitude")
-                timeMagnitudeLineChart = lineChart;
-            if (lineChart.name == "FrequencyPhase")
-                timePhaseLineChart = lineChart;
+            switch (lineChart.name)
+            {
+                case "FrequencyMagnitude":
+                    m_TimeMagnitudeLineChart = lineChart;
+                    break;
+                case "FrequencyPhase":
+                    m_TimePhaseLineChart = lineChart;
+                    break;
+            }
         }
         
-        timeMagnitudeLineChart.title.show = true;
-        timeMagnitudeLineChart.title.text = "Frequency(Hz)-Magnitude chart";
-        timeMagnitudeLineChart.tooltip.show = true;
-        timeMagnitudeLineChart.legend.show = false;
-        timeMagnitudeLineChart.xAxises[0].show = true;
-        timeMagnitudeLineChart.xAxises[1].show = false;
-        timeMagnitudeLineChart.yAxises[0].show = true;
-        timeMagnitudeLineChart.yAxises[1].show = false;
-        timeMagnitudeLineChart.xAxises[0].type = Axis.AxisType.Category;
-        timeMagnitudeLineChart.yAxises[0].type = Axis.AxisType.Value;
-        timeMagnitudeLineChart.xAxises[0].splitNumber = 10;
-        timeMagnitudeLineChart.xAxises[0].boundaryGap = true;
-        timeMagnitudeLineChart.RemoveData();
-        timeMagnitudeLineChart.AddSerie(SerieType.Line, "Magnitude").sampleDist = 1;
+        m_TimeMagnitudeLineChart.title.show = true;
+        m_TimeMagnitudeLineChart.title.text = "Frequency(Hz)-Magnitude chart";
+        m_TimeMagnitudeLineChart.tooltip.show = true;
+        m_TimeMagnitudeLineChart.legend.show = false;
+        m_TimeMagnitudeLineChart.xAxises[0].show = true;
+        m_TimeMagnitudeLineChart.xAxises[1].show = false;
+        m_TimeMagnitudeLineChart.yAxises[0].show = true;
+        m_TimeMagnitudeLineChart.yAxises[1].show = false;
+        m_TimeMagnitudeLineChart.xAxises[0].type = Axis.AxisType.Category;
+        m_TimeMagnitudeLineChart.yAxises[0].type = Axis.AxisType.Value;
+        m_TimeMagnitudeLineChart.xAxises[0].splitNumber = 10;
+        m_TimeMagnitudeLineChart.xAxises[0].boundaryGap = true;
+        m_TimeMagnitudeLineChart.RemoveData();
+        m_TimeMagnitudeLineChart.AddSerie(SerieType.Line, "Magnitude").sampleDist = 1;
     
-        for (int index = 0; index < xFrquencies.Count; ++index)
+        for (int index = 0; index < xFrequency.Count; ++index)
         {
-            timeMagnitudeLineChart.AddXAxisData(xFrquencies[index].ToString());
-            timeMagnitudeLineChart.AddData(0, yMagnitude[index]);
+            m_TimeMagnitudeLineChart.AddXAxisData(xFrequency[index].ToString());
+            m_TimeMagnitudeLineChart.AddData(0, yMagnitude[index]);
         }
 
-        timePhaseLineChart.title.show = true;
-        timePhaseLineChart.title.text = "Frequency(Hz)-Phase chart";
-        timePhaseLineChart.tooltip.show = true;
-        timePhaseLineChart.legend.show = false;
-        timePhaseLineChart.xAxises[0].show = true;
-        timePhaseLineChart.xAxises[1].show = false;
-        timePhaseLineChart.yAxises[0].show = true;
-        timePhaseLineChart.yAxises[1].show = false;
-        timePhaseLineChart.xAxises[0].type = Axis.AxisType.Category;
-        timePhaseLineChart.yAxises[0].type = Axis.AxisType.Value;
-        timePhaseLineChart.xAxises[0].splitNumber = 10;
-        timePhaseLineChart.xAxises[0].boundaryGap = true;
-        timePhaseLineChart.RemoveData();
-        timePhaseLineChart.AddSerie(SerieType.Line, "Phase").sampleDist = 1;
+        m_TimePhaseLineChart.title.show = true;
+        m_TimePhaseLineChart.title.text = "Frequency(Hz)-Phase chart";
+        m_TimePhaseLineChart.tooltip.show = true;
+        m_TimePhaseLineChart.legend.show = false;
+        m_TimePhaseLineChart.xAxises[0].show = true;
+        m_TimePhaseLineChart.xAxises[1].show = false;
+        m_TimePhaseLineChart.yAxises[0].show = true;
+        m_TimePhaseLineChart.yAxises[1].show = false;
+        m_TimePhaseLineChart.xAxises[0].type = Axis.AxisType.Category;
+        m_TimePhaseLineChart.yAxises[0].type = Axis.AxisType.Value;
+        m_TimePhaseLineChart.xAxises[0].splitNumber = 10;
+        m_TimePhaseLineChart.xAxises[0].boundaryGap = true;
+        m_TimePhaseLineChart.RemoveData();
+        m_TimePhaseLineChart.AddSerie(SerieType.Line, "Phase").sampleDist = 1;
 
-        for (int index = 0; index < xFrquencies.Count; ++index)
+        for (int index = 0; index < xFrequency.Count; ++index)
         {
-            timePhaseLineChart.AddXAxisData(xFrquencies[index].ToString());
-            timePhaseLineChart.AddData(0, yPhase[index]);
+            m_TimePhaseLineChart.AddXAxisData(xFrequency[index].ToString());
+            m_TimePhaseLineChart.AddData(0, yPhase[index]);
         }
     }
 }

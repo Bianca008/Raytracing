@@ -3,25 +3,25 @@ using System.Collections.Generic;
 
 public class IntensityCalculator
 {
-    private Dictionary<int, List<AcousticRay>> Rays
+    private Dictionary<int, List<AcousticRay>> rays
     {
         get;
         set;
     }
 
-    private List<MicrophoneSphere> Microphones
+    private List<MicrophoneSphere> microphones
     {
         get;
         set;
     }
 
-    public Dictionary<int, List<double>> Intensities
+    public Dictionary<int, List<double>> intensities
     {
         get;
         set;
     }
 
-    private double InitialIntensity
+    private double initialIntensity
     {
         get;
         set;
@@ -32,34 +32,34 @@ public class IntensityCalculator
         List<MicrophoneSphere> microphones,
         float initialPower)
     {
-        InitialIntensity = initialPower / (4.0 * Math.PI);
-        Rays = rays;
-        Intensities = new Dictionary<int, List<double>>();
-        Microphones = microphones;
+        initialIntensity = initialPower / (4.0 * Math.PI);
+        this.rays = rays;
+        intensities = new Dictionary<int, List<double>>();
+        this.microphones = microphones;
     }
 
     public void ComputePower()
     {
-        for (int indexMicro = 0; indexMicro < Rays.Count; ++indexMicro)
+        for (int indexMicro = 0; indexMicro < rays.Count; ++indexMicro)
         {
-            List<double> intensities = new List<double>();
-            for (int indexRay = 0; indexRay < Rays[Microphones[indexMicro].Id].Count; ++indexRay)
+            var intensities = new List<double>();
+            for (int indexRay = 0; indexRay < rays[microphones[indexMicro].id].Count; ++indexRay)
             {
-                intensities.Add(ComputeRayIntensity(Microphones[indexMicro].Id, indexRay));
+                intensities.Add(ComputeRayIntensity(microphones[indexMicro].id, indexRay));
             }
 
-            Intensities[Microphones[indexMicro].Id] = intensities;
+            this.intensities[microphones[indexMicro].id] = intensities;
         }
     }
 
     public void TransformIntensitiesToPressure()
     {
-        for (int indexMicro = 0; indexMicro < Rays.Count; ++indexMicro)
+        for (int indexMicro = 0; indexMicro < rays.Count; ++indexMicro)
         {
-            for (int indexRay = 0; indexRay < Rays[Microphones[indexMicro].Id].Count; ++indexRay)
+            for (int indexRay = 0; indexRay < rays[microphones[indexMicro].id].Count; ++indexRay)
             {
-                Intensities[indexMicro][indexRay] = PressureConverter.
-                    ConvertIntensityToPressure(Intensities[indexMicro][indexRay]);
+                intensities[microphones[indexMicro].id][indexRay] = PressureConverter.
+                    ConvertIntensityToPressure(intensities[microphones[indexMicro].id][indexRay]);
             }
         }
     }
@@ -67,40 +67,40 @@ public class IntensityCalculator
     private double ComputeRayIntensity(int indexMicro, int indexRay)
     {
         /*Case for 0 CollisionPoints.*/
-        if (Rays[indexMicro][indexRay].CollisionPoints.Count == 0)
+        if (rays[indexMicro][indexRay].collisionPoints.Count == 0)
         {
-            float distance = System.Numerics.Vector3.Distance(
-                Rays[indexMicro][indexRay].Source,
-                Rays[indexMicro][indexRay].MicrophonePosition);
-            return Math.Pow(1 / distance, 2) * InitialIntensity;
+            var distance = System.Numerics.Vector3.Distance(
+                rays[indexMicro][indexRay].source,
+                rays[indexMicro][indexRay].microphonePosition);
+            return Math.Pow(1 / distance, 2) * initialIntensity;
         }
 
         /*Usual case.*/
-        float previousDistance = System.Numerics.Vector3.Distance(
-             Rays[indexMicro][indexRay].Source,
-             Rays[indexMicro][indexRay].CollisionPoints[0]);
+        var previousDistance = System.Numerics.Vector3.Distance(
+             rays[indexMicro][indexRay].source,
+             rays[indexMicro][indexRay].collisionPoints[0]);
         /*I0*/
-        double previousIntensity = Math.Pow(1 / previousDistance, 2) *
-                                   InitialIntensity *
-                                   Math.Pow(1 - Rays[indexMicro][indexRay].AcousticMaterials[0].AbsorbtionCoefficient, 2);
+        var previousIntensity = Math.Pow(1 / previousDistance, 2) *
+                                initialIntensity *
+                                Math.Pow(1 - rays[indexMicro][indexRay].acousticMaterials[0].AbsorbtionCoefficient, 2);
 
-        for (int indexPosition = 1; indexPosition < Rays[indexMicro][indexRay].CollisionPoints.Count; ++indexPosition)
+        for (int indexPosition = 1; indexPosition < rays[indexMicro][indexRay].collisionPoints.Count; ++indexPosition)
         {
-            float currentDistance = previousDistance + System.Numerics.Vector3.Distance(
-                 Rays[indexMicro][indexRay].CollisionPoints[indexPosition],
-                 Rays[indexMicro][indexRay].CollisionPoints[indexPosition - 1]);
-            double currentIntensity = Math.Pow(previousDistance / currentDistance, 2) * previousIntensity *
-                                Math.Pow(1 - Rays[indexMicro][indexRay].AcousticMaterials[indexPosition].AbsorbtionCoefficient, 2);
+            var currentDistance = previousDistance + System.Numerics.Vector3.Distance(
+                 rays[indexMicro][indexRay].collisionPoints[indexPosition],
+                 rays[indexMicro][indexRay].collisionPoints[indexPosition - 1]);
+            var currentIntensity = Math.Pow(previousDistance / currentDistance, 2) * previousIntensity *
+                                   Math.Pow(1 - rays[indexMicro][indexRay].acousticMaterials[indexPosition].AbsorbtionCoefficient, 2);
 
             previousDistance = currentDistance;
             previousIntensity = currentIntensity;
         }
 
         /*In*/
-        int lastPos = Rays[indexMicro][indexRay].CollisionPoints.Count - 1;
+        var lastPos = rays[indexMicro][indexRay].collisionPoints.Count - 1;
         return Math.Pow(previousDistance /
                         (previousDistance + System.Numerics.Vector3.Distance(
-                        Rays[indexMicro][indexRay].CollisionPoints[lastPos],
-                        Rays[indexMicro][indexRay].MicrophonePosition)), 2) * previousIntensity;
+                        rays[indexMicro][indexRay].collisionPoints[lastPos],
+                        rays[indexMicro][indexRay].microphonePosition)), 2) * previousIntensity;
     }
 }

@@ -4,19 +4,19 @@ using System.Numerics;
 
 public class PhaseCalculator
 {
-    private Dictionary<int, List<AcousticRay>> Rays
+    private Dictionary<int, List<AcousticRay>> rays
     {
         get;
         set;
     }
 
-    private List<MicrophoneSphere> Microphones
+    private List<MicrophoneSphere> microphones
     {
         get;
         set;
     }
 
-    private Dictionary<int, List<Complex>> EchogramMagnitudePhase
+    private Dictionary<int, List<Complex>> echogramMagnitudePhase
     {
         get;
         set;
@@ -25,58 +25,57 @@ public class PhaseCalculator
     private Dictionary<int, List<double>> pressures
     {
         get;
-        set;
     }
 
     public PhaseCalculator(Dictionary<int, List<AcousticRay>> rays,
         List<MicrophoneSphere> microphones,
         Dictionary<int, List<double>> pressure)
     {
-        Rays = rays;
+        this.rays = rays;
         pressures = pressure;
-        Microphones = microphones;
-        EchogramMagnitudePhase = new Dictionary<int, List<Complex>>();
+        this.microphones = microphones;
+        echogramMagnitudePhase = new Dictionary<int, List<Complex>>();
     }
 
     private void SetEchogram()
     {
         for (int indexMicro = 0; indexMicro < pressures.Count; ++indexMicro)
         {
-            List<Complex> values = new List<Complex>();
+            var values = new List<Complex>();
             for (int indexRay = 0; indexRay < pressures[indexMicro].Count; ++indexRay)
             {
-                values.Add(new Complex(pressures[Microphones[indexMicro].Id][indexRay], 0));
+                values.Add(new Complex(pressures[microphones[indexMicro].id][indexRay], 0));
             }
-            EchogramMagnitudePhase[indexMicro] = values;
+            echogramMagnitudePhase[indexMicro] = values;
         }
     }
 
     public Dictionary<int, List<Complex>> ComputePhase(double frequency)
     {
         SetEchogram();
-        for (int indexMicro = 0; indexMicro < Rays.Count; ++indexMicro)
-            for (int indexRay = 0; indexRay < Rays[Microphones[indexMicro].Id].Count; ++indexRay)
+        for (int indexMicro = 0; indexMicro < rays.Count; ++indexMicro)
+            for (int indexRay = 0; indexRay < rays[microphones[indexMicro].id].Count; ++indexRay)
             {
-                ComputePhase(Microphones[indexMicro].Id, indexRay, frequency);
+                ComputePhase(microphones[indexMicro].id, indexRay, frequency);
             }
-        return EchogramMagnitudePhase;
+        return echogramMagnitudePhase;
     }
 
     private void ComputePhase(int indexMicro, int indexRay, double frequency, double airSoundSpeed = 343.21)
     {
         if(frequency == 0)
         {
-            EchogramMagnitudePhase[indexMicro][indexRay] = new Complex(EchogramMagnitudePhase[indexMicro][indexRay].Real, 0);
+            echogramMagnitudePhase[indexMicro][indexRay] = new Complex(echogramMagnitudePhase[indexMicro][indexRay].Real, 0);
             return;
         }
 
-        float distance = Rays[indexMicro][indexRay].Distance;
-        double waveLength = airSoundSpeed / frequency;
-        double waveNumber = 2 * Math.PI / waveLength;
-        double phase = Math.Atan2(-Math.Sin(waveNumber * distance), Math.Cos(waveNumber * distance));
+        var distance = rays[indexMicro][indexRay].GetDistance();
+        var waveLength = airSoundSpeed / frequency;
+        var waveNumber = 2 * Math.PI / waveLength;
+        var phase = Math.Atan2(-Math.Sin(waveNumber * distance), Math.Cos(waveNumber * distance));
 
-        Complex result = Complex.FromPolarCoordinates(EchogramMagnitudePhase[indexMicro][indexRay].Real, phase);
+        var result = Complex.FromPolarCoordinates(echogramMagnitudePhase[indexMicro][indexRay].Real, phase);
 
-        EchogramMagnitudePhase[indexMicro][indexRay] = result;
+        echogramMagnitudePhase[indexMicro][indexRay] = result;
     }
 }

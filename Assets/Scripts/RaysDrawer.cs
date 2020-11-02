@@ -4,18 +4,18 @@ using UnityEngine;
 
 public class RaysDrawer
 {
-    private readonly Dictionary<int, List<AcousticRay>> rays;
-    private readonly LineRenderer[] lines;
+    private readonly Dictionary<int, List<AcousticRay>> m_Rays;
+    private readonly LineRenderer[] m_Lines;
 
     public RaysDrawer(LineRenderer[] linesToDraw, Dictionary<int, List<AcousticRay>> rays)
     {
-        lines = linesToDraw;
-        this.rays = rays;
+        m_Lines = linesToDraw;
+        this.m_Rays = rays;
     }
 
     private void ResetLines()
     {
-        foreach (var line in lines)
+        foreach (var line in m_Lines)
         {
             line.positionCount = 1;
         }
@@ -46,20 +46,20 @@ public class RaysDrawer
     {
         ResetLines();
         
-        lines[numberOfLine].SetPosition(0,
-            VectorConverter.Convert(rays[numberOfMicro][numberOfLine].Source));
+        m_Lines[numberOfLine].SetPosition(0,
+            VectorConverter.Convert(m_Rays[numberOfMicro][numberOfLine].source));
 
-        int numberOfPoints = 1;
-        int size = rays[numberOfMicro][numberOfLine].CollisionPoints.Count;
+        var numberOfPoints = 1;
+        var size = m_Rays[numberOfMicro][numberOfLine].collisionPoints.Count;
         for (int indexPosition = 0; indexPosition < size; ++indexPosition)
         {
-            lines[numberOfLine].positionCount = ++numberOfPoints;
-            lines[numberOfLine].SetPosition(numberOfPoints - 1,
-                VectorConverter.Convert(rays[numberOfMicro][numberOfLine].CollisionPoints[indexPosition]));
+            m_Lines[numberOfLine].positionCount = ++numberOfPoints;
+            m_Lines[numberOfLine].SetPosition(numberOfPoints - 1,
+                VectorConverter.Convert(m_Rays[numberOfMicro][numberOfLine].collisionPoints[indexPosition]));
         }
 
-        lines[numberOfLine].positionCount = ++numberOfPoints;
-        lines[numberOfLine].SetPosition(numberOfPoints - 1,
-            VectorConverter.Convert(rays[numberOfMicro][numberOfLine].MicrophonePosition));
+        m_Lines[numberOfLine].positionCount = ++numberOfPoints;
+        m_Lines[numberOfLine].SetPosition(numberOfPoints - 1,
+            VectorConverter.Convert(m_Rays[numberOfMicro][numberOfLine].microphonePosition));
     }
 }

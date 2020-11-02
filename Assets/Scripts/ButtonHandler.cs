@@ -12,15 +12,15 @@ public class ButtonHandler
         List<double> frequencies,
         int indexMicrophone)
     {
-        string file = indexMicrophone.ToString() + "M.txt";
-        Tuple<List<float>, List<float>> magnitudeAndPhse = FileHandler.ReadFromFile(file);
-        List<float> freq = new List<float>();
+        var file = indexMicrophone.ToString() + "M.txt";
+        var magnitudeAndPhase = FileHandler.ReadFromFile(file);
+        var freq = new List<float>();
 
-        foreach (double frequency in frequencies)
+        foreach (var frequency in frequencies)
             freq.Add((float)frequency);
 
         chartDrawer = new ChartDrawer(menuCanvas);
-        chartDrawer.DrawFrequencieChart(freq, magnitudeAndPhse.Item1, magnitudeAndPhse.Item2);
+        chartDrawer.DrawFrequencyChart(freq, magnitudeAndPhase.Item1, magnitudeAndPhase.Item2);
     }
 
     public void ShowFrequencyChart(
@@ -30,15 +30,15 @@ public class ButtonHandler
         List<double> frequencies,
         List<MicrophoneSphere> microphones)
     {
-        string numberOfMicrophoneStr = microphoneField.text;
-        int numberOfMicrophone = 0;
+        var numberOfMicrophoneStr = microphoneField.text;
+        var numberOfMicrophone = 0;
 
         if (numberOfMicrophoneStr.All(char.IsDigit) == true)
             numberOfMicrophone = Int32.Parse(numberOfMicrophoneStr) - 1;
 
-        bool okToDraw = false;
-        foreach (MicrophoneSphere micro in microphones)
-            if (micro.Id == numberOfMicrophone)
+        var okToDraw = false;
+        foreach (var micro in microphones)
+            if (micro.id == numberOfMicrophone)
                 okToDraw = true;
 
         if (okToDraw == true)

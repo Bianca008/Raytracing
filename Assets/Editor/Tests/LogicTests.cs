@@ -16,17 +16,17 @@ namespace Tests
         {
             AcousticRay ray = new AcousticRay(new Vector3(0, 0, 0), new Vector3(1, 5, 7));
 
-            Assert.IsTrue(Math.Abs(ray.Distance - 8.66) < 1e-2);
+            Assert.IsTrue(Math.Abs(ray.GetDistance() - 8.66) < 1e-2);
         }
 
         [Test]
         public void RayDistance_Test()
         {
             AcousticRay ray = new AcousticRay(new Vector3(0, 0, 0), new Vector3(1, 5, 7));
-            ray.CollisionPoints.Add(new Vector3(1, 5, 3));
-            ray.CollisionPoints.Add(new Vector3(1, 2, 6));
+            ray.collisionPoints.Add(new Vector3(1, 5, 3));
+            ray.collisionPoints.Add(new Vector3(1, 2, 6));
 
-            Assert.IsTrue(Math.Abs(ray.Distance - 13.32) < 1e-2);
+            Assert.IsTrue(Math.Abs(ray.GetDistance() - 13.32) < 1e-2);
         }
 
         [Test]
@@ -45,7 +45,7 @@ namespace Tests
 
             newRays.Sort(delegate (AcousticRay first, AcousticRay second)
             {
-                return first.Distance.CompareTo(second.Distance);
+                return first.GetDistance().CompareTo(second.GetDistance());
 
             });
 
@@ -68,11 +68,11 @@ namespace Tests
 
             newRays.Sort(delegate (AcousticRay first, AcousticRay second)
             {
-                return first.Distance.CompareTo(second.Distance);
+                return first.GetDistance().CompareTo(second.GetDistance());
             });
 
             Assert.IsTrue(newRays.Count == 1);
-            Assert.IsTrue(newRays[0].CollisionPoints.Count == 0);
+            Assert.IsTrue(newRays[0].collisionPoints.Count == 0);
         }
 
         [Test]
@@ -91,16 +91,16 @@ namespace Tests
 
             rays.Sort(delegate (AcousticRay first, AcousticRay second)
             {
-                return first.Distance.CompareTo(second.Distance);
+                return first.GetDistance().CompareTo(second.GetDistance());
             });
 
             Dictionary<int, List<AcousticRay>> myRays = new Dictionary<int, List<AcousticRay>>();
-            myRays.Add(microphone[0].Id, rays);
+            myRays.Add(microphone[0].id, rays);
 
             IntensityCalculator intensityCalculator = new IntensityCalculator(myRays, microphone, 1);
             intensityCalculator.ComputePower();
 
-            Assert.IsTrue(Math.Abs(intensityCalculator.Intensities[0][0] - 0.02038056768) < 1e-3);
+            Assert.IsTrue(Math.Abs(intensityCalculator.intensities[0][0] - 0.02038056768) < 1e-3);
         }
 
         [Test]
@@ -119,17 +119,17 @@ namespace Tests
 
             rays.Sort(delegate (AcousticRay first, AcousticRay second)
             {
-                return first.Distance.CompareTo(second.Distance);
+                return first.GetDistance().CompareTo(second.GetDistance());
             });
 
             Dictionary<int, List<AcousticRay>> myRays = new Dictionary<int, List<AcousticRay>>();
-            myRays.Add(microphone[0].Id, rays);
+            myRays.Add(microphone[0].id, rays);
 
             IntensityCalculator intensityCalculator = new IntensityCalculator(myRays, microphone, 1);
             intensityCalculator.ComputePower();
 
             double epsilon = 1e-5;
-            Assert.IsTrue(Math.Abs(intensityCalculator.Intensities[0][9] - 0.0005087481) < epsilon);
+            Assert.IsTrue(Math.Abs(intensityCalculator.intensities[0][9] - 0.0005087481) < epsilon);
         }
 
         [Test]

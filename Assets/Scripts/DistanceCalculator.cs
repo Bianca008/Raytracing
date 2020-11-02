@@ -3,13 +3,13 @@ using System.Linq;
 
 public class DistanceCalculator
 {
-    private Dictionary<int, List<AcousticRay>> Rays
+    private Dictionary<int, List<AcousticRay>> rays
     {
         get;
         set;
     }
 
-    private List<MicrophoneSphere> Microphones
+    private List<MicrophoneSphere> microphones
     {
         get;
         set;
@@ -17,47 +17,47 @@ public class DistanceCalculator
 
     public DistanceCalculator(Dictionary<int, List<AcousticRay>> rays, List<MicrophoneSphere> microphones)
     {
-        Microphones = microphones;
-        Rays = rays;
+        this.microphones = microphones;
+        this.rays = rays;
     }
 
     public void ComputeDistances()
     {
-        for (int indexMicro = 0; indexMicro < Rays.Count; ++indexMicro)
-            for (int indexRay = 0; indexRay < Rays[Microphones[indexMicro].Id].Count; ++indexRay)
-                ComputeDistance(Microphones[indexMicro].Id, indexRay);
+        for (int indexMicro = 0; indexMicro < rays.Count; ++indexMicro)
+            for (int indexRay = 0; indexRay < rays[microphones[indexMicro].id].Count; ++indexRay)
+                ComputeDistance(microphones[indexMicro].id, indexRay);
     }
 
     private void ComputeDistance(int indexMicro, int indexRay)
     {
-        if (Rays[indexMicro][indexRay].CollisionPoints.Count == 0)
+        if (rays[indexMicro][indexRay].collisionPoints.Count == 0)
         {
-            Rays[indexMicro][indexRay].Distances.Add(System.Numerics.Vector3.Distance(
-                Rays[indexMicro][indexRay].Source,
-                Rays[indexMicro][indexRay].MicrophonePosition));
+            rays[indexMicro][indexRay].distances.Add(System.Numerics.Vector3.Distance(
+                rays[indexMicro][indexRay].source,
+                rays[indexMicro][indexRay].microphonePosition));
             return;
         }
 
-        Rays[indexMicro][indexRay].Distances.Add(System.Numerics.Vector3.Distance(
-            Rays[indexMicro][indexRay].Source,
-            Rays[indexMicro][indexRay].CollisionPoints[0]));
+        rays[indexMicro][indexRay].distances.Add(System.Numerics.Vector3.Distance(
+            rays[indexMicro][indexRay].source,
+            rays[indexMicro][indexRay].collisionPoints[0]));
 
-        for (int indexPosition = 1; indexPosition < Rays[indexMicro][indexRay].CollisionPoints.Count; ++indexPosition)
+        for (int indexPosition = 1; indexPosition < rays[indexMicro][indexRay].collisionPoints.Count; ++indexPosition)
         {
-            float distanceBetweenTwoPoints = System.Numerics.Vector3.Distance(
-                Rays[indexMicro][indexRay].CollisionPoints[indexPosition],
-                Rays[indexMicro][indexRay].CollisionPoints[indexPosition - 1]);
-            Rays[indexMicro][indexRay].Distances.Add(Rays[indexMicro][indexRay].
-                                                         Distances[Rays[indexMicro][indexRay].Distances.Count - 1] +
+            var distanceBetweenTwoPoints = System.Numerics.Vector3.Distance(
+                rays[indexMicro][indexRay].collisionPoints[indexPosition],
+                rays[indexMicro][indexRay].collisionPoints[indexPosition - 1]);
+            rays[indexMicro][indexRay].distances.Add(rays[indexMicro][indexRay].
+                                                         distances[rays[indexMicro][indexRay].distances.Count - 1] +
                                                          distanceBetweenTwoPoints);
         }
 
-        Rays[indexMicro][indexRay].Distances.Add(Rays[indexMicro][indexRay].Distances[
-                                                     Rays[indexMicro][indexRay].Distances.Count - 1] +
+        rays[indexMicro][indexRay].distances.Add(rays[indexMicro][indexRay].distances[
+                                                     rays[indexMicro][indexRay].distances.Count - 1] +
                                                      System.Numerics.Vector3.Distance(
-                                                     Rays[indexMicro][indexRay].CollisionPoints[
-                                                     Rays[indexMicro][indexRay].CollisionPoints.Count - 1],
-                                                     Rays[indexMicro][indexRay].MicrophonePosition));
+                                                     rays[indexMicro][indexRay].collisionPoints[
+                                                     rays[indexMicro][indexRay].collisionPoints.Count - 1],
+                                                     rays[indexMicro][indexRay].microphonePosition));
     }
 
 }

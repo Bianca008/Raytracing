@@ -3,27 +3,27 @@ using UnityEngine;
 
 public class IRayCaster
 {
-    private readonly int maxDistance;
+    private readonly int m_MaxDistance;
 
-    public System.Numerics.Vector3 Position
+    public System.Numerics.Vector3 position
     {
         get;
         set;
     }
 
-    public System.Numerics.Vector3 Direction
+    public System.Numerics.Vector3 direction
     {
         get;
         set;
     }
 
-    public float TotalDistance
+    public float totalDistance
     {
         get;
         set;
     }
 
-    public int NumberOfReflections
+    public int numberOfReflections
     {
         get;
         set;
@@ -31,36 +31,36 @@ public class IRayCaster
 
     public IRayCaster(int maxDist)
     {
-        maxDistance = maxDist;
+        m_MaxDistance = maxDist;
     }
 
     public void RayCast(List<AcousticRay> rays,
         int numberOfRay)
     {
-        Ray ray = new Ray(VectorConverter.Convert(Position), VectorConverter.Convert(Direction));
+        var ray = new Ray(VectorConverter.Convert(position), VectorConverter.Convert(direction));
         RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit, maxDistance))
+        if (Physics.Raycast(ray, out hit, m_MaxDistance))
         {
-            AcousticMaterial acousticMaterial = hit.transform.GetComponent<AcousticMaterial>();
-            Direction = VectorConverter.Convert(UnityEngine.Vector3.Reflect(VectorConverter.Convert(Direction), hit.normal));
-            Position = VectorConverter.Convert(hit.point);
-            ++NumberOfReflections;
-            TotalDistance += hit.distance;
-            rays[numberOfRay].CollisionPoints.Add(VectorConverter.Convert(hit.point));
+            var acousticMaterial = hit.transform.GetComponent<AcousticMaterial>();
+            direction = VectorConverter.Convert(UnityEngine.Vector3.Reflect(VectorConverter.Convert(direction), hit.normal));
+            position = VectorConverter.Convert(hit.point);
+            ++numberOfReflections;
+            totalDistance += hit.distance;
+            rays[numberOfRay].collisionPoints.Add(VectorConverter.Convert(hit.point));
 
             if (acousticMaterial != null)
-                rays[numberOfRay].AcousticMaterials.Add(acousticMaterial);
+                rays[numberOfRay].acousticMaterials.Add(acousticMaterial);
             else
             {
-                GameObject gameObject = new GameObject();
-                rays[numberOfRay].AcousticMaterials.Add(gameObject.AddComponent<AcousticMaterial>());
+                var gameObject = new GameObject();
+                rays[numberOfRay].acousticMaterials.Add(gameObject.AddComponent<AcousticMaterial>());
             }
         }
         else
         {
-            Position += Direction * maxDistance;
-            TotalDistance += maxDistance;
+            position += direction * m_MaxDistance;
+            totalDistance += m_MaxDistance;
         }
     }
 }

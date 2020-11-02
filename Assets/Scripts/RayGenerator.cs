@@ -19,25 +19,24 @@ public class RayGenerator : MonoBehaviour
     public GameObject MenuCanvas;
     public Button ShowButton;
     public Button ShowFrequencyEchogramButton;
-    public InputField numberOfMicrophoneInputField;
-    public InputField frequencyInputField;
+    public InputField NumberOfMicrophoneInputField;
 
-    private readonly int maxDistance = 200;
-    private int numberOfReflections = 8;
-    private Dictionary<double, Echogram> echograms;
-    private Dictionary<int, List<Complex>> frequencyReponse;
-    private List<double> frequencies;
-    private Dictionary<int, List<AcousticRay>> rays;
-    private LineRenderer[] intersectedLines;
-    private RayGeometry rayGeometryGenerator;
-    private RaysDrawer intersectedRayDrawer;
-    private List<MicrophoneSphere> microphones;
-    private ChartDrawer chartDrawer;
-    private AudioSource audioSource;
+    private const int maxDistance = 200;
+    private readonly int numberOfReflections = 8;
+    private Dictionary<double, Echogram> m_Echograms;
+    private Dictionary<int, List<Complex>> m_FrequencyReponse;
+    private List<double> m_Frequencies;
+    private Dictionary<int, List<AcousticRay>> m_Rays;
+    private LineRenderer[] m_IntersectedLines;
+    private RayGeometry m_RayGeometryGenerator;
+    private RaysDrawer m_IntersectedRayDrawer;
+    private List<MicrophoneSphere> m_Microphones;
+    private ChartDrawer m_ChartDrawer;
+    private AudioSource m_AudioSource;
 
     private void Start()
     {
-        audioSource = GetComponent<AudioSource>();
+        m_AudioSource = GetComponent<AudioSource>();
 
         CreateMicrophones();
         CreateRays();
@@ -46,22 +45,22 @@ public class RayGenerator : MonoBehaviour
 
         ComputeIntensities();
         //WriteToFileTimePressure();
-        IntersectedRays = rays[NumberOfMicrophone - 1].Count;
+        IntersectedRays = m_Rays[NumberOfMicrophone - 1].Count;
 
         ComputeFrequencyReponse();
-        FileHandler.WriteFrquencies(frequencyReponse, microphones);
+        FileHandler.WriteFrquencies(m_FrequencyReponse, m_Microphones);
 
-        SoundConvolver.ConvolveSound(audioSource, frequencyReponse, microphones);
+        SoundConvolver.ConvolveSound(m_AudioSource, m_FrequencyReponse, m_Microphones);
         InitializeUi();
     }
 
     private void Update()
     {
         if (NumberOfRay <= IntersectedRays && NumberOfRay >= 1 &&
-            NumberOfMicrophone <= microphones.Count && NumberOfMicrophone >= 1)
+            NumberOfMicrophone <= m_Microphones.Count && NumberOfMicrophone >= 1)
         {
-            intersectedRayDrawer.Draw(NumberOfMicrophone - 1, NumberOfRay - 1);
-            IntersectedRays = rays[NumberOfMicrophone - 1].Count;
+            m_IntersectedRayDrawer.Draw(NumberOfMicrophone - 1, NumberOfRay - 1);
+            IntersectedRays = m_Rays[NumberOfMicrophone - 1].Count;
         }
         else
             Debug.Log("The number of ray or the number of microphone does not exist...");
@@ -74,38 +73,38 @@ public class RayGenerator : MonoBehaviour
 
     private void CreateRays()
     {
-        rayGeometryGenerator = new RayGeometry(VectorConverter.Convert(transform.position),
-            microphones,
+        m_RayGeometryGenerator = new RayGeometry(VectorConverter.Convert(transform.position),
+            m_Microphones,
             NumberOfRays,
             numberOfReflections,
             maxDistance);
-        rayGeometryGenerator.GenerateRays();
+        m_RayGeometryGenerator.GenerateRays();
     }
 
     private List<AcousticRay> RemoveDuplicates(List<AcousticRay> rays)
     {
-        int indexRay = 0;
+        var indexRay = 0;
         while (indexRay < rays.Count - 1)
         {
-            if (rays[indexRay].CollisionPoints.Count == rays[indexRay + 1].CollisionPoints.Count &&
-                rays[indexRay].CollisionPoints.Count == 0)
+            if (rays[indexRay].collisionPoints.Count == rays[indexRay + 1].collisionPoints.Count &&
+                rays[indexRay].collisionPoints.Count == 0)
             {
                 rays.RemoveAt(indexRay);
             }
             else
-            if (Math.Abs(rays[indexRay].Distance - rays[indexRay + 1].Distance) < 1e-2 &&
-                rays[indexRay].CollisionPoints.Count == rays[indexRay + 1].CollisionPoints.Count &&
-                rays[indexRay].CollisionPoints.Count > 0)
+            if (Math.Abs(rays[indexRay].GetDistance() - rays[indexRay + 1].GetDistance()) < 1e-2 &&
+                rays[indexRay].collisionPoints.Count == rays[indexRay + 1].collisionPoints.Count &&
+                rays[indexRay].collisionPoints.Count > 0)
             {
-                int size = rays[indexRay].CollisionPoints.Count;
-                int indexPointCompared = 0;
-                bool ok = false;
+                var size = rays[indexRay].collisionPoints.Count;
+                var indexPointCompared = 0;
+                var ok = false;
                 while (indexPointCompared < size && ok == false)
                 {
                     double distance = System.Numerics.Vector3.Distance
-                    (rays[indexRay].CollisionPoints[indexPointCompared],
-                        rays[indexRay + 1].CollisionPoints[indexPointCompared]);
-                    if (distance < 0.06 * rays[indexRay].Distance)
+                    (rays[indexRay].collisionPoints[indexPointCompared],
+                        rays[indexRay + 1].collisionPoints[indexPointCompared]);
+                    if (distance < 0.06 * rays[indexRay].GetDistance())
                     {
                         ok = true;
                         rays.RemoveAt(indexRay);
@@ -125,143 +124,145 @@ public class RayGenerator : MonoBehaviour
 
     private void CreateIntersectedRaysWithMicrophones()
     {
-        rays = new Dictionary<int, List<AcousticRay>>();
-        for (int indexMicrophone = 0; indexMicrophone < microphones.Count; ++indexMicrophone)
+        m_Rays = new Dictionary<int, List<AcousticRay>>();
+        foreach (var microphone in m_Microphones)
         {
-            List<AcousticRay> newRays = rayGeometryGenerator.GetIntersectedRays(microphones[indexMicrophone]);
+            List<AcousticRay> newRays = m_RayGeometryGenerator.GetIntersectedRays(microphone);
 
             newRays.Sort(delegate (AcousticRay first, AcousticRay second)
             {
-                return first.Distance.CompareTo(second.Distance);
+                return first.GetDistance().CompareTo(second.GetDistance());
 
             });
             IntersectedRaysWithDuplicate += newRays.Count;
-            List<AcousticRay> raysWithoutDuplicates = RemoveDuplicates(newRays);
-            rays[microphones[indexMicrophone].Id] = raysWithoutDuplicates;
+            var raysWithoutDuplicates = RemoveDuplicates(newRays);
+            m_Rays[microphone.id] = raysWithoutDuplicates;
         }
 
-        int count = 0;
-        for (int index = 0; index < rays.Count; ++index)
-            count += rays[index].Count;
-        intersectedLines = LinesCreator.GenerateLines(count, transform, LineMaterial);
-        intersectedRayDrawer = new RaysDrawer(intersectedLines, rays);
+        var count = 0;
+        for (int index = 0; index < m_Rays.Count; ++index)
+            count += m_Rays[index].Count;
+        m_IntersectedLines = LinesCreator.GenerateLines(count, transform, LineMaterial);
+        m_IntersectedRayDrawer = new RaysDrawer(m_IntersectedLines, m_Rays);
     }
 
     private void CreateMicrophones()
     {
-        microphones = new List<MicrophoneSphere>();
-        microphones.Add(new MicrophoneSphere(new System.Numerics.Vector3(2, 1.6f, 1.7f), 0.1f));
-        microphones.Add(new MicrophoneSphere(new System.Numerics.Vector3(-1.5f, 1.2f, 1.7f), 0.1f));
+        m_Microphones = new List<MicrophoneSphere>
+        {
+            new MicrophoneSphere(new System.Numerics.Vector3(2, 1.6f, 1.7f), 0.1f),
+            new MicrophoneSphere(new System.Numerics.Vector3(-1.5f, 1.2f, 1.7f), 0.1f)
+        };
     }
 
     private void DrawMicrophones()
     {
-        foreach (var microphone in microphones)
+        foreach (var microphone in m_Microphones)
         {
-            GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            sphere.transform.position = VectorConverter.Convert(microphone.Center);
-            sphere.transform.localScale = new UnityEngine.Vector3(microphone.Radius,
-                microphone.Radius,
-                microphone.Radius);
+            var sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            sphere.transform.position = VectorConverter.Convert(microphone.center);
+            sphere.transform.localScale = new UnityEngine.Vector3(microphone.radius,
+                microphone.radius,
+                microphone.radius);
         }
     }
 
     private void ComputeIntensities()
     {
-        IntensityCalculator intensityCalculator = new IntensityCalculator(rays, microphones, InitialPower);
+        var intensityCalculator = new IntensityCalculator(m_Rays, m_Microphones, InitialPower);
         intensityCalculator.ComputePower();
         intensityCalculator.TransformIntensitiesToPressure();
-        Dictionary<int, List<double>> intensities = intensityCalculator.Intensities;
+        var intensities = intensityCalculator.intensities;
 
-        frequencies = new List<double>();
+        m_Frequencies = new List<double>();
         for (double index = 0; index < 22050; index += 22050.0 / 8192.0)
-            frequencies.Add(index);
+            m_Frequencies.Add(index);
 
-        Debug.Log(frequencies.Count);
+        Debug.Log(m_Frequencies.Count);
 
-        echograms = new Dictionary<double, Echogram>();
-        foreach (double frequency in frequencies)
+        m_Echograms = new Dictionary<double, Echogram>();
+        foreach (var frequency in m_Frequencies)
         {
-            PhaseCalculator phaseCalculator = new PhaseCalculator(rays, microphones, intensities);
-            echograms[frequency] = phaseCalculator.ComputePhase(frequency);
+            var phaseCalculator = new PhaseCalculator(m_Rays, m_Microphones, intensities);
+            m_Echograms[frequency] = phaseCalculator.ComputePhase(frequency);
         }
     }
 
     private void ComputeFrequencyReponse()
     {
-        frequencyReponse = new Dictionary<int, List<Complex>>();
+        m_FrequencyReponse = new Dictionary<int, List<Complex>>();
 
-        for (int indexMicro = 0; indexMicro < microphones.Count; ++indexMicro)
+        foreach (var microphone in m_Microphones)
         {
-            List<Complex> values = new List<Complex>();
-            for (int indexFrequencie = 0; indexFrequencie < frequencies.Count; ++indexFrequencie)
+            var values = new List<Complex>();
+            for (int indexFrequency = 0; indexFrequency < m_Frequencies.Count; ++indexFrequency)
             {
-                Complex sumi = echograms[frequencies[indexFrequencie]][microphones[indexMicro].Id].
+                var sumi = m_Echograms[m_Frequencies[indexFrequency]][microphone.id].
                     Aggregate((s, a) => s + a);
                 values.Add(sumi);
             }
-            frequencyReponse[microphones[indexMicro].Id] = values;
+            m_FrequencyReponse[microphone.id] = values;
         }
     }
 
-    private void AddListeneForShowButton()
+    private void AddListenerForShowButton()
     {
-        ButtonHandler buttonHandler = new ButtonHandler();
+        var buttonHandler = new ButtonHandler();
 
         ShowButton.onClick.AddListener(() =>
         {
-            buttonHandler.ShowFrequencyChart(numberOfMicrophoneInputField,
+            buttonHandler.ShowFrequencyChart(NumberOfMicrophoneInputField,
                                       MenuCanvas,
-                                      chartDrawer,
-                                      frequencies,
-                                      microphones);
+                                      m_ChartDrawer,
+                                      m_Frequencies,
+                                      m_Microphones);
         });
     }
 
-    private void AddListeneForShowFrequencyEchogram()
+    private void AddListenerForShowFrequencyEchogram()
     {
-        ButtonHandler buttonHandler = new ButtonHandler();
+        var buttonHandler = new ButtonHandler();
 
         ShowFrequencyEchogramButton.onClick.AddListener(SetActiveFrequncyEchogramUi);
     }
 
     private void InitializeUi()
     {
-        GameObject inputPanel = GameObject.Find("InputPanel");
+        var inputPanel = GameObject.Find("InputPanel");
         inputPanel.SetActive(false);
-        GameObject chartPanel = GameObject.Find("ChartPanel");
+        var chartPanel = GameObject.Find("ChartPanel");
         chartPanel.SetActive(false);
 
-        AddListeneForShowFrequencyEchogram();
-        AddListeneForShowButton();
+        AddListenerForShowFrequencyEchogram();
+        AddListenerForShowButton();
     }
 
     private void SetActiveFrequncyEchogramUi()
     {
-        GameObject inputPanel = MenuCanvas.transform.Find("InputPanel").gameObject;
+        var inputPanel = MenuCanvas.transform.Find("InputPanel").gameObject;
         Debug.Log(inputPanel);
         inputPanel.SetActive(true);
-        GameObject buttonsAndPlotPanel= MenuCanvas.transform.Find("ButtonsAndPlotPanel").gameObject;
-        GameObject chartPanel = buttonsAndPlotPanel.transform.Find("ChartPanel").gameObject;
+        var buttonsAndPlotPanel= MenuCanvas.transform.Find("ButtonsAndPlotPanel").gameObject;
+        var chartPanel = buttonsAndPlotPanel.transform.Find("ChartPanel").gameObject;
         chartPanel.SetActive(true);
     }
 
     private void DrawChart(int indexMicrophone, double indexFrequencie)
     {
-        string timeMagnitudeFile = "results/timeMagnitude" +
-                (indexMicrophone).ToString() + "M" +
-                indexFrequencie.ToString() + "Hz.txt";
-        string timePhaseFile = "results/timePhase" +
-                (indexMicrophone).ToString() + "M" +
-                indexFrequencie.ToString() + "Hz.txt";
+        var timeMagnitudeFile = "results/timeMagnitude" +
+                                (indexMicrophone).ToString() + "M" +
+                                indexFrequencie.ToString() + "Hz.txt";
+        var timePhaseFile = "results/timePhase" +
+                            (indexMicrophone).ToString() + "M" +
+                            indexFrequencie.ToString() + "Hz.txt";
 
-        Tuple<List<float>, List<float>> timePhase = FileHandler.ReadFromFile(timePhaseFile);
-        Tuple<List<float>, List<float>> timeMagnitude = FileHandler.ReadFromFile(timeMagnitudeFile);
+        var timePhase = FileHandler.ReadFromFile(timePhaseFile);
+        var timeMagnitude = FileHandler.ReadFromFile(timeMagnitudeFile);
 
         for (int index = 0; index < timeMagnitude.Item1.Count; ++index)
             timeMagnitude.Item1[index] = (float)Math.Round(timeMagnitude.Item1[index] * 1000, 2);
 
-        chartDrawer = new ChartDrawer(MenuCanvas);
-        chartDrawer.Draw(timeMagnitude.Item1, timeMagnitude.Item2, timePhase.Item2);
+        m_ChartDrawer = new ChartDrawer(MenuCanvas);
+        m_ChartDrawer.Draw(timeMagnitude.Item1, timeMagnitude.Item2, timePhase.Item2);
     }
 }

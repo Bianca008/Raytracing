@@ -5,78 +5,55 @@ using Vector3 = System.Numerics.Vector3;
 
 public class AcousticRay
 {
-    public Vector3 Source
+    public Vector3 source
     {
         get;
         set;
     }
 
-    public Vector3 MicrophonePosition
+    public Vector3 microphonePosition
     {
         get;
         set;
     }
 
-    public List<Vector3> CollisionPoints
-    {
-        get;
-        set;
-    }
+    public List<Vector3> collisionPoints { get; set; } = new List<Vector3>();
 
-    public List<AcousticMaterial> AcousticMaterials
-    {
-        get;
-        set;
-    }
+    public List<AcousticMaterial> acousticMaterials { get; set; } = new List<AcousticMaterial>();
 
-    public List<double> Distances
-    {
-        get;
-        set;
-    }
-
-    public float Distance
-    {
-        get
-        {
-            return GetDistance();
-        }
-    }
+    public List<double> distances { get; set; } = new List<double>();
 
     public AcousticRay(Vector3 source, Vector3 microphone)
     {
-        Source = source;
-        MicrophonePosition = microphone;
-        CollisionPoints = new List<Vector3>();
-        AcousticMaterials = new List<AcousticMaterial>();
-        Distances = new List<double>();
+        this.source = source;
+        microphonePosition = microphone;
     }
 
     public AcousticRay TruncateRay(int position, Vector3 microphonePos)
     {
-        AcousticRay newRay = new AcousticRay(Source, microphonePos);
+        var newRay = new AcousticRay(source, microphonePos);
         /*index, number of elements to copy*/
-        newRay.CollisionPoints = CollisionPoints.GetRange(0, position);
+        newRay.collisionPoints = collisionPoints.GetRange(0, position);
         /* TODO: see acoustic material for last acoustic material */
-        newRay.AcousticMaterials = AcousticMaterials.GetRange(0, position);
+        newRay.acousticMaterials = acousticMaterials.GetRange(0, position);
 
         return newRay;
     }
 
-    private float GetDistance()
+    public float GetDistance()
     {
-        if (CollisionPoints.Count == 0)
-            return Vector3.Distance(Source, MicrophonePosition);
+        if (collisionPoints.Count == 0)
+            return Vector3.Distance(source, microphonePosition);
 
-        float distance = Vector3.Distance(Source,
-            CollisionPoints[0]);
+        var distance = Vector3.Distance(source,
+            collisionPoints[0]);
 
-        for (int index = 0; index < CollisionPoints.Count - 1; ++index)
+        for (int index = 0; index < collisionPoints.Count - 1; ++index)
         {
-            distance += Vector3.Distance(CollisionPoints[index], CollisionPoints[index + 1]);
+            distance += Vector3.Distance(collisionPoints[index], collisionPoints[index + 1]);
         }
 
-        distance += Vector3.Distance(CollisionPoints[CollisionPoints.Count - 1], MicrophonePosition);
+        distance += Vector3.Distance(collisionPoints[collisionPoints.Count - 1], microphonePosition);
 
         return distance;
     }

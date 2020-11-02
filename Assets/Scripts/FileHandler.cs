@@ -7,16 +7,16 @@ public class FileHandler
 {
     public static Tuple<List<float>, List<float>> ReadFromFile(string fileName)
     {
-        List<float> x = new List<float>();
-        List<float> y = new List<float>();
-        using (System.IO.StreamReader file = new System.IO.StreamReader(fileName))
+        var x = new List<float>();
+        var y = new List<float>();
+        using (var file = new System.IO.StreamReader(fileName))
         {
             while (!file.EndOfStream)
             {
-                string text = file.ReadLine();
-                string[] bits = text.Split(' ');
-                x.Add(System.Single.Parse(bits[0]));
-                y.Add(System.Single.Parse(bits[1]));
+                var text = file.ReadLine();
+                var bits = text.Split(' ');
+                x.Add(Single.Parse(bits[0]));
+                y.Add(Single.Parse(bits[1]));
             }
         }
 
@@ -33,18 +33,18 @@ public class FileHandler
         }
     }
 
-    public static void WriteFrquencies(Echogram frequencyReponse, List<MicrophoneSphere> microphones)
+    public static void WriteFrquencies(Echogram frequencyResponse, List<MicrophoneSphere> microphones)
     {
-        for (int indexMicro = 0; indexMicro < frequencyReponse.Count; ++indexMicro)
+        for (int indexMicro = 0; indexMicro < frequencyResponse.Count; ++indexMicro)
         {
-            List<float> x = new List<float>();
-            List<float> y = new List<float>();
-            for (int index = 0; index < frequencyReponse[microphones[indexMicro].Id].Count; ++index)
+            var x = new List<float>();
+            var y = new List<float>();
+            for (int index = 0; index < frequencyResponse[microphones[indexMicro].id].Count; ++index)
             {
-                x.Add((float)frequencyReponse[microphones[indexMicro].Id][index].Magnitude);
-                y.Add((float)frequencyReponse[microphones[indexMicro].Id][index].Phase);
+                x.Add((float)frequencyResponse[microphones[indexMicro].id][index].Magnitude);
+                y.Add((float)frequencyResponse[microphones[indexMicro].id][index].Phase);
             }
-            FileHandler.WriteToFile(x, y, microphones[indexMicro].Id.ToString() + "M.txt");
+            FileHandler.WriteToFile(x, y, microphones[indexMicro].id.ToString() + "M.txt");
         }
     }
 
@@ -54,18 +54,18 @@ public class FileHandler
         List<MicrophoneSphere> microphones,
         List<double> frequencies)
     {
-        DistanceCalculator distanceCalculator = new DistanceCalculator(rays, microphones);
+        var distanceCalculator = new DistanceCalculator(rays, microphones);
         distanceCalculator.ComputeDistances();
 
-        Dictionary<int, List<float>> times = TimeCalculator.GetTime(rays, microphones);
+        var times = TimeCalculator.GetTime(rays, microphones);
 
-        for (int indexFrequencie = 0; indexFrequencie < frequencies.Count; ++indexFrequencie)
+        for (int indexFrequency = 0; indexFrequency < frequencies.Count; ++indexFrequency)
             for (int indexMicro = 0; indexMicro < microphones.Count; ++indexMicro)
             {
-                List<float> xTime = times[microphones[indexMicro].Id];
-                List<float> yMagnitude = new List<float>();
-                List<float> yPhase = new List<float>();
-                List<Complex> microphoneIntensities = echograms[frequencies[indexFrequencie]][microphones[indexMicro].Id];
+                var xTime = times[microphones[indexMicro].id];
+                var yMagnitude = new List<float>();
+                var yPhase = new List<float>();
+                var microphoneIntensities = echograms[frequencies[indexFrequency]][microphones[indexMicro].id];
                 for (int index = 0; index < microphoneIntensities.Count; ++index)
                 {
                     yPhase.Add((float)(microphoneIntensities[index].Phase * 180 / Math.PI));
@@ -73,10 +73,10 @@ public class FileHandler
                 }
 
                 WriteToFile(xTime, yMagnitude, "results/timeMagnitude" +
-                    (microphones[indexMicro].Id + 1).ToString() + "M" + frequencies[indexFrequencie].ToString() + "Hz.txt");
+                    (microphones[indexMicro].id + 1).ToString() + "M" + frequencies[indexFrequency].ToString() + "Hz.txt");
 
                 WriteToFile(xTime, yPhase, "results/timePhase" +
-                   (microphones[indexMicro].Id + 1).ToString() + "M" + frequencies[indexFrequencie].ToString() + "Hz.txt");
+                   (microphones[indexMicro].id + 1).ToString() + "M" + frequencies[indexFrequency].ToString() + "Hz.txt");
             }
     }
 }
