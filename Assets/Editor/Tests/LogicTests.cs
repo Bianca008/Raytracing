@@ -14,7 +14,7 @@ namespace Tests
         [Test]
         public void RayDistanceZeroCollisionPoints_Test()
         {
-            AcousticRay ray = new AcousticRay(new Vector3(0, 0, 0), new Vector3(1, 5, 7));
+            var ray = new AcousticRay(new Vector3(0, 0, 0), new Vector3(1, 5, 7));
 
             Assert.IsTrue(Math.Abs(ray.GetDistance() - 8.66) < 1e-2);
         }
@@ -22,7 +22,7 @@ namespace Tests
         [Test]
         public void RayDistance_Test()
         {
-            AcousticRay ray = new AcousticRay(new Vector3(0, 0, 0), new Vector3(1, 5, 7));
+            var ray = new AcousticRay(new Vector3(0, 0, 0), new Vector3(1, 5, 7));
             ray.collisionPoints.Add(new Vector3(1, 5, 3));
             ray.collisionPoints.Add(new Vector3(1, 2, 6));
 
@@ -32,16 +32,16 @@ namespace Tests
         [Test]
         public void ZeroIntersectedRays_Test()
         {
-            List<MicrophoneSphere> microphone = new List<MicrophoneSphere>(){
+            var microphone = new List<MicrophoneSphere>(){
                 new MicrophoneSphere(new System.Numerics.Vector3(2, 1.6f, 1.7f), 0.1f) };
-            RayGeometry rayGeometryGenerator = new RayGeometry(new Vector3(0, 0, 0),
+            var rayGeometryGenerator = new RayGeometry(new Vector3(0, 0, 0),
                 microphone,
                 3,
                 3,
                 200);
             rayGeometryGenerator.GenerateRays();
 
-            List<AcousticRay> newRays = rayGeometryGenerator.GetIntersectedRays(microphone[0]);
+            var newRays = rayGeometryGenerator.GetIntersectedRays(microphone[0]);
 
             newRays.Sort(delegate (AcousticRay first, AcousticRay second)
             {
@@ -55,16 +55,16 @@ namespace Tests
         [Test]
         public void IntersectedRays_Test()
         {
-            List<MicrophoneSphere> microphone = new List<MicrophoneSphere>(){
+            var microphone = new List<MicrophoneSphere>(){
                 new MicrophoneSphere(new System.Numerics.Vector3(0, 0, 1.976f), 0.1f) };
-            RayGeometry rayGeometryGenerator = new RayGeometry(new Vector3(0, 0, 0),
+            var rayGeometryGenerator = new RayGeometry(new Vector3(0, 0, 0),
                 microphone,
                 3,
                 3,
                 200);
             rayGeometryGenerator.GenerateRays();
 
-            List<AcousticRay> newRays = rayGeometryGenerator.GetIntersectedRays(microphone[0]);
+            var newRays = rayGeometryGenerator.GetIntersectedRays(microphone[0]);
 
             newRays.Sort(delegate (AcousticRay first, AcousticRay second)
             {
@@ -78,26 +78,26 @@ namespace Tests
         [Test]
         public void ComputeIntensityForDirectRay_Test()
         {
-            List<MicrophoneSphere> microphone = new List<MicrophoneSphere>(){
+            var microphone = new List<MicrophoneSphere>(){
                 new MicrophoneSphere(new System.Numerics.Vector3(0, 0, 1.976f), 0.1f) };
-            RayGeometry rayGeometryGenerator = new RayGeometry(new Vector3(0, 0, 0),
+            var rayGeometryGenerator = new RayGeometry(new Vector3(0, 0, 0),
                 microphone,
                 3,
                 3,
                 200);
             rayGeometryGenerator.GenerateRays();
 
-            List<AcousticRay> rays = rayGeometryGenerator.GetIntersectedRays(microphone[0]);
+            var rays = rayGeometryGenerator.GetIntersectedRays(microphone[0]);
 
             rays.Sort(delegate (AcousticRay first, AcousticRay second)
             {
                 return first.GetDistance().CompareTo(second.GetDistance());
             });
 
-            Dictionary<int, List<AcousticRay>> myRays = new Dictionary<int, List<AcousticRay>>();
+            var myRays = new Dictionary<int, List<AcousticRay>>();
             myRays.Add(microphone[0].id, rays);
 
-            IntensityCalculator intensityCalculator = new IntensityCalculator(myRays, microphone, 1);
+            var intensityCalculator = new IntensityCalculator(myRays, microphone, 1);
             intensityCalculator.ComputePower();
 
             Assert.IsTrue(Math.Abs(intensityCalculator.intensities[0][0] - 0.02038056768) < 1e-3);
@@ -106,41 +106,41 @@ namespace Tests
         [Test]
         public void ComputeIntensityForRay_Test()
         {
-            List<MicrophoneSphere> microphone = new List<MicrophoneSphere>() {
+            var microphone = new List<MicrophoneSphere>() {
                 new MicrophoneSphere(new System.Numerics.Vector3(0, 0, 1.976f), 0.1f) };
-            RayGeometry rayGeometryGenerator = new RayGeometry(new Vector3(0, 0, 0),
+            var rayGeometryGenerator = new RayGeometry(new Vector3(0, 0, 0),
                 microphone,
                 500,
                 3,
                 200);
             rayGeometryGenerator.GenerateRays();
 
-            List<AcousticRay> rays = rayGeometryGenerator.GetIntersectedRays(microphone[0]);
+            var rays = rayGeometryGenerator.GetIntersectedRays(microphone[0]);
 
             rays.Sort(delegate (AcousticRay first, AcousticRay second)
             {
                 return first.GetDistance().CompareTo(second.GetDistance());
             });
 
-            Dictionary<int, List<AcousticRay>> myRays = new Dictionary<int, List<AcousticRay>>();
+            var myRays = new Dictionary<int, List<AcousticRay>>();
             myRays.Add(microphone[0].id, rays);
 
-            IntensityCalculator intensityCalculator = new IntensityCalculator(myRays, microphone, 1);
+            var intensityCalculator = new IntensityCalculator(myRays, microphone, 1);
             intensityCalculator.ComputePower();
 
-            double epsilon = 1e-5;
+            var epsilon = 1e-5;
             Assert.IsTrue(Math.Abs(intensityCalculator.intensities[0][9] - 0.0005087481) < epsilon);
         }
 
         [Test]
         public void GetPolarCoordinates_Test()
         {
-            Vector3 point = new Vector3(3, 4, 5);
+            var point = new Vector3(3, 4, 5);
 
-            Vector3 polarCoordinates = DegreesRadiansConverter.TransformToPolarCoordinates(point);
+            var polarCoordinates = DegreesRadiansConverter.TransformToPolarCoordinates(point);
 
             double[] expectedValues = { 7.0710678118655, 0.92729521800161, 0.78539816339745 };
-            double epsilon = 1e-5;
+            var epsilon = 1e-5;
             Assert.IsTrue(Math.Abs(expectedValues[0] - polarCoordinates.X) < epsilon);
             Assert.IsTrue(Math.Abs(expectedValues[1] - polarCoordinates.Y) < epsilon);
             Assert.IsTrue(Math.Abs(expectedValues[2] - polarCoordinates.Z) < epsilon);
@@ -149,14 +149,14 @@ namespace Tests
         [Test]
         public void GetCartesianCoordinates_Test()
         {
-            Vector3 point = new Vector3(3, 4, 5);
+            var point = new Vector3(3, 4, 5);
 
-            Vector3 polarCoordinates = DegreesRadiansConverter.TransformToPolarCoordinates(point);
-            Vector3 recalculatedPoint = DegreesRadiansConverter.TransformToCartesianCoordinates(polarCoordinates.X,
+            var polarCoordinates = DegreesRadiansConverter.TransformToPolarCoordinates(point);
+            var recalculatedPoint = DegreesRadiansConverter.TransformToCartesianCoordinates(polarCoordinates.X,
                 polarCoordinates.Y,
                 polarCoordinates.Z);
 
-            double epsilon = 1e-8;
+            var epsilon = 1e-8;
             Assert.IsTrue(Math.Abs(recalculatedPoint.X - point.X) < epsilon);
             Assert.IsTrue(Math.Abs(recalculatedPoint.Y - point.Y) < epsilon);
             Assert.IsTrue(Math.Abs(recalculatedPoint.Z - point.Z) < epsilon);

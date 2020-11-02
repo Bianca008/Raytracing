@@ -13,21 +13,20 @@ public class ButtonHandler
         int indexMicrophone)
     {
         var file = indexMicrophone.ToString() + "M.txt";
-        var magnitudeAndPhase = FileHandler.ReadFromFile(file);
-        var freq = new List<float>();
-
-        foreach (var frequency in frequencies)
-            freq.Add((float)frequency);
+        var (magnitude, phase) = FileHandler.ReadFromFile(file);
+        var freq = frequencies.Select(frequency => (float) frequency).ToList();
 
         chartDrawer = new ChartDrawer(menuCanvas);
-        chartDrawer.DrawFrequencyChart(freq, magnitudeAndPhase.Item1, magnitudeAndPhase.Item2);
+        chartDrawer.DrawFrequencyChart(freq, magnitude, phase);
     }
 
     public void ShowFrequencyChart(
         InputField microphoneField,
         GameObject menuCanvas,
         ChartDrawer chartDrawer,
-        List<double> frequencies,
+        List<double> f
+    
+    s,
         List<MicrophoneSphere> microphones)
     {
         var numberOfMicrophoneStr = microphoneField.text;

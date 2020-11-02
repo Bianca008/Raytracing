@@ -33,7 +33,7 @@ public class FileHandler
         }
     }
 
-    public static void WriteFrquencies(Echogram frequencyResponse, List<MicrophoneSphere> microphones)
+    public static void WriteFrequencies(Echogram frequencyResponse, List<MicrophoneSphere> microphones)
     {
         for (int indexMicro = 0; indexMicro < frequencyResponse.Count; ++indexMicro)
         {

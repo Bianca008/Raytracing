@@ -47,8 +47,8 @@ public class RayGenerator : MonoBehaviour
         //WriteToFileTimePressure();
         IntersectedRays = m_Rays[NumberOfMicrophone - 1].Count;
 
-        ComputeFrequencyReponse();
-        FileHandler.WriteFrquencies(m_FrequencyResponse, m_Microphones);
+        ComputeFrequencyResponse();
+        FileHandler.WriteFrequencies(m_FrequencyResponse, m_Microphones);
 
         SoundConvolver.ConvolveSound(m_AudioSource, m_FrequencyResponse, m_Microphones);
         InitializeUi();
@@ -188,7 +188,7 @@ public class RayGenerator : MonoBehaviour
         }
     }
 
-    private void ComputeFrequencyReponse()
+    private void ComputeFrequencyResponse()
     {
         m_FrequencyResponse = new Dictionary<int, List<Complex>>();
 
@@ -247,14 +247,14 @@ public class RayGenerator : MonoBehaviour
         chartPanel.SetActive(true);
     }
 
-    private void DrawChart(int indexMicrophone, double indexFrequencie)
+    private void DrawChart(int indexMicrophone, double indexFrequency)
     {
         var timeMagnitudeFile = "results/timeMagnitude" +
                                 (indexMicrophone).ToString() + "M" +
-                                indexFrequencie.ToString() + "Hz.txt";
+                                indexFrequency.ToString() + "Hz.txt";
         var timePhaseFile = "results/timePhase" +
                             (indexMicrophone).ToString() + "M" +
-                            indexFrequencie.ToString() + "Hz.txt";
+                            indexFrequency.ToString() + "Hz.txt";
 
         var timePhase = FileHandler.ReadFromFile(timePhaseFile);
         var timeMagnitude = FileHandler.ReadFromFile(timeMagnitudeFile);
