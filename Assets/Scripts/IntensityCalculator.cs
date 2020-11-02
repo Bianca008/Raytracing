@@ -6,25 +6,18 @@ public class IntensityCalculator
     private Dictionary<int, List<AcousticRay>> rays
     {
         get;
-        set;
     }
 
     private List<MicrophoneSphere> microphones
     {
         get;
-        set;
     }
 
-    public Dictionary<int, List<double>> intensities
-    {
-        get;
-        set;
-    }
+    public Dictionary<int, List<double>> intensities { get; set; } = new Dictionary<int, List<double>>();
 
     private double initialIntensity
     {
         get;
-        set;
     }
 
     public IntensityCalculator(
@@ -34,7 +27,6 @@ public class IntensityCalculator
     {
         initialIntensity = initialPower / (4.0 * Math.PI);
         this.rays = rays;
-        intensities = new Dictionary<int, List<double>>();
         this.microphones = microphones;
     }
 

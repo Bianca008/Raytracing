@@ -9,11 +9,7 @@ public class RayGeometry
     private readonly int m_MaxDistance;
     private readonly IRayCaster m_RayCaster;
 
-    public List<AcousticRay> rays
-    {
-        get;
-        set;
-    }
+    public List<AcousticRay> rays { get; set; } = new List<AcousticRay>();
 
     public RayGeometry(Vector3 sourcePos,
         List<MicrophoneSphere> microphones,
@@ -21,7 +17,6 @@ public class RayGeometry
         int nrOfCollisions = 3,
         int maxDist = 200)
     {
-        rays = new List<AcousticRay>();
         m_NumberOfCollisions = nrOfCollisions;
         m_NumberOfRays = nrOfRays;
         m_MaxDistance = maxDist;

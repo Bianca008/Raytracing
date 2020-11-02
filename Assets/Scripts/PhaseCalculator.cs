@@ -7,20 +7,14 @@ public class PhaseCalculator
     private Dictionary<int, List<AcousticRay>> rays
     {
         get;
-        set;
     }
 
     private List<MicrophoneSphere> microphones
     {
         get;
-        set;
     }
 
-    private Dictionary<int, List<Complex>> echogramMagnitudePhase
-    {
-        get;
-        set;
-    }
+    private Dictionary<int, List<Complex>> echogramMagnitudePhase { get; } = new Dictionary<int, List<Complex>>();
 
     private Dictionary<int, List<double>> pressures
     {
@@ -34,7 +28,6 @@ public class PhaseCalculator
         this.rays = rays;
         pressures = pressure;
         this.microphones = microphones;
-        echogramMagnitudePhase = new Dictionary<int, List<Complex>>();
     }
 
     private void SetEchogram()

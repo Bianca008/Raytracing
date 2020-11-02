@@ -24,7 +24,7 @@ public class RayGenerator : MonoBehaviour
     private const int maxDistance = 200;
     private readonly int numberOfReflections = 8;
     private Dictionary<double, Echogram> m_Echograms;
-    private Dictionary<int, List<Complex>> m_FrequencyReponse;
+    private Dictionary<int, List<Complex>> m_FrequencyResponse;
     private List<double> m_Frequencies;
     private Dictionary<int, List<AcousticRay>> m_Rays;
     private LineRenderer[] m_IntersectedLines;
@@ -48,9 +48,9 @@ public class RayGenerator : MonoBehaviour
         IntersectedRays = m_Rays[NumberOfMicrophone - 1].Count;
 
         ComputeFrequencyReponse();
-        FileHandler.WriteFrquencies(m_FrequencyReponse, m_Microphones);
+        FileHandler.WriteFrquencies(m_FrequencyResponse, m_Microphones);
 
-        SoundConvolver.ConvolveSound(m_AudioSource, m_FrequencyReponse, m_Microphones);
+        SoundConvolver.ConvolveSound(m_AudioSource, m_FrequencyResponse, m_Microphones);
         InitializeUi();
     }
 
@@ -190,7 +190,7 @@ public class RayGenerator : MonoBehaviour
 
     private void ComputeFrequencyReponse()
     {
-        m_FrequencyReponse = new Dictionary<int, List<Complex>>();
+        m_FrequencyResponse = new Dictionary<int, List<Complex>>();
 
         foreach (var microphone in m_Microphones)
         {
@@ -201,7 +201,7 @@ public class RayGenerator : MonoBehaviour
                     Aggregate((s, a) => s + a);
                 values.Add(sumi);
             }
-            m_FrequencyReponse[microphone.id] = values;
+            m_FrequencyResponse[microphone.id] = values;
         }
     }
 
