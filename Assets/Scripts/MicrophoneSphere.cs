@@ -6,7 +6,7 @@ public class MicrophoneSphere
     public int id
     {
         get;
-        set;
+        private set;
     }
 
     public Vector3 center
@@ -22,6 +22,11 @@ public class MicrophoneSphere
     }
 
     private static int m_id = -1;
+
+    ~MicrophoneSphere()
+    {
+        --m_id;
+    }
 
     public MicrophoneSphere(Vector3 center, float radius)
     {
