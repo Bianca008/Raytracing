@@ -18,9 +18,12 @@ public class RayGenerator : MonoBehaviour
     public Material LineMaterial;
     public GameObject MenuCanvas;
     public Button ShowButton;
+    public Button ShowTimeButton;
     public Button ShowFrequencyEchogramButton;
     public Button ShowTimeEchogramButton;
     public InputField NumberOfMicrophoneInputField;
+    public InputField NumberOfMicrophoneTimeInputField;
+    public InputField FrequencyInputField;
 
     private const int maxDistance = 200;
     private readonly int numberOfReflections = 8;
@@ -209,10 +212,13 @@ public class RayGenerator : MonoBehaviour
     private void InitializeUi()
     {
         UiHandler uiHandler = new UiHandler(MenuCanvas);
-        uiHandler.InitializeUi(ShowFrequencyEchogramButton, 
+        uiHandler.InitializeUi(ShowFrequencyEchogramButton,
             ShowButton,
-            ShowTimeEchogramButton, 
-            NumberOfMicrophoneInputField, 
+            ShowTimeEchogramButton,
+            ShowTimeButton,
+            NumberOfMicrophoneInputField,
+            NumberOfMicrophoneTimeInputField,
+            FrequencyInputField,
             m_Microphones,
             m_Frequencies);
     }

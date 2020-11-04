@@ -15,7 +15,6 @@ public class UiHandler
     GameObject menuCanvas
     {
         get;
-        set;
     }
 
     public UiHandler(GameObject menuCanvas)
@@ -57,14 +56,49 @@ public class UiHandler
             Debug.Log("The microphone for which you want to see the result does not exist.");
     }
 
+    private void ShowTimeChart(
+        InputField microphoneField,
+        InputField frequencyField,
+        List<double> frequencies,
+        List<MicrophoneSphere> microphones)
+    {
+        var frequencyFieldStr = frequencyField.text;
+        var numberOfMicrophoneStr = microphoneField.text;
+        var numberOfMicrophone = 0;
+        var frequency = 0.0;
+        if (numberOfMicrophoneStr.All(char.IsDigit) == true)
+            numberOfMicrophone = Int32.Parse(numberOfMicrophoneStr);
+        if (frequencyFieldStr.All(char.IsDigit) == true)
+            frequency = Int32.Parse(frequencyFieldStr);
+
+        var okToDraw = false;
+        foreach (var micro in microphones)
+            if (micro.id == numberOfMicrophone)
+                okToDraw = true;
+        var okToDrawFr = false;
+        foreach (var fr in frequencies)
+            if (Math.Abs(fr - frequency) < 1e-2)
+                okToDrawFr = true;
+
+        if (okToDraw == true && okToDrawFr == true)
+            DrawTimeEchogram(numberOfMicrophone, frequency);
+        else
+            Debug.Log("The microphone for which you want to see the result does not exist.");
+    }
+
     public void InitializeUi(
         Button showFrequencyEchogramButton,
         Button showButton,
         Button showTimeEchogramButton,
+        Button showTimeButton,
         InputField numberOfMicrophoneInputField,
+        InputField numberOfMicrophoneTimeInputField,
+        InputField frequencyInputField,
         List<MicrophoneSphere> microphones,
         List<double> frequencies)
     {
+        var inputTimePanel = menuCanvas.transform.Find("InputTimePanel").gameObject;
+        inputTimePanel.SetActive(false);
         var inputPanel = GameObject.Find("InputPanel");
         inputPanel.SetActive(false);
         var frequencyPanel = GameObject.Find("FrequencyPanel");
@@ -75,6 +109,7 @@ public class UiHandler
         AddListenerForShowFrequencyEchogram(showFrequencyEchogramButton);
         AddListenerForShowButton(showButton, numberOfMicrophoneInputField, frequencies, microphones);
         AddListenerForShowTimeEchogram(showTimeEchogramButton);
+        AddListenerForShowTimeButton(showTimeButton, numberOfMicrophoneTimeInputField, frequencyInputField, frequencies, microphones);
     }
 
     private void AddListenerForShowButton(
@@ -86,6 +121,22 @@ public class UiHandler
         showButton.onClick.AddListener(() =>
         {
             ShowFrequencyChart(numberOfMicrophoneInputField,
+                frequencies,
+                microphones);
+        });
+    }
+
+    private void AddListenerForShowTimeButton(
+        Button showTimeButton,
+        InputField numberOfMicrophoneTimeInputField,
+        InputField frequencyInputField,
+        List<double> frequencies,
+        List<MicrophoneSphere> microphones)
+    {
+        showTimeButton.onClick.AddListener(() =>
+        {
+            ShowTimeChart(numberOfMicrophoneTimeInputField,
+                frequencyInputField,
                 frequencies,
                 microphones);
         });
@@ -103,14 +154,15 @@ public class UiHandler
 
     private void SetActiveTimeEchogramUi()
     {
-        var inputPanel = menuCanvas.transform.Find("InputPanel").gameObject;
-        inputPanel.SetActive(true);
+        var inputTimePanel = menuCanvas.transform.Find("InputTimePanel").gameObject;
+        inputTimePanel.SetActive(true);
         var buttonsAndPlotPanel = menuCanvas.transform.Find("ButtonsAndPlotPanel").gameObject;
         var timePanel = buttonsAndPlotPanel.transform.Find("TimePanel").gameObject;
         timePanel.SetActive(true);
         var frequencyPanel = buttonsAndPlotPanel.transform.Find("FrequencyPanel").gameObject;
         frequencyPanel.SetActive(false);
-        //DrawChart(1, 2.691650390625);
+        var inputPanel = menuCanvas.transform.Find("InputPanel").gameObject;
+        inputPanel.SetActive(false);
     }
 
     private void SetActiveFrequencyEchogramUi()
@@ -122,9 +174,11 @@ public class UiHandler
         frequencyPanel.SetActive(true);
         var timePanel = buttonsAndPlotPanel.transform.Find("TimePanel").gameObject;
         timePanel.SetActive(false);
+        var inputTimePanel = menuCanvas.transform.Find("InputTimePanel").gameObject;
+        inputTimePanel.SetActive(false);
     }
 
-    private void DrawChart(int indexMicrophone, double indexFrequency)
+    private void DrawTimeEchogram(int indexMicrophone, double indexFrequency)
     {
         var timeMagnitudeFile = "results/timeMagnitude" +
                                 (indexMicrophone).ToString() + "M" +
