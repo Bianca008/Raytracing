@@ -24,9 +24,7 @@ public class ButtonHandler
         InputField microphoneField,
         GameObject menuCanvas,
         ChartDrawer chartDrawer,
-        List<double> f
-    
-    s,
+        List<double> frequencies,
         List<MicrophoneSphere> microphones)
     {
         var numberOfMicrophoneStr = microphoneField.text;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Vector3 = System.Numerics.Vector3;
 
@@ -31,11 +32,15 @@ public class AcousticRay
 
     public AcousticRay TruncateRay(int position, Vector3 microphonePos)
     {
-        var newRay = new AcousticRay(source, microphonePos);
-        /*index, number of elements to copy*/
-        newRay.collisionPoints = collisionPoints.GetRange(0, position);
-        /* TODO: see acoustic material for last acoustic material */
-        newRay.acousticMaterials = acousticMaterials.GetRange(0, position);
+        if (position > collisionPoints.Count || position > acousticMaterials.Count)
+            return this;
+
+        var newRay = new AcousticRay(source, microphonePos)
+        {
+            /*index, number of elements to copy*/
+            collisionPoints = collisionPoints.GetRange(0, position),
+            acousticMaterials = acousticMaterials.GetRange(0, position)
+        };
 
         return newRay;
     }
@@ -48,10 +53,8 @@ public class AcousticRay
         var distance = Vector3.Distance(source,
             collisionPoints[0]);
 
-        for (int index = 0; index < collisionPoints.Count - 1; ++index)
-        {
-            distance += Vector3.Distance(collisionPoints[index], collisionPoints[index + 1]);
-        }
+        distance += collisionPoints.Select((vec, index) =>
+            index == collisionPoints.Count - 1 ? 0 : Vector3.Distance(vec, collisionPoints[index + 1])).Sum();
 
         distance += Vector3.Distance(collisionPoints[collisionPoints.Count - 1], microphonePosition);
 
