@@ -102,7 +102,7 @@ namespace Tests
         [Test]
         public void ComputeIntensityForRay_Test()
         {
-            var microphone = new List<MicrophoneSphere>()
+            var microphone = new List<MicrophoneSphere>() 
             {
                 new MicrophoneSphere(new System.Numerics.Vector3(0, 0, 1.976f), 0.1f)
             };

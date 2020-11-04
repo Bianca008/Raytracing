@@ -19,6 +19,7 @@ public class RayGenerator : MonoBehaviour
     public GameObject MenuCanvas;
     public Button ShowButton;
     public Button ShowFrequencyEchogramButton;
+    public Button ShowTimeEchogramButton;
     public InputField NumberOfMicrophoneInputField;
 
     private const int maxDistance = 200;
@@ -44,7 +45,6 @@ public class RayGenerator : MonoBehaviour
         DrawMicrophones();
 
         ComputeIntensities();
-        //WriteToFileTimePressure();
         IntersectedRays = m_Rays[NumberOfMicrophone - 1].Count;
 
         ComputeFrequencyResponse();
@@ -186,6 +186,8 @@ public class RayGenerator : MonoBehaviour
             var phaseCalculator = new PhaseCalculator(m_Rays, m_Microphones, intensities);
             m_Echograms[frequency] = phaseCalculator.ComputePhase(frequency);
         }
+
+        //FileHandler.WriteToFileTimePressure(m_Echograms, m_Rays, m_Microphones, m_Frequencies);
     }
 
     private void ComputeFrequencyResponse()
@@ -223,28 +225,49 @@ public class RayGenerator : MonoBehaviour
     {
         var buttonHandler = new ButtonHandler();
 
-        ShowFrequencyEchogramButton.onClick.AddListener(SetActiveFrequncyEchogramUi);
+        ShowFrequencyEchogramButton.onClick.AddListener(SetActiveFrequencyEchogramUi);
+    }
+
+    private void AddListenerForShowTimeEchogram()
+    {
+        ShowTimeEchogramButton.onClick.AddListener(SetActiveTimeEchogramUi);
     }
 
     private void InitializeUi()
     {
         var inputPanel = GameObject.Find("InputPanel");
         inputPanel.SetActive(false);
-        var chartPanel = GameObject.Find("ChartPanel");
-        chartPanel.SetActive(false);
+        var frequencyPanel = GameObject.Find("FrequencyPanel");
+        frequencyPanel.SetActive(false);
+        var timePanel = GameObject.Find("TimePanel");
+        timePanel.SetActive(false);
 
         AddListenerForShowFrequencyEchogram();
         AddListenerForShowButton();
+        AddListenerForShowTimeEchogram();
     }
 
-    private void SetActiveFrequncyEchogramUi()
+    private void SetActiveTimeEchogramUi()
     {
         var inputPanel = MenuCanvas.transform.Find("InputPanel").gameObject;
-        Debug.Log(inputPanel);
         inputPanel.SetActive(true);
-        var buttonsAndPlotPanel= MenuCanvas.transform.Find("ButtonsAndPlotPanel").gameObject;
-        var chartPanel = buttonsAndPlotPanel.transform.Find("ChartPanel").gameObject;
-        chartPanel.SetActive(true);
+        var buttonsAndPlotPanel = MenuCanvas.transform.Find("ButtonsAndPlotPanel").gameObject;
+        var timePanel = buttonsAndPlotPanel.transform.Find("TimePanel").gameObject;
+        timePanel.SetActive(true);
+        var frequencyPanel = buttonsAndPlotPanel.transform.Find("FrequencyPanel").gameObject;
+        frequencyPanel.SetActive(false);
+        //DrawChart(1, 2.691650390625);
+    }
+
+    private void SetActiveFrequencyEchogramUi()
+    {
+        var inputPanel = MenuCanvas.transform.Find("InputPanel").gameObject;
+        inputPanel.SetActive(true);
+        var buttonsAndPlotPanel = MenuCanvas.transform.Find("ButtonsAndPlotPanel").gameObject;
+        var frequencyPanel = buttonsAndPlotPanel.transform.Find("FrequencyPanel").gameObject;
+        frequencyPanel.SetActive(true);
+        var timePanel = buttonsAndPlotPanel.transform.Find("TimePanel").gameObject;
+        timePanel.SetActive(false);
     }
 
     private void DrawChart(int indexMicrophone, double indexFrequency)
@@ -256,13 +279,13 @@ public class RayGenerator : MonoBehaviour
                             (indexMicrophone).ToString() + "M" +
                             indexFrequency.ToString() + "Hz.txt";
 
-        var timePhase = FileHandler.ReadFromFile(timePhaseFile);
-        var timeMagnitude = FileHandler.ReadFromFile(timeMagnitudeFile);
+        var (tm, phase) = FileHandler.ReadFromFile(timePhaseFile);
+        var (time, magnitude) = FileHandler.ReadFromFile(timeMagnitudeFile);
 
-        for (int index = 0; index < timeMagnitude.Item1.Count; ++index)
-            timeMagnitude.Item1[index] = (float)Math.Round(timeMagnitude.Item1[index] * 1000, 2);
+        for (int index = 0; index < time.Count; ++index)
+            time[index] = (float)Math.Round(time[index] * 1000, 2);
 
         m_ChartDrawer = new ChartDrawer(MenuCanvas);
-        m_ChartDrawer.Draw(timeMagnitude.Item1, timeMagnitude.Item2, timePhase.Item2);
+        m_ChartDrawer.Draw(time, magnitude, phase);
     }
 }
