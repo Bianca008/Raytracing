@@ -14,7 +14,7 @@ public class TimeCalculator
          */
         for (int indexMicro = 0; indexMicro < microphones.Count; ++indexMicro)
         {
-            rayTimes[indexMicro] = new List<float>();
+            rayTimes[microphones[indexMicro].id] = new List<float>();
             for (int indexRay = 0; indexRay < rays[microphones[indexMicro].id].Count; ++indexRay)
                 rayTimes[microphones[indexMicro].id].Add(
                     (float)(rays[microphones[indexMicro].id][indexRay].GetDistance() / airSoundSpeed));

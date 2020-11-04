@@ -105,7 +105,7 @@ namespace Tests
             var intensityCalculator = new IntensityCalculator(myRays, microphone, 1);
             intensityCalculator.ComputePower();
 
-            Assert.IsTrue(Math.Abs(intensityCalculator.intensities[0][0] - 0.02038056768) < 1e-3);
+            Assert.IsTrue(Math.Abs(intensityCalculator.intensities[microphone[0].id][0] - 0.02038056768) < 1e-3);
         }
 
         [Test]
@@ -136,7 +136,7 @@ namespace Tests
             intensityCalculator.ComputePower();
 
             var epsilon = 1e-5;
-            Assert.IsTrue(Math.Abs(intensityCalculator.intensities[0][9] - 0.0005087481) < epsilon);
+            Assert.IsTrue(Math.Abs(intensityCalculator.intensities[microphone[0].id][9] - 0.0005087481) < epsilon);
         }
 
         [Test]
@@ -212,235 +212,213 @@ namespace Tests
             Assert.IsTrue(newRay.collisionPoints.Count == 3 && newRay.acousticMaterials.Count == 3);
         }
 
-        //[Test]
-        //public void CollisionPoints_Test()
-        //{
-        //    Vector3 origin = new Vector3(0, 0, 0);
-        //    Vector3 microphone = new Vector3(1, 5, 3);
+        [Test]
+        public void CollisionPoints_Test()
+        {
+            var origin = new Vector3(0, 0, 0);
+            var microphone = new Vector3(1, 5, 3);
 
-        //    AcousticRay firstRay = new AcousticRay(origin, microphone);
-        //    AcousticRay secondRay = new AcousticRay(origin, microphone);
-        //    AcousticRay thirdRay = new AcousticRay(origin, microphone);
+            var firstRay = new AcousticRay(origin, microphone);
+            var secondRay = new AcousticRay(origin, microphone);
+            var thirdRay = new AcousticRay(origin, microphone);
 
-        //    List<Vector3> firstRayVectors = new List<Vector3>()
-        //    {
-        //        new Vector3(1, 2, 3),
-        //        new Vector3(1, 2, 4),
-        //        new Vector3(1, 3, 3),
-        //        new Vector3(1, 5.02f, 3)
-        //    };
+            var firstRayVectors = new List<Vector3>()
+            {
+                new Vector3(1, 2, 3),
+                new Vector3(1, 2, 4),
+                new Vector3(1, 3, 3),
+                new Vector3(1, 5.02f, 3)
+            };
 
-        //    List<Vector3> secondRayVectors = new List<Vector3>()
-        //    {
-        //        new Vector3(1, 2, 3),
-        //        new Vector3(1, 2, 4),
-        //        new Vector3(1, 2, 5)
-        //    };
+            var secondRayVectors = new List<Vector3>()
+            {
+                new Vector3(1, 2, 3),
+                new Vector3(1, 2, 4),
+                new Vector3(1, 2, 5)
+            };
 
-        //    List<Vector3> thirdRayVectors = new List<Vector3>()
-        //    {
-        //        new Vector3(1, 2, 5),
-        //        new Vector3(1, 3, 5),
-        //        new Vector3(1, 4, 5),
-        //        new Vector3(1, 5, 5),
-        //        new Vector3(1, 6, 3.002f)
-        //    };
+            var thirdRayVectors = new List<Vector3>()
+            {
+                new Vector3(1, 2, 5),
+                new Vector3(1, 3, 5),
+                new Vector3(1, 4, 5),
+                new Vector3(1, 5, 5),
+                new Vector3(1, 6, 3.002f)
+            };
 
-        //    for (int index = 0; index < firstRayVectors.Count; ++index)
-        //        firstRay.CollisionPoints.Add(firstRayVectors[index]);
+            for (int index = 0; index < firstRayVectors.Count; ++index)
+                firstRay.collisionPoints.Add(firstRayVectors[index]);
 
-        //    for (int index = 0; index < secondRayVectors.Count; ++index)
-        //        secondRay.CollisionPoints.Add(secondRayVectors[index]);
+            for (int index = 0; index < secondRayVectors.Count; ++index)
+                secondRay.collisionPoints.Add(secondRayVectors[index]);
 
-        //    for (int index = 0; index < thirdRayVectors.Count; ++index)
-        //        thirdRay.CollisionPoints.Add(thirdRayVectors[index]);
+            for (int index = 0; index < thirdRayVectors.Count; ++index)
+                thirdRay.collisionPoints.Add(thirdRayVectors[index]);
 
-        //    Assert.IsTrue(firstRay.CollisionPoints.Count == 4);
-        //    Assert.IsTrue(secondRay.CollisionPoints.Count == 3);
-        //    Assert.IsTrue(thirdRay.CollisionPoints.Count == 5);
-        //}
+            Assert.IsTrue(firstRay.collisionPoints.Count == 4 && secondRay.collisionPoints.Count == 3 && thirdRay.collisionPoints.Count == 5);
+        }
 
-        //[Test]
-        //public void DistanceForZeroCollisionPoints_Test()
-        //{
-        //    Vector3 origin = new Vector3(0, 0, 0);
-        //    Vector3 microphone = new Vector3(1, 5, 3);
+        [Test]
+        public void DistanceForZeroCollisionPoints_Test()
+        {
+            var origin = new Vector3(0, 0, 0);
+            var microphonePosition = new Vector3(1, 5, 3);
+            var microphones = new List<MicrophoneSphere>()
+            {
+                new MicrophoneSphere(microphonePosition, 0.5f)
+            };
 
-        //    AcousticRay firstRay = new AcousticRay(origin, microphone);
 
-        //    List<AcousticRay> rays = new List<AcousticRay>();
-        //    rays.Add(firstRay);
+            var firstRay = new AcousticRay(origin, microphonePosition);
 
-        //    DistanceCalculator distanceCalculator = new DistanceCalculator(rays);
-        //    distanceCalculator.ComputeDistances();
+            var rays = new List<AcousticRay>
+            {
+                firstRay
+            };
 
-        //    Assert.IsTrue(Math.Abs(rays[0].Distances[0] - 5.92) < 1e-2);
-        //}
+            Assert.IsTrue(Math.Abs(rays[0].GetDistance() - 5.92) < 1e-2);
+        }
 
-        //[Test]
-        //public void DistanceForMultipleCollisionPoints_Test()
-        //{
-        //    Vector3 origin = new Vector3(0, 0, 0);
-        //    Vector3 microphone = new Vector3(1, 5, 3);
+        [Test]
+        public void DistanceForMultipleCollisionPoints_Test()
+        {
+            var origin = new Vector3(0, 0, 0);
+            var microphonePosition = new Vector3(1, 5, 3);
+            var microphones = new List<MicrophoneSphere>()
+            {
+                new MicrophoneSphere(microphonePosition, 0.5f)
+            };
 
-        //    AcousticRay firstRay = new AcousticRay(origin, microphone);
+            var firstRay = new AcousticRay(origin, microphonePosition);
 
-        //    List<Vector3> firstRayVectors = new List<Vector3>()
-        //    {
-        //        new Vector3(1, 2, 3),
-        //        new Vector3(1, 2, 4),
-        //        new Vector3(1, 3, 3),
-        //        new Vector3(1, 5.02f, 3)
-        //    };
+            List<Vector3> firstRayVectors = new List<Vector3>()
+            {
+                new Vector3(1, 2, 3),
+                new Vector3(1, 2, 4),
+                new Vector3(1, 3, 3),
+                new Vector3(1, 5.02f, 3)
+            };
 
-        //    for (int index = 0; index < firstRayVectors.Count; ++index)
-        //        firstRay.CollisionPoints.Add(firstRayVectors[index]);
+            for (int index = 0; index < firstRayVectors.Count; ++index)
+                firstRay.collisionPoints.Add(firstRayVectors[index]);
 
-        //    List<AcousticRay> rays = new List<AcousticRay>();
-        //    rays.Add(firstRay);
+            var rays = new List<AcousticRay>
+            {
+                firstRay
+            };
 
-        //    DistanceCalculator distanceCalculator = new DistanceCalculator(rays);
-        //    distanceCalculator.ComputeDistances();
+            var raysDictionary = new Dictionary<int, List<AcousticRay>>();
+            raysDictionary[microphones[0].id] = rays;
 
-        //    List<float> distancesResults = new List<float>() { 3.74f, 4.74f, 6.15f, 8.17f };
-        //    for (int index = 0; index < distancesResults.Count; ++index)
-        //        Assert.IsTrue(Math.Abs(distancesResults[index] - rays[0].Distances[index]) < 1e-2);
-        //}
+            var distanceCalculator = new DistanceCalculator(raysDictionary, microphones);
+            distanceCalculator.ComputeDistances();
 
-        //[Test]
-        //public void TimeForMultipleCollisionPoints_Test()
-        //{
-        //    Vector3 origin = new Vector3(0, 0, 0);
-        //    Vector3 microphone = new Vector3(1, 5, 3);
+            List<float> distancesResults = new List<float>() { 3.74f, 4.74f, 6.15f, 8.17f, 8.19f };
+            Assert.IsTrue(Math.Abs(distancesResults[4] - raysDictionary[microphones[0].id][0].GetDistance()) < 1e-2);
+        }
 
-        //    AcousticRay firstRay = new AcousticRay(origin, microphone);
+        [Test]
+        public void TimeForMultipleCollisionPoints_Test()
+        {
+            var origin = new Vector3(0, 0, 0);
+            var microphonePosition = new Vector3(1, 5, 3);
+            var microphones = new List<MicrophoneSphere>()
+            {
+                new MicrophoneSphere(microphonePosition, 0.5f)
+            };
 
-        //    List<Vector3> firstRayVectors = new List<Vector3>()
-        //    {
-        //        new Vector3(1, 2, 3),
-        //        new Vector3(1, 2, 4),
-        //        new Vector3(1, 3, 3),
-        //        new Vector3(1, 5.02f, 3)
-        //    };
+            var firstRay = new AcousticRay(origin, microphonePosition);
 
-        //    for (int index = 0; index < firstRayVectors.Count; ++index)
-        //        firstRay.CollisionPoints.Add(firstRayVectors[index]);
+            var firstRayVectors = new List<Vector3>()
+            {
+                new Vector3(1, 2, 3),
+                new Vector3(1, 2, 4),
+                new Vector3(1, 3, 3),
+                new Vector3(1, 5.02f, 3)
+            };
 
-        //    List<AcousticRay> rays = new List<AcousticRay>();
-        //    rays.Add(firstRay);
+            for (int index = 0; index < firstRayVectors.Count; ++index)
+                firstRay.collisionPoints.Add(firstRayVectors[index]);
 
-        //    DistanceCalculator distanceCalculator = new DistanceCalculator(rays);
-        //    distanceCalculator.ComputeDistances();
+            var rays = new List<AcousticRay>
+            {
+                firstRay
+            };
 
-        //    List<List<double>> times = TimeCalculator.GetTime(rays);
+            var raysDictionary = new Dictionary<int, List<AcousticRay>>();
+            raysDictionary[microphones[0].id] = rays;
 
-        //    List<float> timeResults = new List<float>() { 3.74f/ 343.21f,
-        //       4.74f / 343.21f,
-        //       6.15f / 343.21f,
-        //       8.17f / 343.21f };
+            var distanceCalculator = new DistanceCalculator(raysDictionary, microphones);
+            distanceCalculator.ComputeDistances();
 
-        //    for (int index = 0; index < timeResults.Count; ++index)
-        //        Assert.IsTrue(Math.Abs(timeResults[index] - times[0][index]) < 1e-2);
-        //}
+            var times = TimeCalculator.GetTime(raysDictionary, microphones);
 
-        //[Test]
-        //public void Rays11_Test()
-        //{
-        //    List<MicrophoneSphere> microphone = new List<MicrophoneSphere>() {
-        //        new MicrophoneSphere(new System.Numerics.Vector3(2, 1.6f, 1.7f), 0.1f) };
-        //    RayGeometry rayGeometryGenerator = new RayGeometry(new Vector3(0, 0.5f, 0),
-        //        microphone,
-        //        1000,
-        //        3,
-        //        200);
-        //    rayGeometryGenerator.GenerateRays();
+            Assert.IsTrue(Math.Abs(times[microphones[0].id][0] - 0.0238) < 1e-3);
+        }
 
-        //    List<AcousticRay> rays = rayGeometryGenerator.GetIntersectedRays(microphone[0]);
+        [Test]
+        public void Rays11_Test()
+        {
+            var microphone = new List<MicrophoneSphere>() {
+                new MicrophoneSphere(new System.Numerics.Vector3(2, 1.6f, 1.7f), 0.1f) };
+            var rayGeometryGenerator = new RayGeometry(new Vector3(0, 0.5f, 0),
+                microphone,
+                1000,
+                3,
+                200);
+            rayGeometryGenerator.GenerateRays();
 
-        //    rays.Sort(delegate (AcousticRay first, AcousticRay second)
-        //    {
-        //        return first.Distance.CompareTo(second.Distance);
-        //    });
+            var rays = rayGeometryGenerator.GetIntersectedRays(microphone[0]);
 
-        //    Dictionary<int, List<AcousticRay>> myRays = new Dictionary<int, List<AcousticRay>>();
-        //    myRays.Add(microphone[0].Id, rays);
+            rays.Sort(delegate (AcousticRay first, AcousticRay second)
+            {
+                return first.GetDistance().CompareTo(second.GetDistance());
+            });
 
-        //    IntensityCalculator intensityCalculator = new IntensityCalculator(myRays, microphone, 1);
-        //    intensityCalculator.ComputePower();
+            var myRays = new Dictionary<int, List<AcousticRay>>();
+            myRays.Add(microphone[0].id, rays);
 
-        //    DistanceCalculator distanceCalculator = new DistanceCalculator(myRays, microphone);
-        //    distanceCalculator.ComputeDistances();
+            var intensityCalculator = new IntensityCalculator(myRays, microphone, 1);
+            intensityCalculator.ComputePower();
 
-        //    //List<List<double>> times = TimeCalculator.GetTime(myRays);
+            var distanceCalculator = new DistanceCalculator(myRays, microphone);
+            distanceCalculator.ComputeDistances();
 
-        //    double epsilon = 1e-4;
-        //    Assert.IsTrue(Math.Abs(intensityCalculator.Intensities[0][0].Real - 0.0098243) < epsilon);
-        //    Assert.IsTrue(Math.Abs(intensityCalculator.Intensities[0][1].Real - 0.0049536) < epsilon);
-        //}
+            double epsilon = 1e-4;
+            Assert.IsTrue(Math.Abs(intensityCalculator.intensities[microphone[0].id][0] - 0.0098243) < epsilon);
+            Assert.IsTrue(Math.Abs(intensityCalculator.intensities[microphone[0].id][1] - 0.0049536) < epsilon);
+        }
 
-        //[Test]
-        //public void Rays11Phase_Test()
-        //{
-        //    List<MicrophoneSphere> microphone = new List<MicrophoneSphere>() {
-        //        new MicrophoneSphere(new System.Numerics.Vector3(2, 1.6f, 1.7f), 0.1f) };
-        //    RayGeometry rayGeometryGenerator = new RayGeometry(new Vector3(0, 0.5f, 0),
-        //        microphone,
-        //        1000,
-        //        3,
-        //        200);
-        //    rayGeometryGenerator.GenerateRays();
+        [Test]
+        public void Rays11Phase_Test()
+        {
+            List<MicrophoneSphere> microphone = new List<MicrophoneSphere>() {
+                new MicrophoneSphere(new System.Numerics.Vector3(2, 1.6f, 1.7f), 0.1f) };
+            RayGeometry rayGeometryGenerator = new RayGeometry(new Vector3(0, 0.5f, 0),
+                microphone,
+                1000,
+                3,
+                200);
+            rayGeometryGenerator.GenerateRays();
 
-        //    List<AcousticRay> rays = rayGeometryGenerator.GetIntersectedRays(microphone[0]);
+            List<AcousticRay> rays = rayGeometryGenerator.GetIntersectedRays(microphone[0]);
 
-        //    rays.Sort(delegate (AcousticRay first, AcousticRay second)
-        //    {
-        //        return first.Distance.CompareTo(second.Distance);
-        //    });
+            rays.Sort(delegate (AcousticRay first, AcousticRay second)
+            {
+                return first.GetDistance().CompareTo(second.GetDistance());
+            });
 
-        //    Dictionary<int, List<AcousticRay>> myRays = new Dictionary<int, List<AcousticRay>>();
-        //    myRays.Add(microphone[0].Id, rays);
+            Dictionary<int, List<AcousticRay>> myRays = new Dictionary<int, List<AcousticRay>>();
+            myRays.Add(microphone[0].id, rays);
 
-        //    IntensityCalculator intensityCalculator = new IntensityCalculator(myRays, microphone, 1);
-        //    intensityCalculator.ComputePower();
+            IntensityCalculator intensityCalculator = new IntensityCalculator(myRays, microphone, 1);
+            intensityCalculator.ComputePower();
 
-        //    PhaseCalculator phaseCalculator = new PhaseCalculator(myRays, microphone, intensityCalculator.Intensities);
-        //    phaseCalculator.ComputePhase(1000);
+            PhaseCalculator phaseCalculator = new PhaseCalculator(myRays, microphone, intensityCalculator.intensities);
+            phaseCalculator.ComputePhase(1000);
 
-        //    double epsilon = 1e-4;
-        //    Assert.IsTrue(Math.Abs(phaseCalculator.EchogramMagnitudePhase[0][0].Real + 0.002589105375) < epsilon);
-        //}
-
-        //[Test]
-        //public void RaysPhase_Test()
-        //{
-        //    List<MicrophoneSphere> microphone = new List<MicrophoneSphere>() {
-        //        new MicrophoneSphere(new System.Numerics.Vector3(2, 1.6f, 1.7f), 0.1f) };
-        //    RayGeometry rayGeometryGenerator = new RayGeometry(new Vector3(0, 0.5f, 0),
-        //        microphone,
-        //        63000,
-        //        3,
-        //        200);
-        //    rayGeometryGenerator.GenerateRays();
-
-        //    List<AcousticRay> rays = rayGeometryGenerator.GetIntersectedRays(microphone[0]);
-
-        //    rays.Sort(delegate (AcousticRay first, AcousticRay second)
-        //    {
-        //        return first.Distance.CompareTo(second.Distance);
-        //    });
-
-        //    Dictionary<int, List<AcousticRay>> myRays = new Dictionary<int, List<AcousticRay>>();
-        //    myRays.Add(microphone[0].Id, rays);
-
-        //    IntensityCalculator intensityCalculator = new IntensityCalculator(myRays, microphone, 1);
-        //    intensityCalculator.ComputePower();
-        //    intensityCalculator.TransformIntensitiesToPressure();
-
-        //    PhaseCalculator phaseCalculator = new PhaseCalculator(myRays, microphone, intensityCalculator.Intensities);
-        //    phaseCalculator.ComputePhase(1000);
-
-        //    double epsilon = 1e-4;
-        //    Assert.IsTrue(Math.Abs(phaseCalculator.EchogramMagnitudePhase[0][0] + 0.002589105375) < epsilon);
-        //}
+            double epsilon = 1e-4;
+            Assert.IsTrue(Math.Abs(phaseCalculator.echogramMagnitudePhase[microphone[0].id][0].Real + 0.002589105375) < epsilon);
+        }
     }
 }

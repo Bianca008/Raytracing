@@ -14,7 +14,7 @@ public class PhaseCalculator
         get;
     }
 
-    private Dictionary<int, List<Complex>> echogramMagnitudePhase { get; } = new Dictionary<int, List<Complex>>();
+    public Dictionary<int, List<Complex>> echogramMagnitudePhase { get; } = new Dictionary<int, List<Complex>>();
 
     private Dictionary<int, List<double>> pressures
     {
@@ -35,11 +35,11 @@ public class PhaseCalculator
         for (int indexMicro = 0; indexMicro < pressures.Count; ++indexMicro)
         {
             var values = new List<Complex>();
-            for (int indexRay = 0; indexRay < pressures[indexMicro].Count; ++indexRay)
+            for (int indexRay = 0; indexRay < pressures[microphones[indexMicro].id].Count; ++indexRay)
             {
                 values.Add(new Complex(pressures[microphones[indexMicro].id][indexRay], 0));
             }
-            echogramMagnitudePhase[indexMicro] = values;
+            echogramMagnitudePhase[microphones[indexMicro].id] = values;
         }
     }
 
