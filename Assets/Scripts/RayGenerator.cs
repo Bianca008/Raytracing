@@ -32,7 +32,6 @@ public class RayGenerator : MonoBehaviour
     private RayGeometry m_RayGeometryGenerator;
     private RaysDrawer m_IntersectedRayDrawer;
     private List<MicrophoneSphere> m_Microphones;
-    private ChartDrawer m_ChartDrawer;
     private AudioSource m_AudioSource;
 
     private void Start()
@@ -207,85 +206,14 @@ public class RayGenerator : MonoBehaviour
         }
     }
 
-    private void AddListenerForShowButton()
-    {
-        var buttonHandler = new ButtonHandler();
-
-        ShowButton.onClick.AddListener(() =>
-        {
-            buttonHandler.ShowFrequencyChart(NumberOfMicrophoneInputField,
-                                      MenuCanvas,
-                                      m_ChartDrawer,
-                                      m_Frequencies,
-                                      m_Microphones);
-        });
-    }
-
-    private void AddListenerForShowFrequencyEchogram()
-    {
-        var buttonHandler = new ButtonHandler();
-
-        ShowFrequencyEchogramButton.onClick.AddListener(SetActiveFrequencyEchogramUi);
-    }
-
-    private void AddListenerForShowTimeEchogram()
-    {
-        ShowTimeEchogramButton.onClick.AddListener(SetActiveTimeEchogramUi);
-    }
-
     private void InitializeUi()
     {
-        var inputPanel = GameObject.Find("InputPanel");
-        inputPanel.SetActive(false);
-        var frequencyPanel = GameObject.Find("FrequencyPanel");
-        frequencyPanel.SetActive(false);
-        var timePanel = GameObject.Find("TimePanel");
-        timePanel.SetActive(false);
-
-        AddListenerForShowFrequencyEchogram();
-        AddListenerForShowButton();
-        AddListenerForShowTimeEchogram();
-    }
-
-    private void SetActiveTimeEchogramUi()
-    {
-        var inputPanel = MenuCanvas.transform.Find("InputPanel").gameObject;
-        inputPanel.SetActive(true);
-        var buttonsAndPlotPanel = MenuCanvas.transform.Find("ButtonsAndPlotPanel").gameObject;
-        var timePanel = buttonsAndPlotPanel.transform.Find("TimePanel").gameObject;
-        timePanel.SetActive(true);
-        var frequencyPanel = buttonsAndPlotPanel.transform.Find("FrequencyPanel").gameObject;
-        frequencyPanel.SetActive(false);
-        //DrawChart(1, 2.691650390625);
-    }
-
-    private void SetActiveFrequencyEchogramUi()
-    {
-        var inputPanel = MenuCanvas.transform.Find("InputPanel").gameObject;
-        inputPanel.SetActive(true);
-        var buttonsAndPlotPanel = MenuCanvas.transform.Find("ButtonsAndPlotPanel").gameObject;
-        var frequencyPanel = buttonsAndPlotPanel.transform.Find("FrequencyPanel").gameObject;
-        frequencyPanel.SetActive(true);
-        var timePanel = buttonsAndPlotPanel.transform.Find("TimePanel").gameObject;
-        timePanel.SetActive(false);
-    }
-
-    private void DrawChart(int indexMicrophone, double indexFrequency)
-    {
-        var timeMagnitudeFile = "results/timeMagnitude" +
-                                (indexMicrophone).ToString() + "M" +
-                                indexFrequency.ToString() + "Hz.txt";
-        var timePhaseFile = "results/timePhase" +
-                            (indexMicrophone).ToString() + "M" +
-                            indexFrequency.ToString() + "Hz.txt";
-
-        var (tm, phase) = FileHandler.ReadFromFile(timePhaseFile);
-        var (time, magnitude) = FileHandler.ReadFromFile(timeMagnitudeFile);
-
-        for (int index = 0; index < time.Count; ++index)
-            time[index] = (float)Math.Round(time[index] * 1000, 2);
-
-        m_ChartDrawer = new ChartDrawer(MenuCanvas);
-        m_ChartDrawer.Draw(time, magnitude, phase);
+        UiHandler uiHandler = new UiHandler(MenuCanvas);
+        uiHandler.InitializeUi(ShowFrequencyEchogramButton, 
+            ShowButton,
+            ShowTimeEchogramButton, 
+            NumberOfMicrophoneInputField, 
+            m_Microphones,
+            m_Frequencies);
     }
 }
