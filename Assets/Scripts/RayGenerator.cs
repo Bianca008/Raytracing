@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using NWaves.Signals;
 using UnityEngine;
 
 using Echogram = System.Collections.Generic.Dictionary<int, System.Collections.Generic.List<System.Numerics.Complex>>;
@@ -52,7 +53,7 @@ public class RayGenerator : MonoBehaviour
         ComputeFrequencyResponse();
         FileHandler.WriteFrequencies(m_FrequencyResponse, m_Microphones);
 
-        SoundConvolver.ConvolveSound(m_AudioSource, m_FrequencyResponse, m_Microphones);
+        ConvolveSound();
         InitializeUi();
     }
 
@@ -207,6 +208,18 @@ public class RayGenerator : MonoBehaviour
             }
             m_FrequencyResponse[microphone.id] = values;
         }
+    }
+
+    private void ConvolveSound()
+    {
+        var impulseResponses = new Dictionary<int, DiscreteSignal>();
+
+        foreach (var freqResponse in m_FrequencyResponse)
+        {
+            impulseResponses[freqResponse.Key] = ImpulseResponseTranformer.Transform(freqResponse.Value);
+        }
+
+        SoundConvolver.ConvolveSound(m_AudioSource, impulseResponses, m_Microphones);
     }
 
     private void InitializeUi()
