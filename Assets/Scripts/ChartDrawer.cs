@@ -21,15 +21,16 @@ public class ChartDrawer
 
     private LineChart m_TimePhaseLineChart;
     private LineChart m_TimeMagnitudeLineChart;
+    private LineChart m_impulseResponseLineChart;
 
     public ChartDrawer(GameObject canvas)
     {
         chartArea = canvas;
     }
 
-    public void Draw(List<float> xTime, List<float> yMagnitude, List<float> yPhase)
+    public void DrawTimeChart(List<float> xTime, List<float> yMagnitude, List<float> yPhase)
     {
-        foreach(var barChart in chartArea.GetComponentsInChildren<BarChart>())
+        foreach (var barChart in chartArea.GetComponentsInChildren<BarChart>())
         {
             switch (barChart.name)
             {
@@ -41,7 +42,7 @@ public class ChartDrawer
                     break;
             }
         }
-        
+
         m_TimeMagnitudeChart.title.show = true;
         m_TimeMagnitudeChart.title.text = "Time(1e+3)-Magnitude chart";
         m_TimeMagnitudeChart.tooltip.show = true;
@@ -99,7 +100,7 @@ public class ChartDrawer
                     break;
             }
         }
-        
+
         m_TimeMagnitudeLineChart.title.show = true;
         m_TimeMagnitudeLineChart.title.text = "Frequency(Hz)-Magnitude chart";
         m_TimeMagnitudeLineChart.tooltip.show = true;
@@ -114,7 +115,7 @@ public class ChartDrawer
         m_TimeMagnitudeLineChart.xAxises[0].boundaryGap = true;
         m_TimeMagnitudeLineChart.RemoveData();
         m_TimeMagnitudeLineChart.AddSerie(SerieType.Line, "Magnitude").sampleDist = 1;
-    
+
         for (int index = 0; index < xFrequency.Count; ++index)
         {
             m_TimeMagnitudeLineChart.AddXAxisData(xFrequency[index].ToString());
@@ -140,6 +141,36 @@ public class ChartDrawer
         {
             m_TimePhaseLineChart.AddXAxisData(xFrequency[index].ToString());
             m_TimePhaseLineChart.AddData(0, yPhase[index]);
+        }
+    }
+
+    public void DrawImpulseResponseChart(List<float> xTime, List<float> yImpulseResponse)
+    {
+        foreach (var lineChart in chartArea.GetComponentsInChildren<LineChart>())
+        {
+            if (lineChart.name == "ImpulseResponse")
+                m_impulseResponseLineChart = lineChart;
+        }
+        
+        m_impulseResponseLineChart.title.show = true;
+        m_impulseResponseLineChart.title.text = "Impulse response";
+        m_impulseResponseLineChart.tooltip.show = true;
+        m_impulseResponseLineChart.legend.show = false;
+        m_impulseResponseLineChart.xAxises[0].show = true;
+        m_impulseResponseLineChart.xAxises[1].show = false;
+        m_impulseResponseLineChart.yAxises[0].show = true;
+        m_impulseResponseLineChart.yAxises[1].show = false;
+        m_impulseResponseLineChart.xAxises[0].type = Axis.AxisType.Category;
+        m_impulseResponseLineChart.yAxises[0].type = Axis.AxisType.Value;
+        m_impulseResponseLineChart.xAxises[0].splitNumber = 10;
+        m_impulseResponseLineChart.xAxises[0].boundaryGap = true;
+        m_impulseResponseLineChart.RemoveData();
+        m_impulseResponseLineChart.AddSerie(SerieType.Line).sampleDist = 1;
+
+        for (int index = 0; index < xTime.Count; ++index)
+        {
+            m_impulseResponseLineChart.AddXAxisData(xTime[index].ToString());
+            m_impulseResponseLineChart.AddData(0, yImpulseResponse[index]);
         }
     }
 }

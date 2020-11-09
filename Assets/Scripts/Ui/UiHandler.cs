@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NWaves.Signals;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,15 +27,22 @@ public class UiHandler
         get;
     }
 
+    private ImpulseResponse impulseResponse
+    {
+        get;
+    }
+
     public UiHandler(GameObject menuCanvas,
        TimeEchogram timeEcho,
-       FrequencyEchogram freqEcho)
+       FrequencyEchogram freqEcho,
+       ImpulseResponse impulseResp)
     {
         this.menuCanvas = menuCanvas;
         chartDrawer = new ChartDrawer(this.menuCanvas);
 
         timeEchogram = timeEcho;
         frequencyEchogram = freqEcho;
+        impulseResponse = impulseResp;
     }
 
     private void DrawChartFrequency(
@@ -101,22 +109,70 @@ public class UiHandler
     public void InitializeUi(
         Button showFrequencyEchogramButton,
         Button showTimeEchogramButton,
+        Button showImpulseResponseButton,
+        Dictionary<int, DiscreteSignal> impulseResponses,
         List<MicrophoneSphere> microphones,
-        List<double> frequencies)
+        List<double> frequencies,
+        float step)
     {
-        var inputTimePanel = menuCanvas.transform.Find("InputTimePanel").gameObject;
-        inputTimePanel.SetActive(false);
-        var inputPanel = GameObject.Find("InputPanel");
-        inputPanel.SetActive(false);
-        var frequencyPanel = GameObject.Find("FrequencyPanel");
-        frequencyPanel.SetActive(false);
-        var timePanel = GameObject.Find("TimePanel");
-        timePanel.SetActive(false);
+        SetAllUiElementsInactive();
 
         AddListenerForShowFrequencyEchogram(showFrequencyEchogramButton);
         AddListenerForShowButton(frequencies, microphones);
         AddListenerForShowTimeEchogram(showTimeEchogramButton);
         AddListenerForShowTimeButton(frequencies, microphones);
+        AddListenerForShowImpulseResponse(impulseResponses, microphones, step);
+        AddListenerForShowImpulseResponseButton(showImpulseResponseButton);
+    }
+
+    private void AddListenerForShowImpulseResponseButton(Button showImpulseResponseButton)
+    {
+        showImpulseResponseButton.onClick.AddListener(SetActiveImpulseResponseUi);
+    }
+
+    private void AddListenerForShowImpulseResponse(Dictionary<int, DiscreteSignal> impulseResponses, 
+        List<MicrophoneSphere> microphones,
+        float step)
+    {
+        impulseResponse.showButton.onClick.AddListener(() =>
+        {
+            ShowImpulseResponseChart(impulseResponses, microphones, step);
+        });
+    }
+
+    private void ShowImpulseResponseChart(Dictionary<int, DiscreteSignal> impulseResponses,
+        List<MicrophoneSphere> microphones,
+        float step)
+    {
+        var numberOfMicrophoneStr = frequencyEchogram.microphoneInputField.text;
+        var numberOfMicrophone = 0;
+
+        if (numberOfMicrophoneStr.All(char.IsDigit) == true)
+            numberOfMicrophone = Int32.Parse(numberOfMicrophoneStr) - 1;
+
+        var okToDraw = false;
+        foreach (var micro in microphones)
+            if (micro.id == numberOfMicrophone)
+                okToDraw = true;
+
+        if (okToDraw == true)
+            DrawChartImpulseResponse(impulseResponses, step, numberOfMicrophone);
+        else
+            Debug.Log("The microphone for which you want to see the result does not exist.");
+    }
+
+    private void DrawChartImpulseResponse(Dictionary<int, DiscreteSignal> impulseResponses,
+        float step,
+        int numberOfMicrophone)
+    {
+        var xTime = new List<float>() { 0 };
+
+        for (int index = 1; index < impulseResponses[numberOfMicrophone].Samples.Length; ++index)
+            xTime.Add(step + xTime[index - 1]);
+
+        var signal = impulseResponses[numberOfMicrophone];
+        var yImpulseResponse = new List<float>(signal.Samples);
+        chartDrawer.DrawImpulseResponseChart(xTime, yImpulseResponse);
     }
 
     private void AddListenerForShowButton(
@@ -155,28 +211,35 @@ public class UiHandler
 
     private void SetActiveTimeEchogramUi()
     {
+        SetAllUiElementsInactive();
+
         var inputTimePanel = menuCanvas.transform.Find("InputTimePanel").gameObject;
         inputTimePanel.SetActive(true);
         var buttonsAndPlotPanel = menuCanvas.transform.Find("ButtonsAndPlotPanel").gameObject;
         var timePanel = buttonsAndPlotPanel.transform.Find("TimePanel").gameObject;
         timePanel.SetActive(true);
-        var frequencyPanel = buttonsAndPlotPanel.transform.Find("FrequencyPanel").gameObject;
-        frequencyPanel.SetActive(false);
-        var inputPanel = menuCanvas.transform.Find("InputPanel").gameObject;
-        inputPanel.SetActive(false);
     }
 
     private void SetActiveFrequencyEchogramUi()
     {
+        SetAllUiElementsInactive();
+
         var inputPanel = menuCanvas.transform.Find("InputPanel").gameObject;
         inputPanel.SetActive(true);
         var buttonsAndPlotPanel = menuCanvas.transform.Find("ButtonsAndPlotPanel").gameObject;
         var frequencyPanel = buttonsAndPlotPanel.transform.Find("FrequencyPanel").gameObject;
         frequencyPanel.SetActive(true);
-        var timePanel = buttonsAndPlotPanel.transform.Find("TimePanel").gameObject;
-        timePanel.SetActive(false);
-        var inputTimePanel = menuCanvas.transform.Find("InputTimePanel").gameObject;
-        inputTimePanel.SetActive(false);
+    }
+
+    private void SetActiveImpulseResponseUi()
+    {
+        SetAllUiElementsInactive();
+
+        var inputPanel = menuCanvas.transform.Find("InputImpulseResponsePanel").gameObject;
+        inputPanel.SetActive(true);
+        var buttonsAndPlotPanel = menuCanvas.transform.Find("ButtonsAndPlotPanel").gameObject;
+        var frequencyPanel = buttonsAndPlotPanel.transform.Find("ImpulseResponsePanel").gameObject;
+        frequencyPanel.SetActive(true);
     }
 
     private void DrawTimeEchogram(int indexMicrophone, double indexFrequency)
@@ -194,7 +257,25 @@ public class UiHandler
         for (int index = 0; index < time.Count; ++index)
             time[index] = (float)Math.Round(time[index] * 1000, 2);
 
-        chartDrawer.Draw(time, magnitude, phase);
+        chartDrawer.DrawTimeChart(time, magnitude, phase);
+    }
+
+    private void SetAllUiElementsInactive()
+    {
+        var inputTimePanel = menuCanvas.transform.Find("InputTimePanel").gameObject;
+        inputTimePanel.SetActive(false);
+        var inputPanel = menuCanvas.transform.Find("InputPanel").gameObject;
+        inputPanel.SetActive(false);
+        var inputImpulseResponsePanel = menuCanvas.transform.Find("InputImpulseResponsePanel").gameObject;
+        inputImpulseResponsePanel.SetActive(false);
+
+        var buttonsAndPlotPanel = menuCanvas.transform.Find("ButtonsAndPlotPanel").gameObject;
+        var frequencyPanel = buttonsAndPlotPanel.transform.Find("FrequencyPanel").gameObject;
+        frequencyPanel.SetActive(false);
+        var timePanel = buttonsAndPlotPanel.transform.Find("TimePanel").gameObject;
+        timePanel.SetActive(false);
+        var impulseResponsePanel = buttonsAndPlotPanel.transform.Find("ImpulseResponsePanel").gameObject;
+        impulseResponsePanel.SetActive(false);
     }
 
 }

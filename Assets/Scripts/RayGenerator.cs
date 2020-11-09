@@ -20,10 +20,13 @@ public class RayGenerator : MonoBehaviour
     public GameObject MenuCanvas;
     public Button ShowButton;
     public Button ShowTimeButton;
+    public Button ShowImpulseButton;
     public Button ShowFrequencyEchogramButton;
     public Button ShowTimeEchogramButton;
+    public Button ShowImpulseResponseButton;
     public InputField NumberOfMicrophoneInputField;
     public InputField NumberOfMicrophoneTimeInputField;
+    public InputField NumberOfMicrophoneImpulseResponseInputField;
     public InputField FrequencyInputField;
 
     private const int maxDistance = 200;
@@ -32,6 +35,7 @@ public class RayGenerator : MonoBehaviour
     private Dictionary<int, List<Complex>> m_FrequencyResponse;
     private List<double> m_Frequencies;
     private Dictionary<int, List<AcousticRay>> m_Rays;
+    private Dictionary<int, DiscreteSignal> impulseResponses;
     private LineRenderer[] m_IntersectedLines;
     private RayGeometry m_RayGeometryGenerator;
     private RaysDrawer m_IntersectedRayDrawer;
@@ -208,7 +212,7 @@ public class RayGenerator : MonoBehaviour
 
     private void ConvolveSound()
     {
-        var impulseResponses = new Dictionary<int, DiscreteSignal>();
+        impulseResponses = new Dictionary<int, DiscreteSignal>();
 
         foreach (var freqResponse in m_FrequencyResponse)
         {
@@ -222,14 +226,22 @@ public class RayGenerator : MonoBehaviour
     {
         var timeEchogram = new TimeEchogram(NumberOfMicrophoneTimeInputField, FrequencyInputField, ShowTimeButton);
         var frequencyEchogram = new FrequencyEchogram(NumberOfMicrophoneInputField, ShowButton);
+        var impulseResponse =
+            new ImpulseResponse(NumberOfMicrophoneImpulseResponseInputField, ShowImpulseResponseButton);
 
         var uiHandler = new UiHandler(MenuCanvas,
             timeEchogram,
-            frequencyEchogram);
+            frequencyEchogram,
+            impulseResponse);
+
+        var step = (float)(1 / (2 * m_Frequencies[m_Frequencies.Count - 1]));
 
         uiHandler.InitializeUi(ShowFrequencyEchogramButton,
             ShowTimeEchogramButton,
+            ShowImpulseButton,
+            impulseResponses,
             m_Microphones,
-            m_Frequencies);
+            m_Frequencies,
+            step);
     }
 }

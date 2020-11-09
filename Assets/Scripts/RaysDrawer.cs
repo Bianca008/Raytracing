@@ -21,7 +21,7 @@ public class RaysDrawer
         }
     }
 
-    //public void Draw()
+    //public void DrawTimeChart()
     //{
     //    /* Set initial position.*/
     //    for (int indexLine = 0; indexLine < lines.Length; ++indexLine)
