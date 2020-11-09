@@ -6,38 +6,6 @@ using UnityEngine.UI;
 
 public class UiHandler
 {
-    private class FrequencyEchogram
-    {
-        public InputField microphoneInputField { get; private set; }
-
-        public Button showButton { get; private set; }
-
-        public FrequencyEchogram(InputField microphoneIf, Button showBtn)
-        {
-            showButton = showBtn;
-            microphoneInputField = microphoneIf;
-        }
-    }
-
-    private class TimeEchogram
-    {
-        public InputField microphoneInputField { get; private set; }
-
-        public InputField frequencyInputField { get; private set; }
-
-        public Button showButton { get; private set; }
-
-        public TimeEchogram(
-            InputField microphoneIf,
-            InputField frequencyIf,
-            Button showBtn)
-        {
-            this.showButton = showBtn;
-            this.microphoneInputField = microphoneIf;
-            this.frequencyInputField = frequencyIf;
-        }
-    }
-
     private ChartDrawer chartDrawer
     {
         get;
@@ -59,17 +27,14 @@ public class UiHandler
     }
 
     public UiHandler(GameObject menuCanvas,
-        InputField numberOfMicrophoneTimeInputField,
-        InputField frequencyInputField,
-        Button showTimeButton,
-        Button showButton,
-        InputField numberOfMicrophoneInputField)
+       TimeEchogram timeEcho,
+       FrequencyEchogram freqEcho)
     {
         this.menuCanvas = menuCanvas;
         chartDrawer = new ChartDrawer(this.menuCanvas);
 
-        timeEchogram = new TimeEchogram(numberOfMicrophoneTimeInputField, frequencyInputField, showTimeButton);
-        frequencyEchogram = new FrequencyEchogram(numberOfMicrophoneInputField, showButton);
+        timeEchogram = timeEcho;
+        frequencyEchogram = freqEcho;
     }
 
     private void DrawChartFrequency(
@@ -121,9 +86,10 @@ public class UiHandler
         foreach (var micro in microphones)
             if (micro.id == numberOfMicrophone)
                 okToDraw = true;
+
         var okToDrawFr = false;
         foreach (var fr in frequencies)
-            if (Math.Abs(fr - frequency) < 1e-2)
+            if (Math.Abs((int)fr - frequency) < 1e-2)
                 okToDrawFr = true;
 
         if (okToDraw == true && okToDrawFr == true)

@@ -73,10 +73,10 @@ public class FileHandler
                 }
 
                 WriteToFile(xTime, yMagnitude, "results/timeMagnitude" +
-                    (microphones[indexMicro].id + 1).ToString() + "M" + frequencies[indexFrequency].ToString() + "Hz.txt");
+                    (microphones[indexMicro].id + 1).ToString() + "M" + ((int)(frequencies[indexFrequency])).ToString() + "Hz.txt");
 
                 WriteToFile(xTime, yPhase, "results/timePhase" +
-                   (microphones[indexMicro].id + 1).ToString() + "M" + frequencies[indexFrequency].ToString() + "Hz.txt");
+                   (microphones[indexMicro].id + 1).ToString() + "M" + ((int)(frequencies[indexFrequency])).ToString() + "Hz.txt");
             }
     }
 }

@@ -130,13 +130,9 @@ public class RayGenerator : MonoBehaviour
         m_Rays = new Dictionary<int, List<AcousticRay>>();
         foreach (var microphone in m_Microphones)
         {
-            List<AcousticRay> newRays = m_RayGeometryGenerator.GetIntersectedRays(microphone);
+            var newRays = m_RayGeometryGenerator.GetIntersectedRays(microphone);
 
-            newRays.Sort(delegate (AcousticRay first, AcousticRay second)
-            {
-                return first.GetDistance().CompareTo(second.GetDistance());
-
-            });
+            newRays.Sort((first, second) => first.GetDistance().CompareTo(second.GetDistance()));
             IntersectedRaysWithDuplicate += newRays.Count;
             var raysWithoutDuplicates = RemoveDuplicates(newRays);
             m_Rays[microphone.id] = raysWithoutDuplicates;
@@ -224,14 +220,15 @@ public class RayGenerator : MonoBehaviour
 
     private void InitializeUi()
     {
-        UiHandler uiHandler = new UiHandler(MenuCanvas);
+        var timeEchogram = new TimeEchogram(NumberOfMicrophoneTimeInputField, FrequencyInputField, ShowTimeButton);
+        var frequencyEchogram = new FrequencyEchogram(NumberOfMicrophoneInputField, ShowButton);
+
+        var uiHandler = new UiHandler(MenuCanvas,
+            timeEchogram,
+            frequencyEchogram);
+
         uiHandler.InitializeUi(ShowFrequencyEchogramButton,
-            ShowButton,
             ShowTimeEchogramButton,
-            ShowTimeButton,
-            NumberOfMicrophoneInputField,
-            NumberOfMicrophoneTimeInputField,
-            FrequencyInputField,
             m_Microphones,
             m_Frequencies);
     }
