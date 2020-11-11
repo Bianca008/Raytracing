@@ -190,7 +190,8 @@ public class RayGenerator : MonoBehaviour
             m_Echograms[frequency] = phaseCalculator.ComputePhase(frequency);
         }
 
-        //FileHandler.WriteToFileTimePressure(m_Echograms, m_Rays, m_Microphones, m_Frequencies);
+        /*Se poate comenta linia 194 dupa ce s-au generat fisierele macar o data.*/
+        FileHandler.WriteToFileTimePressure(m_Echograms, m_Rays, m_Microphones, m_Frequencies);
     }
 
     private void ComputeFrequencyResponse()

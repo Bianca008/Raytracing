@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using XCharts;
 
@@ -12,12 +13,12 @@ public class ChartDrawer
 
     public bool enable
     {
-        get => m_TimeMagnitudeChart.enabled;
-        set => m_TimeMagnitudeChart.enabled = value;
+        get => m_TimeMagnitudeBarChart.enabled;
+        set => m_TimeMagnitudeBarChart.enabled = value;
     }
 
-    private BarChart m_TimePhaseChart;
-    private BarChart m_TimeMagnitudeChart;
+    private BarChart m_TimePhaseBarChart;
+    private BarChart m_TimeMagnitudeBarChart;
 
     private LineChart m_TimePhaseLineChart;
     private LineChart m_TimeMagnitudeLineChart;
@@ -35,54 +36,28 @@ public class ChartDrawer
             switch (barChart.name)
             {
                 case "TimeMagnitude":
-                    m_TimeMagnitudeChart = barChart;
+                    m_TimeMagnitudeBarChart = barChart;
                     break;
                 case "TimePhase":
-                    m_TimePhaseChart = barChart;
+                    m_TimePhaseBarChart = barChart;
                     break;
             }
         }
 
-        m_TimeMagnitudeChart.title.show = true;
-        m_TimeMagnitudeChart.title.text = "Time(1e+3)-Magnitude chart";
-        m_TimeMagnitudeChart.tooltip.show = true;
-        m_TimeMagnitudeChart.legend.show = false;
-        m_TimeMagnitudeChart.xAxises[0].show = true;
-        m_TimeMagnitudeChart.xAxises[1].show = false;
-        m_TimeMagnitudeChart.yAxises[0].show = true;
-        m_TimeMagnitudeChart.yAxises[1].show = false;
-        m_TimeMagnitudeChart.xAxises[0].type = Axis.AxisType.Category;
-        m_TimeMagnitudeChart.yAxises[0].type = Axis.AxisType.Value;
-        m_TimeMagnitudeChart.xAxises[0].splitNumber = 10;
-        m_TimeMagnitudeChart.xAxises[0].boundaryGap = true;
-        m_TimeMagnitudeChart.RemoveData();
-        m_TimeMagnitudeChart.AddSerie(SerieType.Bar, "Magnitude");
+        SetBarChart(m_TimeMagnitudeBarChart, "Time(1e+3)-Magnitude chart", "Magnitude");
 
         for (int index = 0; index < xTime.Count; ++index)
         {
-            m_TimeMagnitudeChart.AddXAxisData(xTime[index].ToString());
-            m_TimeMagnitudeChart.AddData(0, yMagnitude[index]);
+            m_TimeMagnitudeBarChart.AddXAxisData(xTime[index].ToString());
+            m_TimeMagnitudeBarChart.AddData(0, yMagnitude[index]);
         }
 
-        m_TimePhaseChart.title.show = true;
-        m_TimePhaseChart.title.text = "Time(1e+3)-Phase chart";
-        m_TimePhaseChart.tooltip.show = true;
-        m_TimePhaseChart.legend.show = false;
-        m_TimePhaseChart.xAxises[0].show = true;
-        m_TimePhaseChart.xAxises[1].show = false;
-        m_TimePhaseChart.yAxises[0].show = true;
-        m_TimePhaseChart.yAxises[1].show = false;
-        m_TimePhaseChart.xAxises[0].type = Axis.AxisType.Category;
-        m_TimePhaseChart.yAxises[0].type = Axis.AxisType.Value;
-        m_TimePhaseChart.xAxises[0].splitNumber = 10;
-        m_TimePhaseChart.xAxises[0].boundaryGap = true;
-        m_TimePhaseChart.RemoveData();
-        m_TimePhaseChart.AddSerie(SerieType.Bar, "Phase");
+        SetBarChart(m_TimePhaseBarChart, "Time(1e+3)-Phase chart", "Phase");
 
         for (int index = 0; index < xTime.Count; ++index)
         {
-            m_TimePhaseChart.AddXAxisData(xTime[index].ToString());
-            m_TimePhaseChart.AddData(0, yPhase[index]);
+            m_TimePhaseBarChart.AddXAxisData(xTime[index].ToString());
+            m_TimePhaseBarChart.AddData(0, yPhase[index]);
         }
     }
 
@@ -101,20 +76,7 @@ public class ChartDrawer
             }
         }
 
-        m_TimeMagnitudeLineChart.title.show = true;
-        m_TimeMagnitudeLineChart.title.text = "Frequency(Hz)-Magnitude chart";
-        m_TimeMagnitudeLineChart.tooltip.show = true;
-        m_TimeMagnitudeLineChart.legend.show = false;
-        m_TimeMagnitudeLineChart.xAxises[0].show = true;
-        m_TimeMagnitudeLineChart.xAxises[1].show = false;
-        m_TimeMagnitudeLineChart.yAxises[0].show = true;
-        m_TimeMagnitudeLineChart.yAxises[1].show = false;
-        m_TimeMagnitudeLineChart.xAxises[0].type = Axis.AxisType.Category;
-        m_TimeMagnitudeLineChart.yAxises[0].type = Axis.AxisType.Value;
-        m_TimeMagnitudeLineChart.xAxises[0].splitNumber = 10;
-        m_TimeMagnitudeLineChart.xAxises[0].boundaryGap = true;
-        m_TimeMagnitudeLineChart.RemoveData();
-        m_TimeMagnitudeLineChart.AddSerie(SerieType.Line, "Magnitude").sampleDist = 1;
+        SetLineChart(m_TimeMagnitudeLineChart, "Frequency(Hz)-Magnitude chart", "Magnitude");
 
         for (int index = 0; index < xFrequency.Count; ++index)
         {
@@ -122,20 +84,7 @@ public class ChartDrawer
             m_TimeMagnitudeLineChart.AddData(0, yMagnitude[index]);
         }
 
-        m_TimePhaseLineChart.title.show = true;
-        m_TimePhaseLineChart.title.text = "Frequency(Hz)-Phase chart";
-        m_TimePhaseLineChart.tooltip.show = true;
-        m_TimePhaseLineChart.legend.show = false;
-        m_TimePhaseLineChart.xAxises[0].show = true;
-        m_TimePhaseLineChart.xAxises[1].show = false;
-        m_TimePhaseLineChart.yAxises[0].show = true;
-        m_TimePhaseLineChart.yAxises[1].show = false;
-        m_TimePhaseLineChart.xAxises[0].type = Axis.AxisType.Category;
-        m_TimePhaseLineChart.yAxises[0].type = Axis.AxisType.Value;
-        m_TimePhaseLineChart.xAxises[0].splitNumber = 10;
-        m_TimePhaseLineChart.xAxises[0].boundaryGap = true;
-        m_TimePhaseLineChart.RemoveData();
-        m_TimePhaseLineChart.AddSerie(SerieType.Line, "Phase").sampleDist = 1;
+        SetLineChart(m_TimePhaseLineChart, "Frequency(Hz) - Phase chart", "Phase");
 
         for (int index = 0; index < xFrequency.Count; ++index)
         {
@@ -152,27 +101,65 @@ public class ChartDrawer
                 m_impulseResponseLineChart = lineChart;
         }
 
-        m_impulseResponseLineChart.title.show = true;
-        m_impulseResponseLineChart.title.text = "Impulse response";
-        m_impulseResponseLineChart.tooltip.show = true;
-        m_impulseResponseLineChart.legend.show = false;
-        m_impulseResponseLineChart.xAxises[0].show = true;
-        m_impulseResponseLineChart.xAxises[1].show = false;
-        m_impulseResponseLineChart.yAxises[0].show = true;
-        m_impulseResponseLineChart.yAxises[1].show = false;
-        m_impulseResponseLineChart.xAxises[0].type = Axis.AxisType.Category;
-        m_impulseResponseLineChart.yAxises[0].type = Axis.AxisType.Value;
-        m_impulseResponseLineChart.xAxises[0].splitNumber = 10;
-        m_impulseResponseLineChart.xAxises[0].boundaryGap = true;
-        m_impulseResponseLineChart.RemoveData();
-        m_impulseResponseLineChart.AddSerie(SerieType.Line).sampleDist = 1;
+        //m_impulseResponseLineChart.yAxises[0].min = -5000;
+        //m_impulseResponseLineChart.yAxises[0].max = 25000;
+        ///*nu am reusit sa imi dau seama exact ce se intampla,
+        // dar am vazut ca modifica valorile care sunt pe axa y*/
+        //m_impulseResponseLineChart.yAxises[0].ceilRate = 1;
+        ///*adauga mai multe valori pe axa y*/
+        //m_impulseResponseLineChart.yAxises[0].interval = 1;
+
+        SetLineChart(m_impulseResponseLineChart, "Impulse response");
 
         for (int index = 0; index < xTime.Count; ++index)
         {
             m_impulseResponseLineChart.AddXAxisData(xTime[index].ToString());
             m_impulseResponseLineChart.AddData(0, yImpulseResponse[index]);
         }
+    }
 
-        //m_impulseResponseLineChart.RefreshAxisMinMaxValue();
+    private void SetLineChart(LineChart chart, String name, String tag = null)
+    {
+        chart.yAxis0.min = 0;
+        chart.title.show = true;
+        chart.title.text = name;
+        chart.tooltip.show = true;
+        chart.legend.show = false;
+        chart.xAxises[0].show = true;
+        chart.xAxises[1].show = false;
+        chart.yAxises[0].show = true;
+        chart.yAxises[1].show = false;
+        chart.xAxises[0].type = Axis.AxisType.Category;
+        chart.yAxises[0].type = Axis.AxisType.Value;
+        chart.xAxises[0].splitNumber = 10;
+        chart.xAxises[0].boundaryGap = true;
+        chart.RemoveData();
+
+        if (tag == null)
+            chart.AddSerie(SerieType.Line).sampleDist = 1;
+        else
+            chart.AddSerie(SerieType.Line, tag).sampleDist = 1;
+    }
+
+    private void SetBarChart(BarChart chart, String name, String tag = null)
+    {
+        chart.title.show = true;
+        chart.title.text = name;
+        chart.tooltip.show = true;
+        chart.legend.show = false;
+        chart.xAxises[0].show = true;
+        chart.xAxises[1].show = false;
+        chart.yAxises[0].show = true;
+        chart.yAxises[1].show = false;
+        chart.xAxises[0].type = Axis.AxisType.Category;
+        chart.yAxises[0].type = Axis.AxisType.Value;
+        chart.xAxises[0].splitNumber = 10;
+        chart.xAxises[0].boundaryGap = true;
+        chart.RemoveData();
+
+        if (tag == null)
+            chart.AddSerie(SerieType.Bar);
+        else
+            chart.AddSerie(SerieType.Bar, tag);
     }
 }
