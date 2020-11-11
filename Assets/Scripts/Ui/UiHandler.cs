@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using NWaves.Signals;
 using UnityEngine;
@@ -17,32 +18,32 @@ public class UiHandler
         get;
     }
 
-    private TimeEchogram timeEchogram
+    private UiTimeEchogram uiTimeEchogram
     {
         get;
     }
 
-    private FrequencyEchogram frequencyEchogram
+    private UiFrequencyEchogram uiFrequencyEchogram
     {
         get;
     }
 
-    private ImpulseResponse impulseResponse
+    private UiImpulseResponse uiImpulseResponse
     {
         get;
     }
 
     public UiHandler(GameObject menuCanvas,
-       TimeEchogram timeEcho,
-       FrequencyEchogram freqEcho,
-       ImpulseResponse impulseResp)
+       UiTimeEchogram uiTimeEcho,
+       UiFrequencyEchogram freqEcho,
+       UiImpulseResponse uiImpulseResp)
     {
         this.menuCanvas = menuCanvas;
         chartDrawer = new ChartDrawer(this.menuCanvas);
 
-        timeEchogram = timeEcho;
-        frequencyEchogram = freqEcho;
-        impulseResponse = impulseResp;
+        uiTimeEchogram = uiTimeEcho;
+        uiFrequencyEchogram = freqEcho;
+        uiImpulseResponse = uiImpulseResp;
     }
 
     private void DrawChartFrequency(
@@ -60,7 +61,7 @@ public class UiHandler
         List<double> frequencies,
         List<MicrophoneSphere> microphones)
     {
-        var numberOfMicrophoneStr = frequencyEchogram.microphoneInputField.text;
+        var numberOfMicrophoneStr = uiFrequencyEchogram.microphoneInputField.text;
         var numberOfMicrophone = 0;
 
         if (numberOfMicrophoneStr.All(char.IsDigit) == true)
@@ -81,8 +82,8 @@ public class UiHandler
         List<double> frequencies,
         List<MicrophoneSphere> microphones)
     {
-        var frequencyFieldStr = timeEchogram.frequencyInputField.text;
-        var numberOfMicrophoneStr = timeEchogram.microphoneInputField.text;
+        var frequencyFieldStr = uiTimeEchogram.frequencyInputField.text;
+        var numberOfMicrophoneStr = uiTimeEchogram.microphoneInputField.text;
         var numberOfMicrophone = 0;
         var frequency = 0.0;
         if (numberOfMicrophoneStr.All(char.IsDigit) == true)
@@ -134,7 +135,7 @@ public class UiHandler
         List<MicrophoneSphere> microphones,
         float step)
     {
-        impulseResponse.showButton.onClick.AddListener(() =>
+        uiImpulseResponse.showButton.onClick.AddListener(() =>
         {
             ShowImpulseResponseChart(impulseResponses, microphones, step);
         });
@@ -144,7 +145,7 @@ public class UiHandler
         List<MicrophoneSphere> microphones,
         float step)
     {
-        var numberOfMicrophoneStr = frequencyEchogram.microphoneInputField.text;
+        var numberOfMicrophoneStr = uiFrequencyEchogram.microphoneInputField.text;
         var numberOfMicrophone = 0;
 
         if (numberOfMicrophoneStr.All(char.IsDigit) == true)
@@ -172,6 +173,23 @@ public class UiHandler
 
         var signal = impulseResponses[numberOfMicrophone];
         var yImpulseResponse = new List<float>(signal.Samples);
+
+        using (StreamWriter outputFile = new StreamWriter("impulseTime.txt"))
+        {
+            for (int index = 0; index < xTime.Count; ++index)
+            {
+                outputFile.WriteLine(xTime[index] + "," );
+            }
+        }
+
+        using (StreamWriter outputFile = new StreamWriter("impulse.txt"))
+        {
+            for (int index = 0; index < xTime.Count; ++index)
+            {
+                outputFile.WriteLine(yImpulseResponse[index] + ",");
+            }
+        }
+
         chartDrawer.DrawImpulseResponseChart(xTime, yImpulseResponse);
     }
 
@@ -179,7 +197,7 @@ public class UiHandler
         List<double> frequencies,
         List<MicrophoneSphere> microphones)
     {
-        frequencyEchogram.showButton.onClick.AddListener(() =>
+        uiFrequencyEchogram.showButton.onClick.AddListener(() =>
         {
             ShowFrequencyChart(
                 frequencies,
@@ -191,7 +209,7 @@ public class UiHandler
         List<double> frequencies,
         List<MicrophoneSphere> microphones)
     {
-        timeEchogram.showButton.onClick.AddListener(() =>
+        uiTimeEchogram.showButton.onClick.AddListener(() =>
         {
             ShowTimeChart(
                 frequencies,

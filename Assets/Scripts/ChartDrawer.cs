@@ -151,7 +151,7 @@ public class ChartDrawer
             if (lineChart.name == "ImpulseResponse")
                 m_impulseResponseLineChart = lineChart;
         }
-        
+
         m_impulseResponseLineChart.title.show = true;
         m_impulseResponseLineChart.title.text = "Impulse response";
         m_impulseResponseLineChart.tooltip.show = true;
@@ -172,5 +172,7 @@ public class ChartDrawer
             m_impulseResponseLineChart.AddXAxisData(xTime[index].ToString());
             m_impulseResponseLineChart.AddData(0, yImpulseResponse[index]);
         }
+
+        //m_impulseResponseLineChart.RefreshAxisMinMaxValue();
     }
 }

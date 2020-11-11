@@ -224,10 +224,10 @@ public class RayGenerator : MonoBehaviour
 
     private void InitializeUi()
     {
-        var timeEchogram = new TimeEchogram(NumberOfMicrophoneTimeInputField, FrequencyInputField, ShowTimeButton);
-        var frequencyEchogram = new FrequencyEchogram(NumberOfMicrophoneInputField, ShowButton);
+        var timeEchogram = new UiTimeEchogram(NumberOfMicrophoneTimeInputField, FrequencyInputField, ShowTimeButton);
+        var frequencyEchogram = new UiFrequencyEchogram(NumberOfMicrophoneInputField, ShowButton);
         var impulseResponse =
-            new ImpulseResponse(NumberOfMicrophoneImpulseResponseInputField, ShowImpulseResponseButton);
+            new UiImpulseResponse(NumberOfMicrophoneImpulseResponseInputField, ShowImpulseResponseButton);
 
         var uiHandler = new UiHandler(MenuCanvas,
             timeEchogram,
