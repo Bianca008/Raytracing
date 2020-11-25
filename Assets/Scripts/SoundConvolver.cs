@@ -3,6 +3,7 @@ using NWaves.Operations;
 using NWaves.Signals;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 public class SoundConvolver
@@ -25,6 +26,16 @@ public class SoundConvolver
 
             var convolutionResult = Operation.Convolve(discreteSignal,
                 impulseResponses[microphone.id]);
+
+            var maxValue = convolutionResult.Samples.Max();
+
+            for (int index = 0; index < convolutionResult.Samples.Length; ++index)
+                convolutionResult.Samples[index] /= maxValue;
+
+            for (int index = 0; index < convolutionResult.Samples.Length; ++index)
+                convolutionResult.Samples[index] *= 0.99f;
+
+            Debug.Log("Max value: " + convolutionResult.Samples.Max().ToString());
 
             // save
             using (var stream = new FileStream("results/convolutionAttention" +

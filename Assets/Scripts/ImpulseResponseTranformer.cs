@@ -23,11 +23,11 @@ public class ImpulseResponseTranformer
         fft.Inverse(re.ToArray(), im.ToArray(), outputArray);
         var maxi = outputArray.Max();
 
-        //for (int index = 0; index < outputArray.Length; ++index)
-        //    outputArray[index] /= maxi;
+        for (int index = 0; index < outputArray.Length; ++index)
+            outputArray[index] /= maxi;
 
-        //for (int index = 0; index < outputArray.Length; ++index)
-        //    outputArray[index] *= 0.6f;
+        for (int index = 0; index < outputArray.Length; ++index)
+            outputArray[index] *= 0.99f;
 
         var impulseResponse = new DiscreteSignal(22050, outputArray);
 
