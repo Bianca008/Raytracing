@@ -1,4 +1,6 @@
-﻿using UnityEngine.UI;
+﻿using UnityEngine;
+using UnityEngine.UI;
+
 public class UiTimeEchogram
 {
     public InputField microphoneInputField { get; private set; }
@@ -7,13 +9,21 @@ public class UiTimeEchogram
 
     public Button showButton { get; private set; }
 
-    public UiTimeEchogram(
-        InputField microphoneIf,
-        InputField frequencyIf,
-        Button showBtn)
+    public UiTimeEchogram(GameObject menu)
     {
-        this.showButton = showBtn;
-        this.microphoneInputField = microphoneIf;
-        this.frequencyInputField = frequencyIf;
+        GameObject timeEchogramPanel = menu.transform.Find("TabPanel").
+           gameObject.transform.Find("TabPanels").
+           gameObject.transform.Find("TimeEchogramPanel").
+           gameObject;
+
+        microphoneInputField = timeEchogramPanel.transform.Find("InputTime").
+            gameObject.transform.Find("NumberOfMicrophoneInputField").
+            gameObject.GetComponent<InputField>() as InputField;
+
+        frequencyInputField = timeEchogramPanel.transform.Find("InputTime").
+            gameObject.transform.Find("FrequencyInputField").
+            gameObject.GetComponent<InputField>() as InputField;
+
+        showButton = timeEchogramPanel.transform.Find("TimePlotButton").gameObject.GetComponent<Button>() as Button;
     }
 }

@@ -1,4 +1,5 @@
-﻿using UnityEngine.UI;
+﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class UiImpulseResponse 
 {
@@ -6,9 +7,16 @@ public class UiImpulseResponse
 
     public InputField microphoneInputField { get; private set; }
 
-    public UiImpulseResponse(InputField microInputField, Button showBtn)
+    public UiImpulseResponse(GameObject menu)
     {
-        microphoneInputField = microInputField;
-        showButton = showBtn;
+        GameObject frequencyEchogramPanel = menu.transform.Find("TabPanel").
+         gameObject.transform.Find("TabPanels").
+         gameObject.transform.Find("ImpulseResponsePanel").
+         gameObject;
+
+        microphoneInputField = frequencyEchogramPanel.transform.Find("NumberOfMicrophoneInputField").
+                               gameObject.GetComponent<InputField>() as InputField;
+
+        showButton = frequencyEchogramPanel.transform.Find("ImpulseResponsePlotButton").gameObject.GetComponent<Button>() as Button;
     }
 }

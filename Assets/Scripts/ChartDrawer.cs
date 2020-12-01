@@ -35,10 +35,10 @@ public class ChartDrawer
         {
             switch (barChart.name)
             {
-                case "TimeMagnitude":
+                case "TimeMagnitudeBarChart":
                     m_TimeMagnitudeBarChart = barChart;
                     break;
-                case "TimePhase":
+                case "TimePhaseBarChart":
                     m_TimePhaseBarChart = barChart;
                     break;
             }
@@ -67,10 +67,10 @@ public class ChartDrawer
         {
             switch (lineChart.name)
             {
-                case "FrequencyMagnitude":
+                case "FrequencyMagnitudeLineChart":
                     m_TimeMagnitudeLineChart = lineChart;
                     break;
-                case "FrequencyPhase":
+                case "FrequencyPhaseLineChart":
                     m_TimePhaseLineChart = lineChart;
                     break;
             }
@@ -97,7 +97,7 @@ public class ChartDrawer
     {
         foreach (var lineChart in chartArea.GetComponentsInChildren<LineChart>())
         {
-            if (lineChart.name == "ImpulseResponse")
+            if (lineChart.name == "ImpulseResponseLineChart")
                 m_impulseResponseLineChart = lineChart;
         }
 

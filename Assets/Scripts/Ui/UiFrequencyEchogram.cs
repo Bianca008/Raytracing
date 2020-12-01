@@ -1,4 +1,5 @@
-﻿using UnityEngine.UI;
+﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class UiFrequencyEchogram
 {
@@ -6,9 +7,16 @@ public class UiFrequencyEchogram
 
     public Button showButton { get; private set; }
 
-    public UiFrequencyEchogram(InputField microphoneIf, Button showBtn)
+    public UiFrequencyEchogram(GameObject menu)
     {
-        showButton = showBtn;
-        microphoneInputField = microphoneIf;
+        GameObject frequencyEchogramPanel = menu.transform.Find("TabPanel").
+         gameObject.transform.Find("TabPanels").
+         gameObject.transform.Find("FrequencyEchogramPanel").
+         gameObject;
+
+        microphoneInputField = frequencyEchogramPanel.transform.Find("NumberOfMicrophoneInputField").
+                               gameObject.GetComponent<InputField>() as InputField;
+
+        showButton = frequencyEchogramPanel.transform.Find("FrequencyPlotButton").gameObject.GetComponent<Button>() as Button;
     }
 }

@@ -18,33 +18,27 @@ public class RayGenerator : MonoBehaviour
     public int IntersectedRaysWithDuplicate;
     public Material LineMaterial;
     public GameObject MenuCanvas;
-    public Button ShowButton;
-    public Button ShowTimeButton;
-    public Button ShowImpulseButton;
-    public Button ShowFrequencyEchogramButton;
-    public Button ShowTimeEchogramButton;
-    public Button ShowImpulseResponseButton;
-    public InputField NumberOfMicrophoneInputField;
-    public InputField NumberOfMicrophoneTimeInputField;
-    public InputField NumberOfMicrophoneImpulseResponseInputField;
-    public InputField FrequencyInputField;
+    public Button InputTabButton;
+    public Button TimeEchogramTabButton;
+    public Button FrequencyEchogramTabButton;
+    public Button ImpulseResponseTabButton;
 
     private const int maxDistance = 200;
     private readonly int numberOfReflections = 8;
-    private Dictionary<double, Echogram> m_Echograms;
-    private Dictionary<int, List<Complex>> m_FrequencyResponse;
-    private List<double> m_Frequencies;
-    private Dictionary<int, List<AcousticRay>> m_Rays;
+    private Dictionary<double, Echogram> m_echograms;
+    private Dictionary<int, List<Complex>> m_frequencyResponse;
+    private List<double> m_frequencies;
+    private Dictionary<int, List<AcousticRay>> m_rays;
     private Dictionary<int, DiscreteSignal> impulseResponses;
-    private LineRenderer[] m_IntersectedLines;
-    private RayGeometry m_RayGeometryGenerator;
-    private RaysDrawer m_IntersectedRayDrawer;
-    private List<MicrophoneSphere> m_Microphones;
-    private AudioSource m_AudioSource;
+    private LineRenderer[] m_intersectedLines;
+    private RayGeometry m_rayGeometryGenerator;
+    private RaysDrawer m_intersectedRayDrawer;
+    private List<MicrophoneSphere> m_microphones;
+    private AudioSource m_audioSource;
 
     private void Start()
     {
-        m_AudioSource = GetComponent<AudioSource>();
+        m_audioSource = GetComponent<AudioSource>();
 
         CreateMicrophones();
         CreateRays();
@@ -52,10 +46,10 @@ public class RayGenerator : MonoBehaviour
         DrawMicrophones();
 
         ComputeIntensities();
-        IntersectedRays = m_Rays[NumberOfMicrophone - 1].Count;
+        IntersectedRays = m_rays[NumberOfMicrophone - 1].Count;
 
         ComputeFrequencyResponse();
-        FileHandler.WriteFrequencies(m_FrequencyResponse, m_Microphones);
+        FileHandler.WriteFrequencies(m_frequencyResponse, m_microphones);
 
         ConvolveSound();
         InitializeUi();
@@ -64,10 +58,10 @@ public class RayGenerator : MonoBehaviour
     private void Update()
     {
         if (NumberOfRay <= IntersectedRays && NumberOfRay >= 1 &&
-            NumberOfMicrophone <= m_Microphones.Count && NumberOfMicrophone >= 1)
+            NumberOfMicrophone <= m_microphones.Count && NumberOfMicrophone >= 1)
         {
-            m_IntersectedRayDrawer.Draw(NumberOfMicrophone - 1, NumberOfRay - 1);
-            IntersectedRays = m_Rays[NumberOfMicrophone - 1].Count;
+            m_intersectedRayDrawer.Draw(NumberOfMicrophone - 1, NumberOfRay - 1);
+            IntersectedRays = m_rays[NumberOfMicrophone - 1].Count;
         }
         else
             Debug.Log("The number of ray or the number of microphone does not exist...");
@@ -80,12 +74,12 @@ public class RayGenerator : MonoBehaviour
 
     private void CreateRays()
     {
-        m_RayGeometryGenerator = new RayGeometry(VectorConverter.Convert(transform.position),
-            m_Microphones,
+        m_rayGeometryGenerator = new RayGeometry(VectorConverter.Convert(transform.position),
+            m_microphones,
             NumberOfRays,
             numberOfReflections,
             maxDistance);
-        m_RayGeometryGenerator.GenerateRays();
+        m_rayGeometryGenerator.GenerateRays();
     }
 
     private List<AcousticRay> RemoveDuplicates(List<AcousticRay> rays)
@@ -131,27 +125,27 @@ public class RayGenerator : MonoBehaviour
 
     private void CreateIntersectedRaysWithMicrophones()
     {
-        m_Rays = new Dictionary<int, List<AcousticRay>>();
-        foreach (var microphone in m_Microphones)
+        m_rays = new Dictionary<int, List<AcousticRay>>();
+        foreach (var microphone in m_microphones)
         {
-            var newRays = m_RayGeometryGenerator.GetIntersectedRays(microphone);
+            var newRays = m_rayGeometryGenerator.GetIntersectedRays(microphone);
 
             newRays.Sort((first, second) => first.GetDistance().CompareTo(second.GetDistance()));
             IntersectedRaysWithDuplicate += newRays.Count;
             var raysWithoutDuplicates = RemoveDuplicates(newRays);
-            m_Rays[microphone.id] = raysWithoutDuplicates;
+            m_rays[microphone.id] = raysWithoutDuplicates;
         }
 
         var count = 0;
-        for (int index = 0; index < m_Rays.Count; ++index)
-            count += m_Rays[index].Count;
-        m_IntersectedLines = LinesCreator.GenerateLines(count, transform, LineMaterial);
-        m_IntersectedRayDrawer = new RaysDrawer(m_IntersectedLines, m_Rays);
+        for (int index = 0; index < m_rays.Count; ++index)
+            count += m_rays[index].Count;
+        m_intersectedLines = LinesCreator.GenerateLines(count, transform, LineMaterial);
+        m_intersectedRayDrawer = new RaysDrawer(m_intersectedLines, m_rays);
     }
 
     private void CreateMicrophones()
     {
-        m_Microphones = new List<MicrophoneSphere>
+        m_microphones = new List<MicrophoneSphere>
         {
             new MicrophoneSphere(new System.Numerics.Vector3(2, 1.6f, 1.7f), 0.1f),
             new MicrophoneSphere(new System.Numerics.Vector3(-1.5f, 1.2f, 1.7f), 0.1f)
@@ -160,7 +154,7 @@ public class RayGenerator : MonoBehaviour
 
     private void DrawMicrophones()
     {
-        foreach (var microphone in m_Microphones)
+        foreach (var microphone in m_microphones)
         {
             var sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             sphere.transform.position = VectorConverter.Convert(microphone.center);
@@ -172,22 +166,22 @@ public class RayGenerator : MonoBehaviour
 
     private void ComputeIntensities()
     {
-        var intensityCalculator = new IntensityCalculator(m_Rays, m_Microphones, InitialPower);
+        var intensityCalculator = new IntensityCalculator(m_rays, m_microphones, InitialPower);
         intensityCalculator.ComputePower();
         intensityCalculator.TransformIntensitiesToPressure();
         var intensities = intensityCalculator.intensities;
 
-        m_Frequencies = new List<double>();
+        m_frequencies = new List<double>();
         for (double index = 0; index < 22050; index += 22050.0 / 8192.0)
-            m_Frequencies.Add(index);
+            m_frequencies.Add(index);
 
-        Debug.Log(m_Frequencies.Count);
+        Debug.Log(m_frequencies.Count);
 
-        m_Echograms = new Dictionary<double, Echogram>();
-        foreach (var frequency in m_Frequencies)
+        m_echograms = new Dictionary<double, Echogram>();
+        foreach (var frequency in m_frequencies)
         {
-            var phaseCalculator = new PhaseCalculator(m_Rays, m_Microphones, intensities);
-            m_Echograms[frequency] = phaseCalculator.ComputePhase(frequency);
+            var phaseCalculator = new PhaseCalculator(m_rays, m_microphones, intensities);
+            m_echograms[frequency] = phaseCalculator.ComputePhase(frequency);
         }
 
         /*Se poate comenta linia 194 dupa ce s-au generat fisierele macar o data.*/
@@ -196,18 +190,18 @@ public class RayGenerator : MonoBehaviour
 
     private void ComputeFrequencyResponse()
     {
-        m_FrequencyResponse = new Dictionary<int, List<Complex>>();
+        m_frequencyResponse = new Dictionary<int, List<Complex>>();
 
-        foreach (var microphone in m_Microphones)
+        foreach (var microphone in m_microphones)
         {
             var values = new List<Complex>();
-            for (int indexFrequency = 0; indexFrequency < m_Frequencies.Count; ++indexFrequency)
+            for (int indexFrequency = 0; indexFrequency < m_frequencies.Count; ++indexFrequency)
             {
-                var sumi = m_Echograms[m_Frequencies[indexFrequency]][microphone.id].
+                var sumi = m_echograms[m_frequencies[indexFrequency]][microphone.id].
                     Aggregate((s, a) => s + a);
                 values.Add(sumi);
             }
-            m_FrequencyResponse[microphone.id] = values;
+            m_frequencyResponse[microphone.id] = values;
         }
     }
 
@@ -215,34 +209,25 @@ public class RayGenerator : MonoBehaviour
     {
         impulseResponses = new Dictionary<int, DiscreteSignal>();
 
-        foreach (var freqResponse in m_FrequencyResponse)
+        foreach (var freqResponse in m_frequencyResponse)
         {
             impulseResponses[freqResponse.Key] = ImpulseResponseTranformer.Transform(freqResponse.Value);
         }
 
-        SoundConvolver.ConvolveSound(m_AudioSource, impulseResponses, m_Microphones);
+        SoundConvolver.ConvolveSound(m_audioSource, impulseResponses, m_microphones);
     }
 
     private void InitializeUi()
     {
-        var timeEchogram = new UiTimeEchogram(NumberOfMicrophoneTimeInputField, FrequencyInputField, ShowTimeButton);
-        var frequencyEchogram = new UiFrequencyEchogram(NumberOfMicrophoneInputField, ShowButton);
-        var impulseResponse =
-            new UiImpulseResponse(NumberOfMicrophoneImpulseResponseInputField, ShowImpulseResponseButton);
+        var uiTabController = new UiTabController(MenuCanvas, InputTabButton, TimeEchogramTabButton, FrequencyEchogramTabButton, ImpulseResponseTabButton);
+        var uiTimeEchogram = new UiTimeEchogram(MenuCanvas);
+        var uiFrequencyEchogram = new UiFrequencyEchogram(MenuCanvas);
+        var uiImpulseResponse = new UiImpulseResponse(MenuCanvas);
 
-        var uiHandler = new UiHandler(MenuCanvas,
-            timeEchogram,
-            frequencyEchogram,
-            impulseResponse);
+        var uiHandler = new UiHandler(MenuCanvas, uiTimeEchogram, uiFrequencyEchogram, uiImpulseResponse);
 
-        var step = (float)(1 / (2 * m_Frequencies[m_Frequencies.Count - 1]));
+        var step = (float)(1 / (2 * m_frequencies[m_frequencies.Count - 1]));
 
-        uiHandler.InitializeUi(ShowFrequencyEchogramButton,
-            ShowTimeEchogramButton,
-            ShowImpulseButton,
-            impulseResponses,
-            m_Microphones,
-            m_Frequencies,
-            step);
+        uiHandler.InitializeUi(impulseResponses, m_microphones, m_frequencies, step);
     }
 }
