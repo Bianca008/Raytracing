@@ -72,29 +72,26 @@ public class UiHandler
      List<double> frequencies,
      List<MicrophoneSphere> microphones)
     {
-        var frequencyFieldStr = m_uiTimeEchogram.frequencyInputField.text;
-        var numberOfMicrophoneStr = m_uiTimeEchogram.microphoneInputField.text;
-        var numberOfMicrophone = 0;
-        var frequency = 0.0;
-        if (numberOfMicrophoneStr.All(char.IsDigit) == true)
-            numberOfMicrophone = Int32.Parse(numberOfMicrophoneStr);
-        if (frequencyFieldStr.All(char.IsDigit) == true)
-            frequency = Int32.Parse(frequencyFieldStr);
+        var numberOfMicrophone = InputHandler.GetNumber(m_uiTimeEchogram.microphoneInputField);
+        var frequency = InputHandler.GetNumber(m_uiTimeEchogram.frequencyInputField);
 
-        var okToDraw = false;
-        foreach (var micro in microphones)
-            if (micro.id == numberOfMicrophone)
-                okToDraw = true;
+        if (numberOfMicrophone != -1 && frequency != -1)
+        {
+            var okToDraw = false;
+            foreach (var micro in microphones)
+                if (micro.id == numberOfMicrophone)
+                    okToDraw = true;
 
-        var okToDrawFr = false;
-        foreach (var fr in frequencies)
-            if (Math.Abs((int)fr - frequency) < 1e-2)
-                okToDrawFr = true;
+            var okToDrawFr = false;
+            foreach (var fr in frequencies)
+                if (Math.Abs((int)fr - frequency) < 1e-2)
+                    okToDrawFr = true;
 
-        if (okToDraw == true && okToDrawFr == true)
-            DrawTimeEchogram(numberOfMicrophone, frequency);
-        else
-            Debug.Log("The microphone for which you want to see the result does not exist.");
+            if (okToDraw == true && okToDrawFr == true)
+                DrawTimeEchogram(numberOfMicrophone, frequency);
+            else
+                Debug.Log("The microphone for which you want to see the result does not exist.");
+        }
     }
 
     private void DrawTimeEchogram(int indexMicrophone, double indexFrequency)
@@ -131,21 +128,20 @@ public class UiHandler
         List<double> frequencies,
         List<MicrophoneSphere> microphones)
     {
-        var numberOfMicrophoneStr = m_uiFrequencyEchogram.microphoneInputField.text;
-        var numberOfMicrophone = 0;
+        var numberOfMicrophone = InputHandler.GetNumber(m_uiFrequencyEchogram.microphoneInputField);
 
-        if (numberOfMicrophoneStr.All(char.IsDigit) == true)
-            numberOfMicrophone = Int32.Parse(numberOfMicrophoneStr) - 1;
+        if (numberOfMicrophone != -1)
+        {
+            var okToDraw = false;
+            foreach (var micro in microphones)
+                if (micro.id == numberOfMicrophone)
+                    okToDraw = true;
 
-        var okToDraw = false;
-        foreach (var micro in microphones)
-            if (micro.id == numberOfMicrophone)
-                okToDraw = true;
-
-        if (okToDraw == true)
-            DrawChartFrequency(frequencies, numberOfMicrophone);
-        else
-            Debug.Log("The microphone for which you want to see the result does not exist.");
+            if (okToDraw == true)
+                DrawChartFrequency(frequencies, numberOfMicrophone);
+            else
+                Debug.Log("The microphone for which you want to see the result does not exist.");
+        }
     }
 
     private void DrawChartFrequency(
@@ -173,21 +169,20 @@ public class UiHandler
        List<MicrophoneSphere> microphones,
        float step)
     {
-        var numberOfMicrophoneStr = m_uiFrequencyEchogram.microphoneInputField.text;
-        var numberOfMicrophone = 0;
+        var numberOfMicrophone = InputHandler.GetNumber(m_uiFrequencyEchogram.microphoneInputField);
 
-        if (numberOfMicrophoneStr.All(char.IsDigit) == true)
-            numberOfMicrophone = Int32.Parse(numberOfMicrophoneStr) - 1;
+        if (numberOfMicrophone != -1)
+        {
+            var okToDraw = false;
+            foreach (var micro in microphones)
+                if (micro.id == numberOfMicrophone)
+                    okToDraw = true;
 
-        var okToDraw = false;
-        foreach (var micro in microphones)
-            if (micro.id == numberOfMicrophone)
-                okToDraw = true;
-
-        if (okToDraw == true)
-            DrawChartImpulseResponse(impulseResponses, step, numberOfMicrophone);
-        else
-            Debug.Log("The microphone for which you want to see the result does not exist.");
+            if (okToDraw == true)
+                DrawChartImpulseResponse(impulseResponses, step, numberOfMicrophone);
+            else
+                Debug.Log("The microphone for which you want to see the result does not exist.");
+        }
     }
 
     private void DrawChartImpulseResponse(Dictionary<int, DiscreteSignal> impulseResponses,
@@ -220,5 +215,4 @@ public class UiHandler
 
         m_chartDrawer.DrawImpulseResponseChart(xTime, yImpulseResponse);
     }
-
 }
