@@ -4,10 +4,10 @@ using Vector3 = System.Numerics.Vector3;
 
 public class RayGeometry
 {
-    private readonly int m_NumberOfRays;
-    private readonly int m_NumberOfCollisions;
-    private readonly int m_MaxDistance;
-    private readonly IRayCaster m_RayCaster;
+    private readonly int m_numberOfRays;
+    private readonly int m_numberOfCollisions;
+    private readonly int m_maxDistance;
+    private readonly IRayCaster m_rayCaster;
 
     public List<AcousticRay> rays { get; set; } = new List<AcousticRay>();
 
@@ -17,17 +17,17 @@ public class RayGeometry
         int nrOfCollisions = 3,
         int maxDist = 200)
     {
-        m_NumberOfCollisions = nrOfCollisions;
-        m_NumberOfRays = nrOfRays;
-        m_MaxDistance = maxDist;
+        m_numberOfCollisions = nrOfCollisions;
+        m_numberOfRays = nrOfRays;
+        m_maxDistance = maxDist;
 
-        for (int indexRay = 0; indexRay < m_NumberOfRays; ++indexRay)
+        for (int indexRay = 0; indexRay < m_numberOfRays; ++indexRay)
             for (int indexMicro = 0; indexMicro < microphones.Count; ++indexMicro)
             {
                 rays.Add(new AcousticRay(sourcePos, microphones[indexMicro].center));
             }
 
-        m_RayCaster = new IRayCaster(m_MaxDistance);
+        m_rayCaster = new IRayCaster(m_maxDistance);
     }
 
     public Vector3 GetCartesianCoordinates(double distance, double theta, double phi)
@@ -47,9 +47,9 @@ public class RayGeometry
         var goldenAngle = (2 - goldenRatio) * (2 * Math.PI);
         int indexRay = 0;
 
-        for (int index = 0; index < m_NumberOfRays; ++index)
+        for (int index = 0; index < m_numberOfRays; ++index)
         {
-            var theta = Math.Asin(-1.0 + 2.0 * index / (m_NumberOfRays + 1.0));
+            var theta = Math.Asin(-1.0 + 2.0 * index / (m_numberOfRays + 1.0));
             var phi = goldenAngle * index;
 
             GenerateRay(rays[index].source,
@@ -61,15 +61,15 @@ public class RayGeometry
 
     private void GenerateRay(Vector3 position, Vector3 direction, int numberOfRay)
     {
-        m_RayCaster.totalDistance = 0;
-        m_RayCaster.numberOfReflections = 0;
-        m_RayCaster.position = position;
-        m_RayCaster.direction = direction;
+        m_rayCaster.totalDistance = 0;
+        m_rayCaster.numberOfReflections = 0;
+        m_rayCaster.position = position;
+        m_rayCaster.direction = direction;
 
-        while (m_RayCaster.totalDistance <= m_MaxDistance &&
-            m_RayCaster.numberOfReflections <= m_NumberOfCollisions)
+        while (m_rayCaster.totalDistance <= m_maxDistance &&
+            m_rayCaster.numberOfReflections <= m_numberOfCollisions)
         {
-            m_RayCaster.RayCast(rays, numberOfRay);
+            m_rayCaster.RayCast(rays, numberOfRay);
         }
     }
 

@@ -5,12 +5,16 @@ public class UiTabController
 {
     private GameObject m_menuCanvas;
 
-    public UiTabController(GameObject menu, 
-        Button inputTabButton,
-        Button timeEchogramButton,
-        Button frequencyEchogramButton,
-        Button impulseResponseButton)
+    public UiTabController(GameObject menu)
     {
+        GameObject tabButtonsPanel = menu.transform.Find("TabPanel").
+         gameObject.transform.Find("TabButtonsPanel").
+         gameObject;
+        Button inputTabButton = tabButtonsPanel.transform.Find("InputTabButton").gameObject.GetComponent<Button>() as Button;
+        Button timeEchogramButton = tabButtonsPanel.transform.Find("TimeEchogramTabButton").gameObject.GetComponent<Button>() as Button;
+        Button frequencyEchogramButton = tabButtonsPanel.transform.Find("FrequencyEchogramTabButton").gameObject.GetComponent<Button>() as Button;
+        Button impulseResponseButton = tabButtonsPanel.transform.Find("ImpulseResponseTabButton").gameObject.GetComponent<Button>() as Button;
+
         m_menuCanvas = menu;
 
         AddListenerForButton(inputTabButton, 0);

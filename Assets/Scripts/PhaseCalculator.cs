@@ -4,12 +4,12 @@ using System.Numerics;
 
 public class PhaseCalculator
 {
-    private Dictionary<int, List<AcousticRay>> rays
+    private Dictionary<int, List<AcousticRay>> m_rays
     {
         get;
     }
 
-    private List<MicrophoneSphere> microphones
+    private List<MicrophoneSphere> m_microphones
     {
         get;
     }
@@ -25,9 +25,9 @@ public class PhaseCalculator
         List<MicrophoneSphere> microphones,
         Dictionary<int, List<double>> pressure)
     {
-        this.rays = rays;
+        this.m_rays = rays;
         pressures = pressure;
-        this.microphones = microphones;
+        this.m_microphones = microphones;
     }
 
     private void SetEchogram()
@@ -35,21 +35,21 @@ public class PhaseCalculator
         for (int indexMicro = 0; indexMicro < pressures.Count; ++indexMicro)
         {
             var values = new List<Complex>();
-            for (int indexRay = 0; indexRay < pressures[microphones[indexMicro].id].Count; ++indexRay)
+            for (int indexRay = 0; indexRay < pressures[m_microphones[indexMicro].id].Count; ++indexRay)
             {
-                values.Add(new Complex(pressures[microphones[indexMicro].id][indexRay], 0));
+                values.Add(new Complex(pressures[m_microphones[indexMicro].id][indexRay], 0));
             }
-            echogramMagnitudePhase[microphones[indexMicro].id] = values;
+            echogramMagnitudePhase[m_microphones[indexMicro].id] = values;
         }
     }
 
     public Dictionary<int, List<Complex>> ComputePhase(double frequency)
     {
         SetEchogram();
-        for (int indexMicro = 0; indexMicro < rays.Count; ++indexMicro)
-            for (int indexRay = 0; indexRay < rays[microphones[indexMicro].id].Count; ++indexRay)
+        for (int indexMicro = 0; indexMicro < m_rays.Count; ++indexMicro)
+            for (int indexRay = 0; indexRay < m_rays[m_microphones[indexMicro].id].Count; ++indexRay)
             {
-                ComputePhase(microphones[indexMicro].id, indexRay, frequency);
+                ComputePhase(m_microphones[indexMicro].id, indexRay, frequency);
             }
         return echogramMagnitudePhase;
     }
@@ -62,7 +62,7 @@ public class PhaseCalculator
             return;
         }
 
-        var distance = rays[indexMicro][indexRay].GetDistance();
+        var distance = m_rays[indexMicro][indexRay].GetDistance();
         var waveLength = airSoundSpeed / frequency;
         var waveNumber = 2 * Math.PI / waveLength;
         var phase = Math.Atan2(-Math.Sin(waveNumber * distance), Math.Cos(waveNumber * distance));

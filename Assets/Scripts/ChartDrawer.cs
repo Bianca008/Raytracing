@@ -11,17 +11,11 @@ public class ChartDrawer
         set;
     }
 
-    public bool enable
-    {
-        get => m_TimeMagnitudeBarChart.enabled;
-        set => m_TimeMagnitudeBarChart.enabled = value;
-    }
+    private BarChart m_timePhaseBarChart;
+    private BarChart m_timeMagnitudeBarChart;
 
-    private BarChart m_TimePhaseBarChart;
-    private BarChart m_TimeMagnitudeBarChart;
-
-    private LineChart m_TimePhaseLineChart;
-    private LineChart m_TimeMagnitudeLineChart;
+    private LineChart m_timePhaseLineChart;
+    private LineChart m_timeMagnitudeLineChart;
     private LineChart m_impulseResponseLineChart;
 
     public ChartDrawer(GameObject canvas)
@@ -36,28 +30,28 @@ public class ChartDrawer
             switch (barChart.name)
             {
                 case "TimeMagnitudeBarChart":
-                    m_TimeMagnitudeBarChart = barChart;
+                    m_timeMagnitudeBarChart = barChart;
                     break;
                 case "TimePhaseBarChart":
-                    m_TimePhaseBarChart = barChart;
+                    m_timePhaseBarChart = barChart;
                     break;
             }
         }
 
-        SetBarChart(m_TimeMagnitudeBarChart, "Time(1e+3)-Magnitude chart", "Magnitude");
+        SetBarChart(m_timeMagnitudeBarChart, "Time(1e+3)-Magnitude chart", "Magnitude");
 
         for (int index = 0; index < xTime.Count; ++index)
         {
-            m_TimeMagnitudeBarChart.AddXAxisData(xTime[index].ToString());
-            m_TimeMagnitudeBarChart.AddData(0, yMagnitude[index]);
+            m_timeMagnitudeBarChart.AddXAxisData(xTime[index].ToString());
+            m_timeMagnitudeBarChart.AddData(0, yMagnitude[index]);
         }
 
-        SetBarChart(m_TimePhaseBarChart, "Time(1e+3)-Phase chart", "Phase");
+        SetBarChart(m_timePhaseBarChart, "Time(1e+3)-Phase chart", "Phase");
 
         for (int index = 0; index < xTime.Count; ++index)
         {
-            m_TimePhaseBarChart.AddXAxisData(xTime[index].ToString());
-            m_TimePhaseBarChart.AddData(0, yPhase[index]);
+            m_timePhaseBarChart.AddXAxisData(xTime[index].ToString());
+            m_timePhaseBarChart.AddData(0, yPhase[index]);
         }
     }
 
@@ -68,28 +62,28 @@ public class ChartDrawer
             switch (lineChart.name)
             {
                 case "FrequencyMagnitudeLineChart":
-                    m_TimeMagnitudeLineChart = lineChart;
+                    m_timeMagnitudeLineChart = lineChart;
                     break;
                 case "FrequencyPhaseLineChart":
-                    m_TimePhaseLineChart = lineChart;
+                    m_timePhaseLineChart = lineChart;
                     break;
             }
         }
 
-        SetLineChart(m_TimeMagnitudeLineChart, "Frequency(Hz)-Magnitude chart", "Magnitude");
+        SetLineChart(m_timeMagnitudeLineChart, "Frequency(Hz)-Magnitude chart", "Magnitude");
 
         for (int index = 0; index < xFrequency.Count; ++index)
         {
-            m_TimeMagnitudeLineChart.AddXAxisData(xFrequency[index].ToString());
-            m_TimeMagnitudeLineChart.AddData(0, yMagnitude[index]);
+            m_timeMagnitudeLineChart.AddXAxisData(xFrequency[index].ToString());
+            m_timeMagnitudeLineChart.AddData(0, yMagnitude[index]);
         }
 
-        SetLineChart(m_TimePhaseLineChart, "Frequency(Hz) - Phase chart", "Phase");
+        SetLineChart(m_timePhaseLineChart, "Frequency(Hz) - Phase chart", "Phase");
 
         for (int index = 0; index < xFrequency.Count; ++index)
         {
-            m_TimePhaseLineChart.AddXAxisData(xFrequency[index].ToString());
-            m_TimePhaseLineChart.AddData(0, yPhase[index]);
+            m_timePhaseLineChart.AddXAxisData(xFrequency[index].ToString());
+            m_timePhaseLineChart.AddData(0, yPhase[index]);
         }
     }
 

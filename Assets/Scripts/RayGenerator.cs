@@ -18,10 +18,6 @@ public class RayGenerator : MonoBehaviour
     public int IntersectedRaysWithDuplicate;
     public Material LineMaterial;
     public GameObject MenuCanvas;
-    public Button InputTabButton;
-    public Button TimeEchogramTabButton;
-    public Button FrequencyEchogramTabButton;
-    public Button ImpulseResponseTabButton;
 
     private const int maxDistance = 200;
     private readonly int numberOfReflections = 8;
@@ -219,7 +215,7 @@ public class RayGenerator : MonoBehaviour
 
     private void InitializeUi()
     {
-        var uiTabController = new UiTabController(MenuCanvas, InputTabButton, TimeEchogramTabButton, FrequencyEchogramTabButton, ImpulseResponseTabButton);
+        var uiTabController = new UiTabController(MenuCanvas);
         var uiTimeEchogram = new UiTimeEchogram(MenuCanvas);
         var uiFrequencyEchogram = new UiFrequencyEchogram(MenuCanvas);
         var uiImpulseResponse = new UiImpulseResponse(MenuCanvas);
