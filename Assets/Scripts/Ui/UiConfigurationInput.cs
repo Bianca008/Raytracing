@@ -1,9 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class UiConfigurationInput 
+public class UiConfigurationInput
 {
     public InputField numberOfReflections { get; private set; }
 
@@ -12,6 +10,8 @@ public class UiConfigurationInput
     public Dropdown frequencyStep { get; private set; }
 
     public Button setConfiguration { get; private set; }
+
+    public Button soundButton { get; private set; }
 
     public UiConfigurationInput(GameObject menu)
     {
@@ -23,6 +23,7 @@ public class UiConfigurationInput
         numberOfReflections = inputPanel.transform.Find("Input").Find("NumberOfReflectionsInputField").gameObject.GetComponent<InputField>();
         maxDistance = inputPanel.transform.Find("Input").Find("MaxDistanceInputField").GetComponent<InputField>();
         frequencyStep = inputPanel.transform.Find("Input").Find("FrequencyStepDropdown").gameObject.GetComponent<Dropdown>();
+        soundButton = inputPanel.transform.Find("Input").Find("SoundButton").gameObject.GetComponent<Button>();
         setConfiguration = inputPanel.transform.Find("SetConfigurationButton").gameObject.GetComponent<Button>();
     }
 }

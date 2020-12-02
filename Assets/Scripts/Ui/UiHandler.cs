@@ -92,6 +92,7 @@ public class UiHandler
 
             double freq = frequencies.Aggregate((x, y) => Math.Abs(x - frequency) < Math.Abs(y - frequency) ? x : y);
             Debug.Log(freq + " " + frequency);
+            m_uiTimeEchogram.frequencyInputField.text = freq.ToString();
 
             if (okToDraw == true)
                 DrawTimeEchogram(rays, microphones, echograms, numberOfMicrophone, freq);

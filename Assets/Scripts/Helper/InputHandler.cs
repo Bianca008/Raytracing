@@ -17,6 +17,6 @@ public class InputHandler
 
     public static int GetCheckedDropdownElement(Dropdown dropdown)
     {
-        return dropdown.value;
+        return Int32.Parse(dropdown.options[dropdown.value].text);
     }
 }

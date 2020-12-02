@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Numerics;
 using NWaves.Signals;
+using UnityEditor;
 using UnityEngine;
-
+using UnityEngine.Networking;
 using Echogram = System.Collections.Generic.Dictionary<int, System.Collections.Generic.List<System.Numerics.Complex>>;
 
 public class RayGenerator : MonoBehaviour
@@ -18,6 +20,8 @@ public class RayGenerator : MonoBehaviour
     public Material LineMaterial;
     public GameObject MenuCanvas;
 
+    private double m_frequencyStep = 8192.0;
+    private double m_maxFrequency = 22050.0;
     private int m_maxDistance = 200;
     private int m_numberOfReflections = 8;
     private Dictionary<double, Echogram> m_echograms;
@@ -167,7 +171,7 @@ public class RayGenerator : MonoBehaviour
         var intensities = intensityCalculator.intensities;
 
         m_frequencies = new List<double>();
-        for (double index = 0; index < 22050; index += 22050.0 / 8192.0)
+        for (double index = 0; index < m_maxFrequency; index += m_maxFrequency / m_frequencyStep)
             m_frequencies.Add(index);
 
         Debug.Log(m_frequencies.Count);
@@ -229,6 +233,7 @@ public class RayGenerator : MonoBehaviour
             step);
 
         m_configurationInput = new UiConfigurationInput(MenuCanvas);
+        AddListenerForSoundButton();
         m_configurationInput.setConfiguration.onClick.AddListener(RunSolver);
     }
 
@@ -242,7 +247,9 @@ public class RayGenerator : MonoBehaviour
         if (maxDistance != -1)
             m_maxDistance = maxDistance;
 
-        var frequencyStep = InputHandler.GetCheckedDropdownElement(m_configurationInput.frequencyStep);
+        m_frequencyStep = InputHandler.GetCheckedDropdownElement(m_configurationInput.frequencyStep);
+
+        Debug.Log(m_maxFrequency + " fr1  " + m_frequencyStep);
 
         CreateRays();
         CreateIntersectedRaysWithMicrophones();
@@ -253,5 +260,49 @@ public class RayGenerator : MonoBehaviour
         ComputeFrequencyResponse();
 
         ConvolveSound();
+    }
+
+    private void AddListenerForSoundButton()
+    {
+        m_configurationInput.soundButton.onClick.AddListener(ShowDialog);
+    }
+
+    private void ShowDialog()
+    {
+        string path = EditorUtility.OpenFilePanel("Overwrite with wav", "", "wav");
+
+        if (path.Length != 0)
+        {
+            m_audioSource.clip = new WWW(path).GetAudioClip();
+            m_audioSource.clip.name = Path.GetFileNameWithoutExtension(path);
+            m_audioSource.Play();
+            m_maxFrequency = SoundConvolver.GetMaxFrequency(m_audioSource);
+            Debug.Log(m_maxFrequency + " fr  " + m_frequencyStep);
+        }
+
+        //if (path.Length != 0)
+        //{
+        //    using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(path, AudioType.WAV))
+        //    {
+        //        ((DownloadHandlerAudioClip)www.downloadHandler).streamAudio = true;
+        //        www.SendWebRequest();
+
+        //        if (www.result == UnityWebRequest.Result.ConnectionError)
+        //        {
+        //            Debug.Log(www.error);
+        //        }
+        //        else
+        //        {
+        //            m_audioSource.clip = DownloadHandlerAudioClip.GetContent(www);
+        //            m_audioSource.clip.name = Path.GetFileNameWithoutExtension(path);
+        //            m_audioSource.Play();
+        //            m_maxFrequency = SoundConvolver.GetMaxFrequency(m_audioSource);
+        //            m_frequencyStep = InputHandler.GetCheckedDropdownElement(m_configurationInput.frequencyStep);
+        //            Debug.Log(m_maxFrequency + " fr  " + m_frequencyStep);
+        //        }
+
+        //        www.Dispose();
+        //    }
+        //}
     }
 }

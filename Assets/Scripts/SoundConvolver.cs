@@ -8,6 +8,11 @@ using UnityEngine;
 
 public class SoundConvolver
 {
+    public static double GetMaxFrequency(AudioSource audioSource)
+    {
+        return audioSource.clip.frequency / 2.0;
+    }
+
     public static void ConvolveSound(
         AudioSource audioSource,
         Dictionary<int, DiscreteSignal> impulseResponses,
