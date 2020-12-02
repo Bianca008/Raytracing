@@ -14,4 +14,9 @@ public class InputHandler
 
         return -1;
     }
+
+    public static int GetCheckedDropdownElement(Dropdown dropdown)
+    {
+        return dropdown.value;
+    }
 }

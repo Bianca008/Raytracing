@@ -10,13 +10,13 @@ public class UiFrequencyEchogram
     public UiFrequencyEchogram(GameObject menu)
     {
         GameObject frequencyEchogramPanel = menu.transform.Find("TabPanel").
-         gameObject.transform.Find("TabPanels").
-         gameObject.transform.Find("FrequencyEchogramPanel").
-         gameObject;
+                                            Find("TabPanels").
+                                            Find("FrequencyEchogramPanel").
+                                            gameObject;
 
         microphoneInputField = frequencyEchogramPanel.transform.Find("NumberOfMicrophoneInputField").
-                               gameObject.GetComponent<InputField>() as InputField;
+                               gameObject.GetComponent<InputField>();
 
-        showButton = frequencyEchogramPanel.transform.Find("FrequencyPlotButton").gameObject.GetComponent<Button>() as Button;
+        showButton = frequencyEchogramPanel.transform.Find("FrequencyPlotButton").gameObject.GetComponent<Button>();
     }
 }

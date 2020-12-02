@@ -9,14 +9,14 @@ public class UiImpulseResponse
 
     public UiImpulseResponse(GameObject menu)
     {
-        GameObject frequencyEchogramPanel = menu.transform.Find("TabPanel").
-         gameObject.transform.Find("TabPanels").
-         gameObject.transform.Find("ImpulseResponsePanel").
-         gameObject;
+        GameObject impulseResponsePanel = menu.transform.Find("TabPanel").
+                                          Find("TabPanels").
+                                          Find("ImpulseResponsePanel").
+                                          gameObject;
 
-        microphoneInputField = frequencyEchogramPanel.transform.Find("NumberOfMicrophoneInputField").
-                               gameObject.GetComponent<InputField>() as InputField;
+        microphoneInputField = impulseResponsePanel.transform.Find("NumberOfMicrophoneInputField").
+                               gameObject.GetComponent<InputField>();
 
-        showButton = frequencyEchogramPanel.transform.Find("ImpulseResponsePlotButton").gameObject.GetComponent<Button>() as Button;
+        showButton = impulseResponsePanel.transform.Find("ImpulseResponsePlotButton").gameObject.GetComponent<Button>();
     }
 }

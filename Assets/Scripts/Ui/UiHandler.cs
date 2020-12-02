@@ -33,9 +33,9 @@ public class UiHandler
     }
 
     public UiHandler(GameObject menuCanvas,
-       UiTimeEchogram uiTimeEcho,
-       UiFrequencyEchogram freqEcho,
-       UiImpulseResponse uiImpulseResp)
+                     UiTimeEchogram uiTimeEcho,
+                     UiFrequencyEchogram freqEcho,
+                     UiImpulseResponse uiImpulseResp)
     {
         this.menuCanvas = menuCanvas;
         m_chartDrawer = new ChartDrawer(this.menuCanvas);
@@ -45,20 +45,18 @@ public class UiHandler
         m_uiImpulseResponse = uiImpulseResp;
     }
 
-    public void InitializeUi(
-        Dictionary<int, DiscreteSignal> impulseResponses,
-        List<MicrophoneSphere> microphones,
-        List<double> frequencies,
-        float step)
+    public void InitializeUi(Dictionary<int, DiscreteSignal> impulseResponses,
+                             List<MicrophoneSphere> microphones,
+                             List<double> frequencies,
+                             float step)
     {
         AddListenerForShowTimeButton(frequencies, microphones);
         AddListenerForShowFrquencyButton(frequencies, microphones);
         AddListenerForShowImpulseResponse(impulseResponses, microphones, step);
     }
 
-    private void AddListenerForShowTimeButton(
-    List<double> frequencies,
-    List<MicrophoneSphere> microphones)
+    private void AddListenerForShowTimeButton(List<double> frequencies,
+                                              List<MicrophoneSphere> microphones)
     {
         m_uiTimeEchogram.showButton.onClick.AddListener(() =>
         {
@@ -68,9 +66,8 @@ public class UiHandler
         });
     }
 
-    private void ShowTimeChart(
-     List<double> frequencies,
-     List<MicrophoneSphere> microphones)
+    private void ShowTimeChart(List<double> frequencies,
+                               List<MicrophoneSphere> microphones)
     {
         var numberOfMicrophone = InputHandler.GetNumber(m_uiTimeEchogram.microphoneInputField);
         var frequency = InputHandler.GetNumber(m_uiTimeEchogram.frequencyInputField);
@@ -112,9 +109,8 @@ public class UiHandler
         m_chartDrawer.DrawTimeChart(time, magnitude, phase);
     }
 
-    private void AddListenerForShowFrquencyButton(
-       List<double> frequencies,
-       List<MicrophoneSphere> microphones)
+    private void AddListenerForShowFrquencyButton(List<double> frequencies,
+                                                  List<MicrophoneSphere> microphones)
     {
         m_uiFrequencyEchogram.showButton.onClick.AddListener(() =>
         {
@@ -124,9 +120,8 @@ public class UiHandler
         });
     }
 
-    private void ShowFrequencyChart(
-        List<double> frequencies,
-        List<MicrophoneSphere> microphones)
+    private void ShowFrequencyChart(List<double> frequencies,
+                                    List<MicrophoneSphere> microphones)
     {
         var numberOfMicrophone = InputHandler.GetNumber(m_uiFrequencyEchogram.microphoneInputField);
 
@@ -144,9 +139,8 @@ public class UiHandler
         }
     }
 
-    private void DrawChartFrequency(
-    List<double> frequencies,
-    int indexMicrophone)
+    private void DrawChartFrequency(List<double> frequencies,
+                                    int indexMicrophone)
     {
         var file = indexMicrophone.ToString() + "M.txt";
         var (magnitude, phase) = FileHandler.ReadFromFile(file);
@@ -166,8 +160,8 @@ public class UiHandler
     }
 
     private void ShowImpulseResponseChart(Dictionary<int, DiscreteSignal> impulseResponses,
-       List<MicrophoneSphere> microphones,
-       float step)
+                                          List<MicrophoneSphere> microphones,
+                                          float step)
     {
         var numberOfMicrophone = InputHandler.GetNumber(m_uiFrequencyEchogram.microphoneInputField);
 
@@ -186,8 +180,8 @@ public class UiHandler
     }
 
     private void DrawChartImpulseResponse(Dictionary<int, DiscreteSignal> impulseResponses,
-      float step,
-      int numberOfMicrophone)
+                                          float step,
+                                          int numberOfMicrophone)
     {
         var xTime = new List<float>() { 0 };
 

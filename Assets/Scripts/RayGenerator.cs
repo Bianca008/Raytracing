@@ -19,8 +19,8 @@ public class RayGenerator : MonoBehaviour
     public Material LineMaterial;
     public GameObject MenuCanvas;
 
-    private const int maxDistance = 200;
-    private readonly int numberOfReflections = 8;
+    private int m_maxDistance = 200;
+    private int m_numberOfReflections = 8;
     private Dictionary<double, Echogram> m_echograms;
     private Dictionary<int, List<Complex>> m_frequencyResponse;
     private List<double> m_frequencies;
@@ -31,6 +31,7 @@ public class RayGenerator : MonoBehaviour
     private RaysDrawer m_intersectedRayDrawer;
     private List<MicrophoneSphere> m_microphones;
     private AudioSource m_audioSource;
+    private UiConfigurationInput m_configurationInput;
 
     private void Start()
     {
@@ -73,8 +74,8 @@ public class RayGenerator : MonoBehaviour
         m_rayGeometryGenerator = new RayGeometry(VectorConverter.Convert(transform.position),
             m_microphones,
             NumberOfRays,
-            numberOfReflections,
-            maxDistance);
+            m_numberOfReflections,
+            m_maxDistance);
         m_rayGeometryGenerator.GenerateRays();
     }
 
@@ -225,5 +226,32 @@ public class RayGenerator : MonoBehaviour
         var step = (float)(1 / (2 * m_frequencies[m_frequencies.Count - 1]));
 
         uiHandler.InitializeUi(impulseResponses, m_microphones, m_frequencies, step);
+
+        m_configurationInput = new UiConfigurationInput(MenuCanvas);
+        m_configurationInput.setConfiguration.onClick.AddListener(RunSolver);
+    }
+
+    private void RunSolver()
+    {
+        var numberOfReflections = InputHandler.GetNumber(m_configurationInput.numberOfReflections);
+        if (numberOfReflections != -1)
+            m_numberOfReflections = numberOfReflections;
+
+        var maxDistance = InputHandler.GetNumber(m_configurationInput.maxDistance);
+        if (maxDistance != -1)
+            m_maxDistance = maxDistance;
+
+        var frequencyStep = InputHandler.GetCheckedDropdownElement(m_configurationInput.frequencyStep);
+
+        CreateRays();
+        CreateIntersectedRaysWithMicrophones();
+
+        ComputeIntensities();
+        IntersectedRays = m_rays[NumberOfMicrophone - 1].Count;
+
+        ComputeFrequencyResponse();
+        FileHandler.WriteFrequencies(m_frequencyResponse, m_microphones);
+
+        ConvolveSound();
     }
 }

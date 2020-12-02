@@ -12,18 +12,18 @@ public class UiTimeEchogram
     public UiTimeEchogram(GameObject menu)
     {
         GameObject timeEchogramPanel = menu.transform.Find("TabPanel").
-           gameObject.transform.Find("TabPanels").
-           gameObject.transform.Find("TimeEchogramPanel").
-           gameObject;
+                                       Find("TabPanels").
+                                       Find("TimeEchogramPanel").
+                                       gameObject;
 
         microphoneInputField = timeEchogramPanel.transform.Find("InputTime").
-            gameObject.transform.Find("NumberOfMicrophoneInputField").
-            gameObject.GetComponent<InputField>() as InputField;
+                               Find("NumberOfMicrophoneInputField").
+                               gameObject.GetComponent<InputField>();
 
         frequencyInputField = timeEchogramPanel.transform.Find("InputTime").
-            gameObject.transform.Find("FrequencyInputField").
-            gameObject.GetComponent<InputField>() as InputField;
+                              Find("FrequencyInputField").
+                              gameObject.GetComponent<InputField>();
 
-        showButton = timeEchogramPanel.transform.Find("TimePlotButton").gameObject.GetComponent<Button>() as Button;
+        showButton = timeEchogramPanel.transform.Find("TimePlotButton").gameObject.GetComponent<Button>();
     }
 }

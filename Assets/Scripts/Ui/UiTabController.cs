@@ -8,12 +8,12 @@ public class UiTabController
     public UiTabController(GameObject menu)
     {
         GameObject tabButtonsPanel = menu.transform.Find("TabPanel").
-         gameObject.transform.Find("TabButtonsPanel").
-         gameObject;
-        Button inputTabButton = tabButtonsPanel.transform.Find("InputTabButton").gameObject.GetComponent<Button>() as Button;
-        Button timeEchogramButton = tabButtonsPanel.transform.Find("TimeEchogramTabButton").gameObject.GetComponent<Button>() as Button;
-        Button frequencyEchogramButton = tabButtonsPanel.transform.Find("FrequencyEchogramTabButton").gameObject.GetComponent<Button>() as Button;
-        Button impulseResponseButton = tabButtonsPanel.transform.Find("ImpulseResponseTabButton").gameObject.GetComponent<Button>() as Button;
+                                     Find("TabButtonsPanel").
+                                     gameObject;
+        Button inputTabButton = tabButtonsPanel.transform.Find("InputTabButton").gameObject.GetComponent<Button>();
+        Button timeEchogramButton = tabButtonsPanel.transform.Find("TimeEchogramTabButton").gameObject.GetComponent<Button>();
+        Button frequencyEchogramButton = tabButtonsPanel.transform.Find("FrequencyEchogramTabButton").gameObject.GetComponent<Button>();
+        Button impulseResponseButton = tabButtonsPanel.transform.Find("ImpulseResponseTabButton").gameObject.GetComponent<Button>();
 
         m_menuCanvas = menu;
 
@@ -28,7 +28,8 @@ public class UiTabController
     private void InitializeTabs(int indexVisibleTab)
     {
         GameObject tabPanels = m_menuCanvas.transform.Find("TabPanel").gameObject;
-        GameObject panels = tabPanels.transform.Find("TabPanels").gameObject;        GameObject inputTabPanel = panels.transform.Find("InputTabPanel").gameObject;
+        GameObject panels = tabPanels.transform.Find("TabPanels").gameObject;        
+        GameObject inputTabPanel = panels.transform.Find("InputTabPanel").gameObject;
         GameObject timeTabPanel = panels.transform.Find("TimeEchogramPanel").gameObject;
         GameObject frequencyTabPanel = panels.transform.Find("FrequencyEchogramPanel").gameObject;
         GameObject impulseResponePanel = panels.transform.Find("ImpulseResponsePanel").gameObject;
