@@ -51,6 +51,7 @@ public class PhaseCalculator
             {
                 ComputePhase(m_microphones[indexMicro].id, indexRay, frequency);
             }
+
         return echogramMagnitudePhase;
     }
 

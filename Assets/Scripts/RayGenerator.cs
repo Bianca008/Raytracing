@@ -6,7 +6,6 @@ using NWaves.Signals;
 using UnityEngine;
 
 using Echogram = System.Collections.Generic.Dictionary<int, System.Collections.Generic.List<System.Numerics.Complex>>;
-using UnityEngine.UI;
 
 public class RayGenerator : MonoBehaviour
 {
@@ -22,14 +21,14 @@ public class RayGenerator : MonoBehaviour
     private int m_maxDistance = 200;
     private int m_numberOfReflections = 8;
     private Dictionary<double, Echogram> m_echograms;
-    private Dictionary<int, List<Complex>> m_frequencyResponse;
+    private Echogram m_frequencyResponse;
     private List<double> m_frequencies;
     private Dictionary<int, List<AcousticRay>> m_rays;
     private Dictionary<int, DiscreteSignal> impulseResponses;
+    private List<MicrophoneSphere> m_microphones;
     private LineRenderer[] m_intersectedLines;
     private RayGeometry m_rayGeometryGenerator;
     private RaysDrawer m_intersectedRayDrawer;
-    private List<MicrophoneSphere> m_microphones;
     private AudioSource m_audioSource;
     private UiConfigurationInput m_configurationInput;
 
@@ -46,7 +45,6 @@ public class RayGenerator : MonoBehaviour
         IntersectedRays = m_rays[NumberOfMicrophone - 1].Count;
 
         ComputeFrequencyResponse();
-        FileHandler.WriteFrequencies(m_frequencyResponse, m_microphones);
 
         ConvolveSound();
         InitializeUi();
@@ -180,9 +178,6 @@ public class RayGenerator : MonoBehaviour
             var phaseCalculator = new PhaseCalculator(m_rays, m_microphones, intensities);
             m_echograms[frequency] = phaseCalculator.ComputePhase(frequency);
         }
-
-        /*Se poate comenta linia 194 dupa ce s-au generat fisierele macar o data.*/
-        //FileHandler.WriteToFileTimePressure(m_Echograms, m_Rays, m_Microphones, m_Frequencies);
     }
 
     private void ComputeFrequencyResponse()
@@ -225,7 +220,13 @@ public class RayGenerator : MonoBehaviour
 
         var step = (float)(1 / (2 * m_frequencies[m_frequencies.Count - 1]));
 
-        uiHandler.InitializeUi(impulseResponses, m_microphones, m_frequencies, step);
+        uiHandler.InitializeUi(m_rays,
+            m_microphones,
+            m_frequencies,
+            m_echograms,
+            m_frequencyResponse,
+            impulseResponses,
+            step);
 
         m_configurationInput = new UiConfigurationInput(MenuCanvas);
         m_configurationInput.setConfiguration.onClick.AddListener(RunSolver);
@@ -250,7 +251,6 @@ public class RayGenerator : MonoBehaviour
         IntersectedRays = m_rays[NumberOfMicrophone - 1].Count;
 
         ComputeFrequencyResponse();
-        FileHandler.WriteFrequencies(m_frequencyResponse, m_microphones);
 
         ConvolveSound();
     }
