@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -41,9 +42,9 @@ public class RayGenerator : MonoBehaviour
         m_audioSource = GetComponent<AudioSource>();
 
         CreateMicrophones();
+        DrawMicrophones();
         CreateRays();
         CreateIntersectedRaysWithMicrophones();
-        DrawMicrophones();
 
         ComputeIntensities();
         IntersectedRays = m_rays[NumberOfMicrophone - 1].Count;
@@ -239,6 +240,7 @@ public class RayGenerator : MonoBehaviour
 
     private void RunSolver()
     {
+        Debug.Log("---------------------Solver started!-----------------------");
         var numberOfReflections = InputHandler.GetNumber(m_configurationInput.numberOfReflections);
         if (numberOfReflections != -1)
             m_numberOfReflections = numberOfReflections;
@@ -249,7 +251,7 @@ public class RayGenerator : MonoBehaviour
 
         m_frequencyStep = InputHandler.GetCheckedDropdownElement(m_configurationInput.frequencyStep);
 
-        Debug.Log(m_maxFrequency + " fr1  " + m_frequencyStep);
+        Debug.Log(m_maxFrequency + " fr1  " + m_frequencyStep + " " + m_numberOfReflections + " " + m_maxDistance);
 
         CreateRays();
         CreateIntersectedRaysWithMicrophones();
@@ -260,6 +262,8 @@ public class RayGenerator : MonoBehaviour
         ComputeFrequencyResponse();
 
         ConvolveSound();
+
+        Debug.Log("---------------------Solver finished!----------------------");
     }
 
     private void AddListenerForSoundButton()
@@ -270,39 +274,31 @@ public class RayGenerator : MonoBehaviour
     private void ShowDialog()
     {
         string path = EditorUtility.OpenFilePanel("Overwrite with wav", "", "wav");
+        StartCoroutine(LoadAudioClip(path));
+    }
 
+    private IEnumerator LoadAudioClip(string path)
+    {
         if (path.Length != 0)
         {
-            m_audioSource.clip = new WWW(path).GetAudioClip();
-            m_audioSource.clip.name = Path.GetFileNameWithoutExtension(path);
-            m_audioSource.Play();
-            m_maxFrequency = SoundConvolver.GetMaxFrequency(m_audioSource);
-            Debug.Log(m_maxFrequency + " fr  " + m_frequencyStep);
+            using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(path, AudioType.WAV))
+            {
+                yield return www.SendWebRequest();
+
+                if (www.result == UnityWebRequest.Result.ConnectionError)
+                {
+                    Debug.Log(www.error);
+                }
+                else
+                {
+                    m_audioSource.clip = DownloadHandlerAudioClip.GetContent(www);
+                    m_audioSource.clip.name = Path.GetFileNameWithoutExtension(path);
+                    m_audioSource.Play();
+                    m_maxFrequency = SoundConvolver.GetMaxFrequency(m_audioSource);
+                    Debug.Log(m_maxFrequency + " fr  " + m_frequencyStep);
+                }
+            }
+            Debug.Log("---------------------File is loaded!----------------------");
         }
-
-        //if (path.Length != 0)
-        //{
-        //    using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(path, AudioType.WAV))
-        //    {
-        //        ((DownloadHandlerAudioClip)www.downloadHandler).streamAudio = true;
-        //        www.SendWebRequest();
-
-        //        if (www.result == UnityWebRequest.Result.ConnectionError)
-        //        {
-        //            Debug.Log(www.error);
-        //        }
-        //        else
-        //        {
-        //            m_audioSource.clip = DownloadHandlerAudioClip.GetContent(www);
-        //            m_audioSource.clip.name = Path.GetFileNameWithoutExtension(path);
-        //            m_audioSource.Play();
-        //            m_maxFrequency = SoundConvolver.GetMaxFrequency(m_audioSource);
-        //            m_frequencyStep = InputHandler.GetCheckedDropdownElement(m_configurationInput.frequencyStep);
-        //            Debug.Log(m_maxFrequency + " fr  " + m_frequencyStep);
-        //        }
-
-        //        www.Dispose();
-        //    }
-        //}
     }
 }

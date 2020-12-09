@@ -29,16 +29,12 @@ public class SoundConvolver
                 discreteSignal = waveFile[Channels.Left];
             }
 
+            NormalizeSampleData(discreteSignal);
+
             var convolutionResult = Operation.Convolve(discreteSignal,
                 impulseResponses[microphone.id]);
 
-            var maxValue = convolutionResult.Samples.Max();
-
-            for (int index = 0; index < convolutionResult.Samples.Length; ++index)
-                convolutionResult.Samples[index] /= maxValue;
-
-            for (int index = 0; index < convolutionResult.Samples.Length; ++index)
-                convolutionResult.Samples[index] *= 0.99f;
+            NormalizeSampleData(convolutionResult);
 
             Debug.Log("Max value: " + convolutionResult.Samples.Max().ToString());
 
@@ -51,5 +47,16 @@ public class SoundConvolver
                 waveFile.SaveTo(stream);
             }
         }
+    }
+
+    private static void NormalizeSampleData(DiscreteSignal signal)
+    {
+        var maxi = signal.Samples.Max();
+
+        for (int index = 0; index < signal.Samples.Length; ++index)
+            signal.Samples[index] /= maxi;
+
+        for (int index = 0; index < signal.Samples.Length; ++index)
+            signal.Samples[index] *= 0.99f;
     }
 }
