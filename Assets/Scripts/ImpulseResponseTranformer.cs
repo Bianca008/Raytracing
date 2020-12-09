@@ -21,13 +21,6 @@ public class ImpulseResponseTranformer
         var fft = new RealFft(frequencyResponse.Count);
         var outputArray = new float[re.Count];
         fft.Inverse(re.ToArray(), im.ToArray(), outputArray);
-        //var maxi = outputArray.Max();
-
-        //for (int index = 0; index < outputArray.Length; ++index)
-        //    outputArray[index] /= maxi;
-
-        //for (int index = 0; index < outputArray.Length; ++index)
-        //    outputArray[index] *= 0.99f;
 
         var impulseResponse = new DiscreteSignal(22050, outputArray);
 

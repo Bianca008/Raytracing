@@ -114,6 +114,7 @@ public class ChartDrawer
 
     private void SetLineChart(LineChart chart, String name, String tag = null)
     {
+        chart.ClearAxisData();
         chart.yAxis0.min = 0;
         chart.title.show = true;
         chart.title.text = name;
@@ -137,6 +138,7 @@ public class ChartDrawer
 
     private void SetBarChart(BarChart chart, String name, String tag = null)
     {
+        chart.ClearAxisData();
         chart.title.show = true;
         chart.title.text = name;
         chart.tooltip.show = true;

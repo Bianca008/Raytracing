@@ -262,6 +262,7 @@ public class RayGenerator : MonoBehaviour
         ComputeFrequencyResponse();
 
         ConvolveSound();
+        InitializeUi();
 
         Debug.Log("---------------------Solver finished!----------------------");
     }

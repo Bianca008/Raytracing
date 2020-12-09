@@ -171,7 +171,7 @@ public class UiHandler
                                           List<MicrophoneSphere> microphones,
                                           float step)
     {
-        var numberOfMicrophone = InputHandler.GetNumber(m_uiFrequencyEchogram.microphoneInputField);
+        var numberOfMicrophone = InputHandler.GetNumber(m_uiImpulseResponse.microphoneInputField);
 
         if (numberOfMicrophone != -1)
         {

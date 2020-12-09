@@ -9,7 +9,7 @@ public class InputHandler
     {
         var numberStr = number.text;
 
-        if (numberStr.All(char.IsDigit) == true)
+        if (numberStr.Trim().Length > 0 && numberStr.All(char.IsDigit) == true)
             return Int32.Parse(numberStr);
 
         return -1;
