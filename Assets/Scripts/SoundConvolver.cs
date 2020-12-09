@@ -35,10 +35,7 @@ public class SoundConvolver
                 impulseResponses[microphone.id]);
 
             NormalizeSampleData(convolutionResult);
-
-            Debug.Log("Max value: " + convolutionResult.Samples.Max().ToString());
-
-            // save
+            
             using (var stream = new FileStream("results/convolutionAttention" +
                                                microphone.id.ToString() +
                                                ".wav", FileMode.Create))

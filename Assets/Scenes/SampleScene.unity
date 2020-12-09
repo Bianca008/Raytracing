@@ -13715,7 +13715,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Frequency Echogram
+  m_Text: Frequency Response
 --- !u!222 &632461935
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -25423,11 +25423,11 @@ MonoBehaviour:
   m_NowVersion: 1.6.1_20200919
   m_NewVersion: 
   m_ChartList:
+  - {fileID: 907672692}
   - {fileID: 75922192}
   - {fileID: 111721507}
   - {fileID: 277441381}
   - {fileID: 897188942}
-  - {fileID: 907672692}
 --- !u!4 &1204844439
 Transform:
   m_ObjectHideFlags: 0

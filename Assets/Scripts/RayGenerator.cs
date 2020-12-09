@@ -15,7 +15,7 @@ public class RayGenerator : MonoBehaviour
     public int NumberOfRay;
     public float InitialPower = 1;
     public int NumberOfMicrophone;
-    public int NumberOfRays = 1000;
+    public int NumberOfRays;
     public int IntersectedRays;
     public int IntersectedRaysWithDuplicate;
     public Material LineMaterial;
@@ -175,8 +175,6 @@ public class RayGenerator : MonoBehaviour
         for (double index = 0; index < m_maxFrequency; index += m_maxFrequency / m_frequencyStep)
             m_frequencies.Add(index);
 
-        Debug.Log(m_frequencies.Count);
-
         m_echograms = new Dictionary<double, Echogram>();
         foreach (var frequency in m_frequencies)
         {
@@ -251,8 +249,6 @@ public class RayGenerator : MonoBehaviour
 
         m_frequencyStep = InputHandler.GetCheckedDropdownElement(m_configurationInput.frequencyStep);
 
-        Debug.Log(m_maxFrequency + " fr1  " + m_frequencyStep + " " + m_numberOfReflections + " " + m_maxDistance);
-
         CreateRays();
         CreateIntersectedRaysWithMicrophones();
 
@@ -296,7 +292,6 @@ public class RayGenerator : MonoBehaviour
                     m_audioSource.clip.name = Path.GetFileNameWithoutExtension(path);
                     m_audioSource.Play();
                     m_maxFrequency = SoundConvolver.GetMaxFrequency(m_audioSource);
-                    Debug.Log(m_maxFrequency + " fr  " + m_frequencyStep);
                 }
             }
             Debug.Log("---------------------File is loaded!----------------------");

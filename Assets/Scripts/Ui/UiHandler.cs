@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using NWaves.Signals;
 using UnityEngine;
@@ -91,7 +90,6 @@ public class UiHandler
                     okToDraw = true;   
 
             double freq = frequencies.Aggregate((x, y) => Math.Abs(x - frequency) < Math.Abs(y - frequency) ? x : y);
-            Debug.Log(freq + " " + frequency);
             m_uiTimeEchogram.frequencyInputField.text = freq.ToString();
 
             if (okToDraw == true)
