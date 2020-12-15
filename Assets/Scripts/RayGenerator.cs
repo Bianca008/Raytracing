@@ -249,16 +249,27 @@ public class RayGenerator : MonoBehaviour
 
         m_frequencyStep = InputHandler.GetCheckedDropdownElement(m_configurationInput.frequencyStep);
 
+        Debug.Log("Parameters: number of reflections: " + m_numberOfReflections +
+            " max distance: " + m_maxDistance + 
+            " number of steps: " + m_frequencyStep + 
+            " sound: " + m_audioSource.clip.name);
+             
+        Debug.Log("The geometric calculation starts.");
         CreateRays();
         CreateIntersectedRaysWithMicrophones();
+        Debug.Log("The geometric calculation ends.");
 
+        Debug.Log("The physical calculation starts.");
         ComputeIntensities();
         IntersectedRays = m_rays[NumberOfMicrophone - 1].Count;
 
         ComputeFrequencyResponse();
+        Debug.Log("The physical calculation ends.");
 
+        Debug.Log("The sound convolution starts.");
         ConvolveSound();
         InitializeUi();
+        Debug.Log("The sound convolution ends.");
 
         Debug.Log("---------------------Solver finished!----------------------");
     }

@@ -95,14 +95,6 @@ public class ChartDrawer
                 m_impulseResponseLineChart = lineChart;
         }
 
-        //m_impulseResponseLineChart.yAxises[0].min = -5000;
-        //m_impulseResponseLineChart.yAxises[0].max = 25000;
-        ///*nu am reusit sa imi dau seama exact ce se intampla,
-        // dar am vazut ca modifica valorile care sunt pe axa y*/
-        //m_impulseResponseLineChart.yAxises[0].ceilRate = 1;
-        ///*adauga mai multe valori pe axa y*/
-        //m_impulseResponseLineChart.yAxises[0].interval = 1;
-
         SetLineChart(m_impulseResponseLineChart, "Impulse response");
 
         for (int index = 0; index < xTime.Count; ++index)
