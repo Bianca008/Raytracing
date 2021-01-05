@@ -53,6 +53,14 @@ public class MicrophoneSphere
         return Math.Pow(b, 2) - 4 * a * c >= 0;
     }
 
+    public bool IsAroundMicro(Vector3 position)
+    {
+        if (Vector3.Distance(center, position) > radius)
+            return false;
+
+        return true;
+    }
+
     private void GenerateId()
     {
         id = ++m_id;

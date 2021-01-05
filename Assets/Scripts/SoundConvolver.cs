@@ -1,6 +1,7 @@
 ﻿using NWaves.Audio;
 using NWaves.Operations;
 using NWaves.Signals;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,6 +9,12 @@ using UnityEngine;
 
 public class SoundConvolver
 {
+    public static Dictionary<int, float[]> convolvedSounds
+    {
+        get;
+        set;
+    }
+
     public static double GetMaxFrequency(AudioSource audioSource)
     {
         return audioSource.clip.frequency / 2.0;
@@ -18,6 +25,8 @@ public class SoundConvolver
         Dictionary<int, DiscreteSignal> impulseResponses,
         List<MicrophoneSphere> microphones)
     {
+        convolvedSounds = new Dictionary<int, float[]>();
+
         foreach (var microphone in microphones)
         {
             DiscreteSignal discreteSignal;
@@ -35,12 +44,13 @@ public class SoundConvolver
                 impulseResponses[microphone.id]);
 
             NormalizeSampleData(convolutionResult);
-            
+
             using (var stream = new FileStream("results/convolutionAttention" +
                                                microphone.id.ToString() +
                                                ".wav", FileMode.Create))
             {
                 var waveFile = new WaveFile(convolutionResult);
+                convolvedSounds[microphone.id] = convolutionResult.Samples;
                 waveFile.SaveTo(stream);
             }
         }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using NWaves.Audio;
 using NWaves.Signals;
 using UnityEditor;
 using UnityEngine;
@@ -70,6 +71,8 @@ public class RayGenerator : MonoBehaviour
             MenuCanvas.SetActive(false);
         if (Input.GetKey("o"))
             MenuCanvas.SetActive(true);
+
+        Pressed();
     }
 
     private void CreateRays()
@@ -161,6 +164,7 @@ public class RayGenerator : MonoBehaviour
             sphere.transform.localScale = new UnityEngine.Vector3(microphone.radius,
                 microphone.radius,
                 microphone.radius);
+            sphere.AddComponent<BoxCollider>();
         }
     }
 
@@ -250,10 +254,10 @@ public class RayGenerator : MonoBehaviour
         m_frequencyStep = InputHandler.GetCheckedDropdownElement(m_configurationInput.frequencyStep);
 
         Debug.Log("Parameters: number of reflections: " + m_numberOfReflections +
-            " max distance: " + m_maxDistance + 
-            " number of steps: " + m_frequencyStep + 
+            " max distance: " + m_maxDistance +
+            " number of steps: " + m_frequencyStep +
             " sound: " + m_audioSource.clip.name);
-             
+
         Debug.Log("The geometric calculation starts.");
         CreateRays();
         CreateIntersectedRaysWithMicrophones();
@@ -272,6 +276,27 @@ public class RayGenerator : MonoBehaviour
         Debug.Log("The sound convolution ends.");
 
         Debug.Log("---------------------Solver finished!----------------------");
+    }
+
+    private void Pressed()
+    {
+        if (Input.GetMouseButtonDown(0) == false)
+            return;
+
+        var clickedPosition = Camera.main.ScreenPointToRay(Input.mousePosition).origin;
+
+        Debug.Log("clicked: " + clickedPosition);
+
+        foreach (MicrophoneSphere microphone in m_microphones)
+        {
+            if (microphone.IsAroundMicro(VectorConverter.Convert(clickedPosition)) == true && SoundConvolver.convolvedSounds.Count > 0)
+            {
+                float[] f = SoundConvolver.convolvedSounds[microphone.id];
+                AudioClip clip = AudioClip.Create("testSound", f.Length, 1, 44100, false, false);
+                clip.SetData(f, 0);
+                AudioSource.PlayClipAtPoint(clip, clickedPosition, 1.0f);
+            }    
+        }
     }
 
     private void AddListenerForSoundButton()
