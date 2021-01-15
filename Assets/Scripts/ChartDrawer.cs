@@ -96,11 +96,13 @@ public class ChartDrawer
         }
 
         SetLineChart(m_impulseResponseLineChart, "Impulse response");
-
-        for (int index = 0; index < xTime.Count; ++index)
+        var newXtime = AverageValues.CreateSmallerDataSet(xTime, 30);
+        var newYimpulseResponse = AverageValues.CreateSmallerDataSet(yImpulseResponse, 30);
+        for (int index = 0; index < newXtime.Count; ++index)
         {
-            m_impulseResponseLineChart.AddXAxisData(xTime[index].ToString());
-            m_impulseResponseLineChart.AddData(0, yImpulseResponse[index]);
+            /*TODO: vezi ce unitati de masura pui.*/
+            m_impulseResponseLineChart.AddXAxisData(newXtime[index].ToString());
+            m_impulseResponseLineChart.AddData(0, newYimpulseResponse[index]);
         }
     }
 
