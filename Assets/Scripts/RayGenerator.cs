@@ -36,6 +36,7 @@ public class RayGenerator : MonoBehaviour
     private RayGeometry m_rayGeometryGenerator;
     private RaysDrawer m_intersectedRayDrawer;
     private AudioSource m_audioSource;
+    private UiMenuHandler m_menuHandler;
     private UiConfigurationInput m_configurationInput;
 
     private void Start()
@@ -62,12 +63,12 @@ public class RayGenerator : MonoBehaviour
         //else
         //    Debug.Log("The number of ray or the number of microphone does not exist...");
 
-        if (Input.GetKey("i"))
-            MenuCanvas.SetActive(false);
-        if (Input.GetKey("o"))
-            MenuCanvas.SetActive(true);
+        //if (Input.GetKey("i"))
+        //    MenuCanvas.SetActive(false);
+        //if (Input.GetKey("o"))
+        //    MenuCanvas.SetActive(true);
 
-        //Pressed();
+        Pressed();
     }
 
     private void CreateRays()
@@ -212,10 +213,10 @@ public class RayGenerator : MonoBehaviour
     {
         m_configurationInput = new UiConfigurationInput(MenuCanvas);
         AddListenerForSoundButton();
-        m_configurationInput.setConfiguration.onClick.AddListener(() =>
-        {
-            SetVisibilityForLoadingText(true);
-        });
+        //m_configurationInput.setConfiguration.onClick.AddListener(() =>
+        //{
+        //    SetVisibilityForLoadingText();
+        //});
         m_configurationInput.setConfiguration.onClick.AddListener(RunSolver);
 
         var uiTabController = new UiTabController(MenuCanvas);
@@ -234,25 +235,26 @@ public class RayGenerator : MonoBehaviour
             m_frequencyResponse,
             m_impulseResponses,
             step);
+
+        m_menuHandler = new UiMenuHandler();
+        m_menuHandler.AddListenerForMenuButton(MenuCanvas);
     }
 
-    private void SetVisibilityForLoadingText(bool isVisible)
+    private void SetVisibilityForLoadingText()
     {
         Text loadingText = MenuCanvas.transform.Find("TabPanel").
                         gameObject.transform.Find("TabPanels").
                         gameObject.transform.Find("InputTabPanel").
                         gameObject.transform.Find("LoadingText").GetComponent<Text>();
         Color visibleColor = loadingText.color;
-        if (isVisible == true)
-            visibleColor.a = 1;
-        else
-            visibleColor.a = 0;
+        visibleColor.a = 1 - visibleColor.a;
+
         loadingText.color = visibleColor;
     }
 
     private void RunSolver()
     {
-        //SetVisibilityForLoadingText(true);
+        SetVisibilityForLoadingText();
         Debug.Log("---------------------Solver started!-----------------------");
         if (m_microphones.Count == 0)
         {
@@ -289,11 +291,10 @@ public class RayGenerator : MonoBehaviour
 
         Debug.Log("The sound convolution starts.");
         ConvolveSound();
-        InitializeUi();
         Debug.Log("The sound convolution ends.");
 
         Debug.Log("---------------------Solver finished!----------------------");
-        SetVisibilityForLoadingText(false);
+        //SetVisibilityForLoadingText();
     }
 
     private void Pressed()
@@ -301,16 +302,17 @@ public class RayGenerator : MonoBehaviour
         if (Input.GetMouseButtonDown(0) == false)
             return;
 
-        var clickedPosition = Camera.main.ScreenPointToRay(Input.mousePosition).origin;
+        var clickedPosition = Camera.main.ScreenPointToRay(Input.mousePosition).direction;
 
         Debug.Log("clicked: " + clickedPosition);
+        //Debug.DrawLine(Camera.main.transform.position, clickedPosition);
 
         foreach (MicrophoneSphere microphone in m_microphones)
         {
             if (microphone.IsAroundMicro(VectorConverter.Convert(clickedPosition)) == true && SoundConvolver.convolvedSounds.Count > 0)
             {
                 float[] f = SoundConvolver.convolvedSounds[microphone.id];
-                AudioClip clip = AudioClip.Create("testSound", f.Length, 1, 44100, false, false);
+                var clip = AudioClip.Create("testSound", f.Length, 1, 44100, false, false);
                 clip.SetData(f, 0);
                 AudioSource.PlayClipAtPoint(clip, clickedPosition, 1.0f);
             }
