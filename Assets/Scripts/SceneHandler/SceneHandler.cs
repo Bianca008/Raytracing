@@ -12,4 +12,9 @@ public class SceneHandler : MonoBehaviour
     {
         Application.Quit();
     }
+
+    public void BackButton()
+    {
+        SceneManager.LoadScene("MenuScene");
+    }
 }
