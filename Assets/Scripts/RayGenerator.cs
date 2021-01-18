@@ -8,6 +8,7 @@ using NWaves.Signals;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 using Echogram = System.Collections.Generic.Dictionary<int, System.Collections.Generic.List<System.Numerics.Complex>>;
 
 public class RayGenerator : MonoBehaviour
@@ -46,7 +47,7 @@ public class RayGenerator : MonoBehaviour
         m_frequencyResponse = new Dictionary<int, List<Complex>>();
         m_impulseResponses = new Dictionary<int, DiscreteSignal>();
         m_rays = new Dictionary<int, List<AcousticRay>>();
-       
+
         InitializeUi();
     }
 
@@ -211,6 +212,10 @@ public class RayGenerator : MonoBehaviour
     {
         m_configurationInput = new UiConfigurationInput(MenuCanvas);
         AddListenerForSoundButton();
+        m_configurationInput.setConfiguration.onClick.AddListener(() =>
+        {
+            SetVisibilityForLoadingText(true);
+        });
         m_configurationInput.setConfiguration.onClick.AddListener(RunSolver);
 
         var uiTabController = new UiTabController(MenuCanvas);
@@ -231,8 +236,23 @@ public class RayGenerator : MonoBehaviour
             step);
     }
 
+    private void SetVisibilityForLoadingText(bool isVisible)
+    {
+        Text loadingText = MenuCanvas.transform.Find("TabPanel").
+                        gameObject.transform.Find("TabPanels").
+                        gameObject.transform.Find("InputTabPanel").
+                        gameObject.transform.Find("LoadingText").GetComponent<Text>();
+        Color visibleColor = loadingText.color;
+        if (isVisible == true)
+            visibleColor.a = 1;
+        else
+            visibleColor.a = 0;
+        loadingText.color = visibleColor;
+    }
+
     private void RunSolver()
     {
+        //SetVisibilityForLoadingText(true);
         Debug.Log("---------------------Solver started!-----------------------");
         if (m_microphones.Count == 0)
         {
@@ -273,6 +293,7 @@ public class RayGenerator : MonoBehaviour
         Debug.Log("The sound convolution ends.");
 
         Debug.Log("---------------------Solver finished!----------------------");
+        SetVisibilityForLoadingText(false);
     }
 
     private void Pressed()
