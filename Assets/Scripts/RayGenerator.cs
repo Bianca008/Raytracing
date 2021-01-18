@@ -38,6 +38,7 @@ public class RayGenerator : MonoBehaviour
     private AudioSource m_audioSource;
     private UiMenuHandler m_menuHandler;
     private UiConfigurationInput m_configurationInput;
+    private UiRayMenu m_rayMenu;
 
     private void Start()
     {
@@ -54,12 +55,12 @@ public class RayGenerator : MonoBehaviour
 
     private void Update()
     {
-        if (NumberOfRay <= IntersectedRays && NumberOfRay >= 1 &&
-            NumberOfMicrophone <= m_microphones.Count && NumberOfMicrophone >= 1)
-        {
-            m_intersectedRayDrawer.Draw(NumberOfMicrophone - 1, NumberOfRay - 1);
-            IntersectedRays = m_rays[NumberOfMicrophone - 1].Count;
-        }
+        //if (NumberOfRay <= IntersectedRays && NumberOfRay >= 1 &&
+        //    NumberOfMicrophone <= m_microphones.Count && NumberOfMicrophone >= 1)
+        //{
+        //    m_intersectedRayDrawer.Draw(NumberOfMicrophone - 1, NumberOfRay - 1);
+        //    IntersectedRays = m_rays[NumberOfMicrophone - 1].Count;
+        //}
         //else
         //    Debug.Log("The number of ray or the number of microphone does not exist...");
 
@@ -68,7 +69,7 @@ public class RayGenerator : MonoBehaviour
         //if (Input.GetKey("o"))
         //    MenuCanvas.SetActive(true);
 
-        Pressed();
+       // Pressed();
     }
 
     private void CreateRays()
@@ -236,8 +237,11 @@ public class RayGenerator : MonoBehaviour
             m_impulseResponses,
             step);
 
+        m_rayMenu = new UiRayMenu();
         m_menuHandler = new UiMenuHandler();
         m_menuHandler.AddListenerForMenuButton(MenuCanvas);
+        m_menuHandler.AddListenerForRayMenuButton(m_rayMenu.canvasMenu);
+        AddListenerForShowButton();
     }
 
     private void SetVisibilityForLoadingText()
@@ -352,5 +356,11 @@ public class RayGenerator : MonoBehaviour
             }
             Debug.Log("---------------------File is loaded!----------------------");
         }
+    }
+
+    public void AddListenerForShowButton()
+    {
+        m_rayMenu.showButton.onClick.AddListener(()=>
+        { m_intersectedRayDrawer.Draw(Int32.Parse(m_rayMenu.microphoneNumber.text), Int32.Parse(m_rayMenu.rayNumber.text)); });
     }
 }
