@@ -7,9 +7,10 @@ public class UiFrequencyEchogram
 
     public Button showButton { get; private set; }
 
-    public UiFrequencyEchogram(GameObject menu)
+    public UiFrequencyEchogram()
     {
-        GameObject frequencyEchogramPanel = menu.transform.Find("TabPanel").
+        GameObject frequencyEchogramPanel = GameObject.Find("Menu").gameObject.transform.
+                                            Find("TabPanel").
                                             Find("TabPanels").
                                             Find("FrequencyEchogramPanel").
                                             gameObject;

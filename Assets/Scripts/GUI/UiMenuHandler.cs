@@ -20,9 +20,9 @@ public class UiMenuHandler
         viewRay = principalMenuCanvas.transform.Find("ViewRayButton").GetComponent<Button>();
     }
 
-    public void AddListenerForMenuButton(GameObject menu)
+    public void AddListenerForMenuButton()
     {
-        viewMenu.onClick.AddListener(() => { SetTransparentMenu(menu); });
+        viewMenu.onClick.AddListener(() => { SetTransparentMenu(GameObject.Find("Menu").gameObject); });
     }
 
     private void SetTransparentMenu(GameObject menu)

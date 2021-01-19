@@ -7,9 +7,10 @@ public class UiImpulseResponse
 
     public InputField microphoneInputField { get; private set; }
 
-    public UiImpulseResponse(GameObject menu)
+    public UiImpulseResponse()
     {
-        GameObject impulseResponsePanel = menu.transform.Find("TabPanel").
+        GameObject impulseResponsePanel = GameObject.Find("Menu").gameObject.transform.
+                                          Find("TabPanel").
                                           Find("TabPanels").
                                           Find("ImpulseResponsePanel").
                                           gameObject;

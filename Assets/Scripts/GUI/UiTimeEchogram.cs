@@ -9,9 +9,10 @@ public class UiTimeEchogram
 
     public Button showButton { get; private set; }
 
-    public UiTimeEchogram(GameObject menu)
+    public UiTimeEchogram()
     {
-        GameObject timeEchogramPanel = menu.transform.Find("TabPanel").
+        GameObject timeEchogramPanel = GameObject.Find("Menu").gameObject.transform.
+                                       Find("TabPanel").
                                        Find("TabPanels").
                                        Find("TimeEchogramPanel").
                                        gameObject;

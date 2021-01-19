@@ -12,7 +12,7 @@ public class UiHandler
         get;
     }
 
-    GameObject menuCanvas
+    private GameObject m_menuCanvas
     {
         get;
     }
@@ -32,14 +32,13 @@ public class UiHandler
         get;
     }
 
-    public UiHandler(GameObject menuCanvas,
-                     UiTimeEchogram uiTimeEcho,
+    public UiHandler(UiTimeEchogram uiTimeEcho,
                      UiFrequencyEchogram freqEcho,
                      UiImpulseResponse uiImpulseResp,
                      List<double> frequencies)
     {
-        this.menuCanvas = menuCanvas;
-        m_chartDrawer = new ChartDrawer(this.menuCanvas);
+        this.m_menuCanvas = GameObject.Find("Menu").gameObject;
+        m_chartDrawer = new ChartDrawer(this.m_menuCanvas);
 
         m_uiTimeEchogram = uiTimeEcho;
         m_uiFrequencyEchogram = freqEcho;

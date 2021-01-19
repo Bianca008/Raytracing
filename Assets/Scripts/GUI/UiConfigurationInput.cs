@@ -13,11 +13,12 @@ public class UiConfigurationInput
 
     public Button soundButton { get; private set; }
 
-    public UiConfigurationInput(GameObject menu)
+    public UiConfigurationInput()
     {
-        GameObject inputPanel = menu.transform.Find("TabPanel").
-                                gameObject.transform.Find("TabPanels").
-                                gameObject.transform.Find("InputTabPanel").
+        GameObject inputPanel = GameObject.Find("Menu").gameObject.transform.
+                                Find("TabPanel").
+                                Find("TabPanels").
+                                Find("InputTabPanel").
                                 gameObject;
 
         numberOfReflections = inputPanel.transform.Find("Input").Find("NumberOfReflectionsInputField").gameObject.GetComponent<InputField>();
