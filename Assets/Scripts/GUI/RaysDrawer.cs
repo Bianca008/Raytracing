@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class RaysDrawer
 {
-    private readonly Dictionary<int, List<AcousticRay>> m_rays;
-    private readonly LineRenderer[] m_lines;
+    public Dictionary<int, List<AcousticRay>> m_rays { get; set; }
+    public LineRenderer[] m_lines { get; set; }
 
-    public RaysDrawer(LineRenderer[] linesToDraw, Dictionary<int, List<AcousticRay>> rays)
+    public RaysDrawer()
     {
-        m_lines = linesToDraw;
-        this.m_rays = rays;
+        m_lines = new LineRenderer[0];
+        m_rays = new Dictionary<int, List<AcousticRay>>();
     }
 
     private void ResetLines()

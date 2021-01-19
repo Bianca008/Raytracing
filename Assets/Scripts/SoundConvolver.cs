@@ -21,7 +21,7 @@ public class SoundConvolver
     }
 
     public static void ConvolveSound(
-        AudioSource audioSource,
+        String name,
         Dictionary<int, DiscreteSignal> impulseResponses,
         List<MicrophoneSphere> microphones)
     {
@@ -32,7 +32,7 @@ public class SoundConvolver
             DiscreteSignal discreteSignal;
 
             // load
-            using (var stream = new FileStream(audioSource.clip.name + ".wav", FileMode.Open))
+            using (var stream = new FileStream(name + ".wav", FileMode.Open))
             {
                 var waveFile = new WaveFile(stream);
                 discreteSignal = waveFile[Channels.Left];

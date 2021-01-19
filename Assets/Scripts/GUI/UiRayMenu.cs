@@ -22,4 +22,13 @@ public class UiRayMenu
         microphoneNumber = rayMenu.transform.Find("MicrophoneNumberInputField").GetComponent<InputField>();
         showButton = rayMenu.transform.Find("ShowButton").GetComponent<Button>();
     }
+
+    public void AddListenerForShowButton(RaysDrawer raysDrawer)
+    {
+        /*TO DO: Please add validation for input*/
+        //if (microphoneNumber.text.ToString().Trim().Length != 0 &&
+        //    rayNumber.text.ToString().Trim().Length != 0)
+            showButton.onClick.AddListener(() =>
+            { raysDrawer.Draw(int.Parse(microphoneNumber.text), int.Parse(rayNumber.text)); });
+    }
 }
