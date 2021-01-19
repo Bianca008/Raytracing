@@ -69,7 +69,7 @@ public class RayGenerator : MonoBehaviour
         //if (Input.GetKey("o"))
         //    MenuCanvas.SetActive(true);
 
-       // Pressed();
+        // Pressed();
     }
 
     private void CreateRays()
@@ -225,17 +225,15 @@ public class RayGenerator : MonoBehaviour
         var uiFrequencyEchogram = new UiFrequencyEchogram(MenuCanvas);
         var uiImpulseResponse = new UiImpulseResponse(MenuCanvas);
 
-        var uiHandler = new UiHandler(MenuCanvas, uiTimeEchogram, uiFrequencyEchogram, uiImpulseResponse);
+        var uiHandler = new UiHandler(MenuCanvas, uiTimeEchogram, uiFrequencyEchogram, uiImpulseResponse, m_frequencies);
 
-        var step = (m_frequencies.Count == 0) ? 0 : (float)(1 / (2 * m_frequencies[m_frequencies.Count - 1]));
+        //var step = (m_frequencies.Count == 0) ? 0 : (float)(1 / (2 * m_frequencies[m_frequencies.Count - 1]));
 
         uiHandler.InitializeUi(m_rays,
             m_microphones,
-            m_frequencies,
             m_echograms,
             m_frequencyResponse,
-            m_impulseResponses,
-            step);
+            m_impulseResponses);
 
         m_rayMenu = new UiRayMenu();
         m_menuHandler = new UiMenuHandler();
@@ -258,7 +256,7 @@ public class RayGenerator : MonoBehaviour
 
     private void RunSolver()
     {
-        SetVisibilityForLoadingText();
+        //SetVisibilityForLoadingText();
         Debug.Log("---------------------Solver started!-----------------------");
         if (m_microphones.Count == 0)
         {
@@ -360,7 +358,9 @@ public class RayGenerator : MonoBehaviour
 
     public void AddListenerForShowButton()
     {
-        m_rayMenu.showButton.onClick.AddListener(()=>
-        { m_intersectedRayDrawer.Draw(Int32.Parse(m_rayMenu.microphoneNumber.text), Int32.Parse(m_rayMenu.rayNumber.text)); });
+        if (m_rayMenu.microphoneNumber.text.ToString().Trim().Length != 0 &&
+            m_rayMenu.rayNumber.text.ToString().Trim().Length != 0)
+            m_rayMenu.showButton.onClick.AddListener(() =>
+            { m_intersectedRayDrawer.Draw(int.Parse(m_rayMenu.microphoneNumber.text), int.Parse(m_rayMenu.rayNumber.text)); });
     }
 }

@@ -26,8 +26,7 @@ public class TimeCalculator
     public static List<float> GetTimeForMicrophone(Dictionary<int, List<AcousticRay>> rays,
         List<MicrophoneSphere> microphones,
         int idMicrophone,
-        double airSoundSpeed = 343.21
-        )
+        double airSoundSpeed = 343.21)
     {
         var time = GetTime(rays, microphones, airSoundSpeed);
 
