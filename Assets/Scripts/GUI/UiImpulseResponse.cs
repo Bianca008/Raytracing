@@ -17,7 +17,7 @@ public class UiImpulseResponse
 
         microphoneInputField = impulseResponsePanel.transform.Find("NumberOfMicrophoneInputField").
                                gameObject.GetComponent<InputField>();
-
+        microphoneInputField.characterValidation = InputField.CharacterValidation.Integer;
         showButton = impulseResponsePanel.transform.Find("ImpulseResponsePlotButton").gameObject.GetComponent<Button>();
     }
 }

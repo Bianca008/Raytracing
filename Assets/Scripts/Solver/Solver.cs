@@ -41,7 +41,7 @@ public class Solver
 
     public void RunSolver(String audioName, int numberOfReflections, int maxDistance, int frequencyStep)
     {
-        if (numberOfReflections == -1 || maxDistance == -1)
+        if (numberOfReflections == -1 || maxDistance == -1 || audioName == null)
             return;
 
         m_numberOfReflections = numberOfReflections;

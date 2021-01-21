@@ -100,7 +100,7 @@ public class ChartDrawer
         var newYimpulseResponse = AverageValues.CreateSmallerDataSet(yImpulseResponse, 30);
         for (int index = 0; index < newXtime.Count; ++index)
         {
-            /*TODO: vezi ce unitati de masura pui.*/
+            /*TODO: vezi unitati de masura.*/
             m_impulseResponseLineChart.AddXAxisData(newXtime[index].ToString());
             m_impulseResponseLineChart.AddData(0, newYimpulseResponse[index]);
         }

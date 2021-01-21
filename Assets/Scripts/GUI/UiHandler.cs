@@ -74,7 +74,7 @@ public class UiHandler
     {
         m_uiTimeEchogram.showButton.onClick.AddListener(() =>
         {
-            ShowTimeChart(rays, 
+            ShowTimeChart(rays,
                 microphones,
                 echograms);
         });
@@ -88,12 +88,12 @@ public class UiHandler
         var numberOfMicrophone = InputHandler.GetNumber(m_uiTimeEchogram.microphoneInputField);
         var frequency = InputHandler.GetNumber(m_uiTimeEchogram.frequencyInputField);
 
-        if (numberOfMicrophone != -1 && frequency != -1)
+        if (numberOfMicrophone != -1 && frequency != -1 && m_frequencies.Count > 0)
         {
             var okToDraw = false;
             foreach (var micro in microphones)
                 if (micro.id == numberOfMicrophone)
-                    okToDraw = true;   
+                    okToDraw = true;
 
             double freq = m_frequencies.Aggregate((x, y) => Math.Abs(x - frequency) < Math.Abs(y - frequency) ? x : y);
             m_uiTimeEchogram.frequencyInputField.text = freq.ToString();
@@ -107,7 +107,7 @@ public class UiHandler
 
     private void DrawTimeEchogram(Dictionary<int, List<AcousticRay>> rays,
         List<MicrophoneSphere> microphones,
-        Dictionary<double, Echogram> echograms, 
+        Dictionary<double, Echogram> echograms,
         int indexMicrophone,
         double indexFrequency)
     {
@@ -119,7 +119,7 @@ public class UiHandler
         m_chartDrawer.DrawTimeChart(time, magnitude, phase);
     }
 
-    private void AddListenerForShowFrquencyButton(Echogram frequencyResponse, 
+    private void AddListenerForShowFrquencyButton(Echogram frequencyResponse,
                                                   List<MicrophoneSphere> microphones)
     {
         m_uiFrequencyEchogram.showButton.onClick.AddListener(() =>
@@ -129,7 +129,7 @@ public class UiHandler
         });
     }
 
-    private void ShowFrequencyChart(Echogram frequencyResponse, 
+    private void ShowFrequencyChart(Echogram frequencyResponse,
                                     List<MicrophoneSphere> microphones)
     {
         var numberOfMicrophone = InputHandler.GetNumber(m_uiFrequencyEchogram.microphoneInputField);
@@ -188,6 +188,9 @@ public class UiHandler
     private void DrawChartImpulseResponse(Dictionary<int, DiscreteSignal> impulseResponses,
                                           int numberOfMicrophone)
     {
+        if (!impulseResponses.ContainsKey(numberOfMicrophone))
+            return;
+
         var xTime = new List<float>() { 0 };
 
         for (int index = 1; index < impulseResponses[numberOfMicrophone].Samples.Length; ++index)
@@ -225,6 +228,9 @@ public class UiHandler
 
     private Tuple<List<float>, List<float>> GetMagnitudeAndPhase(Echogram frequencyResponse, int idMicro)
     {
+        if (!frequencyResponse.ContainsKey(idMicro))
+            return new Tuple<List<float>, List<float>>(new List<float>(), new List<float>());
+
         var x = new List<float>();
         var y = new List<float>();
         for (int index = 0; index < frequencyResponse[idMicro].Count; ++index)

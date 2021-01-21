@@ -17,7 +17,7 @@ public class UiFrequencyEchogram
 
         microphoneInputField = frequencyEchogramPanel.transform.Find("NumberOfMicrophoneInputField").
                                gameObject.GetComponent<InputField>();
-
+        microphoneInputField.characterValidation = InputField.CharacterValidation.Integer;
         showButton = frequencyEchogramPanel.transform.Find("FrequencyPlotButton").gameObject.GetComponent<Button>();
     }
 }

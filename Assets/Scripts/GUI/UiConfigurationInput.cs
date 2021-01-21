@@ -22,7 +22,9 @@ public class UiConfigurationInput
                                 gameObject;
 
         numberOfReflections = inputPanel.transform.Find("Input").Find("NumberOfReflectionsInputField").gameObject.GetComponent<InputField>();
+        numberOfReflections.characterValidation = InputField.CharacterValidation.Integer;
         maxDistance = inputPanel.transform.Find("Input").Find("MaxDistanceInputField").GetComponent<InputField>();
+        maxDistance.characterValidation = InputField.CharacterValidation.Integer;
         frequencyStep = inputPanel.transform.Find("Input").Find("FrequencyStepDropdown").gameObject.GetComponent<Dropdown>();
         soundButton = inputPanel.transform.Find("Input").Find("SoundButton").gameObject.GetComponent<Button>();
         setConfiguration = inputPanel.transform.Find("SetConfigurationButton").gameObject.GetComponent<Button>();

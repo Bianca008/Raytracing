@@ -21,31 +21,14 @@ public class RaysDrawer
         }
     }
 
-    //public void DrawTimeChart()
-    //{
-    //    /* Set initial position.*/
-    //    for (int indexLine = 0; indexLine < lines.Length; ++indexLine)
-    //    {
-    //        lines[indexLine].SetPosition(0, 
-    //            VectorConverter.Convert(rays[indexLine].CollisionPoints[0]));
-    //    }
-
-    //    /* Add position for each colission.*/
-    //    for (int indexLine = 0; indexLine < rays.Count; ++indexLine)
-    //    {
-    //        int numberOfPoints = 1;
-    //        for (int indexPosition = 1; indexPosition < rays[indexLine].CollisionPoints.Count; ++indexPosition)
-    //        {
-    //            lines[indexLine].positionCount = ++numberOfPoints;
-    //            lines[indexLine].SetPosition(numberOfPoints - 1, VectorConverter.Convert(rays[indexLine].CollisionPoints[indexPosition]));
-    //        }
-    //    }
-    //}
-
     public void Draw(int numberOfMicro, int numberOfLine)
     {
+        if (rays.ContainsKey(numberOfMicro) == false) return;
+        else
+            if (numberOfLine >= rays[numberOfMicro].Count) return;
+
         ResetLines();
-        
+
         lines[numberOfLine].SetPosition(0,
             VectorConverter.Convert(rays[numberOfMicro][numberOfLine].source));
 

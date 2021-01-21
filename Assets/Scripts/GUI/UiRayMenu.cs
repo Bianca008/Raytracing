@@ -19,7 +19,9 @@ public class UiRayMenu
 
         canvasMenu = GameObject.Find("RayMenu").gameObject;
         rayNumber = rayMenu.transform.Find("RayNumberInputField").GetComponent<InputField>();
+        rayNumber.characterValidation = InputField.CharacterValidation.Integer;
         microphoneNumber = rayMenu.transform.Find("MicrophoneNumberInputField").GetComponent<InputField>();
+        microphoneNumber.characterValidation = InputField.CharacterValidation.Integer;
         showButton = rayMenu.transform.Find("ShowButton").GetComponent<Button>();
     }
 
