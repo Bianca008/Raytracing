@@ -44,11 +44,6 @@ public class Solver
         if (numberOfReflections == -1 || maxDistance == -1)
             return;
 
-        //if (Microphones.Count == 0)
-        //{
-        //    CreateMicrophones();
-        //}
-
         m_numberOfReflections = numberOfReflections;
         m_maxDistance = maxDistance;
         m_frequencyStep = frequencyStep;
@@ -124,7 +119,6 @@ public class Solver
             var newRays = m_rayGeometryGenerator.GetIntersectedRays(microphone);
 
             newRays.Sort((first, second) => first.GetDistance().CompareTo(second.GetDistance()));
-            //IntersectedRaysWithDuplicate += newRays.Count;
             var raysWithoutDuplicates = RemoveDuplicates(newRays);
             Rays[microphone.id] = raysWithoutDuplicates;
         }
@@ -132,8 +126,6 @@ public class Solver
         var count = 0;
         for (int index = 0; index < Rays.Count; ++index)
             count += Rays[index].Count;
-        // m_intersectedLines = LinesCreator.GenerateLines(count, transform, LineMaterial);
-        //m_intersectedRayDrawer = new RaysDrawer(m_intersectedLines, m_rays);
     }
 
     private void ComputeIntensities()

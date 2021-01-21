@@ -8,7 +8,9 @@ using UnityEngine.UI;
 public class RayGenerator : MonoBehaviour
 {
     public Material LineMaterial;
+
     private Solver m_solver;
+
     private UiConfigurationInput m_configurationInput;
     private UiRayMenu m_rayMenu;
     private UiMenuHandler m_menuHandler;
@@ -25,6 +27,11 @@ public class RayGenerator : MonoBehaviour
         m_intersectedRayDrawer = new RaysDrawer();
         DrawMicrophones();
         InitializeUi();
+    }
+
+    private void Update()
+    {
+        Pressed();
     }
 
     private void DrawMicrophones()
@@ -133,25 +140,29 @@ public class RayGenerator : MonoBehaviour
         }
     }
 
-    //private void Pressed()
-    //{
-    //    if (Input.GetMouseButtonDown(0) == false)
-    //        return;
+    private void Pressed()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            Vector3 clickedPosition = new Vector3(0, 0, 0);
+            if (Physics.Raycast(ray, out hit, 100))
+            {
+                clickedPosition = hit.transform.position;
+                Debug.Log(hit.transform.position);
+            }
 
-    //    var clickedPosition = Camera.main.ScreenPointToRay(Input.mousePosition).direction;
-
-    //    Debug.Log("clicked: " + clickedPosition);
-    //    //Debug.DrawLine(Camera.main.transform.position, clickedPosition);
-
-    //    foreach (MicrophoneSphere microphone in m_microphones)
-    //    {
-    //        if (microphone.IsAroundMicro(VectorConverter.Convert(clickedPosition)) == true && SoundConvolver.convolvedSounds.Count > 0)
-    //        {
-    //            float[] f = SoundConvolver.convolvedSounds[microphone.id];
-    //            var clip = AudioClip.Create("testSound", f.Length, 1, 44100, false, false);
-    //            clip.SetData(f, 0);
-    //            AudioSource.PlayClipAtPoint(clip, clickedPosition, 1.0f);
-    //        }
-    //    }
-    //}
+            foreach (MicrophoneSphere microphone in m_solver.Microphones)
+            {
+                if (microphone.IsAroundMicro(VectorConverter.Convert(clickedPosition)) == true && SoundConvolver.convolvedSounds.Count > 0)
+                {
+                    float[] f = SoundConvolver.convolvedSounds[microphone.id];
+                    var clip = AudioClip.Create("testSound", f.Length, 1, 44100, false, false);
+                    clip.SetData(f, 0);
+                    AudioSource.PlayClipAtPoint(clip, clickedPosition, 1.0f);
+                }
+            }
+        }
+    }
 }
