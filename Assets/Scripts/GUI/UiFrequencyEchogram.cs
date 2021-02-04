@@ -10,6 +10,7 @@ public class UiFrequencyEchogram
     public UiFrequencyEchogram()
     {
         GameObject frequencyEchogramPanel = GameObject.Find("Menu").gameObject.transform.
+                                            Find("Menu").
                                             Find("TabPanel").
                                             Find("TabPanels").
                                             Find("FrequencyEchogramPanel").

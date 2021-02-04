@@ -13,7 +13,8 @@ public class UiRayMenu
 
     public UiRayMenu()
     {
-        GameObject rayMenu = GameObject.Find("RayMenu").
+        GameObject rayMenu = GameObject.Find("Menu").
+                              gameObject.transform.Find("RayMenu").
                               gameObject.transform.Find("Panel").
                               gameObject;
 

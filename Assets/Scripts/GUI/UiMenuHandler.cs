@@ -13,12 +13,13 @@ public class UiMenuHandler
 
     public UiMenuHandler()
     {
-        GameObject principalMenuCanvas = GameObject.Find("PrincipalMenuCanvas").
-                               gameObject.transform.Find("Panel").
+        GameObject principalMenuCanvas = GameObject.Find("Menu").
+                               gameObject.transform.Find("PrincipalMenuCanvas").
+                               Find("Panel").
                                gameObject;
 
-        menuInput = GameObject.Find("Menu").gameObject;
-        menuBar = GameObject.Find("PrincipalMenuCanvas").gameObject;
+        menuInput = GameObject.Find("Menu").gameObject.transform.Find("Menu").gameObject;
+        menuBar = GameObject.Find("Menu").gameObject.transform.Find("PrincipalMenuCanvas").gameObject;
         viewMenu = principalMenuCanvas.transform.Find("MenuButton").GetComponent<Button>();
         viewRay = principalMenuCanvas.transform.Find("ViewRayButton").GetComponent<Button>();
     }
