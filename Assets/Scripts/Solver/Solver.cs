@@ -20,8 +20,8 @@ public class Solver
     public Dictionary<int, DiscreteSignal> ImpulseResponses { get; set; }
 
     private Vector3 m_sourcePosition;
-    private float InitialPower = 1;
-    private int NumberOfRays = 63000;
+    private float m_initialPower = 1;
+    private int m_numberOfRays = 63000;
     private double m_frequencyStep = 8192.0;
     private double m_maxFrequency = 22050.0;
     private int m_maxDistance = 200;
@@ -39,7 +39,7 @@ public class Solver
         Rays = new Dictionary<int, List<AcousticRay>>();
     }
 
-    public void RunSolver(String audioName, int numberOfReflections, int maxDistance, int frequencyStep)
+    public void RunSolver(String audioName, int numberOfReflections, int numberOfRays, int maxDistance, int frequencyStep)
     {
         if (numberOfReflections == -1 || maxDistance == -1 || audioName == null)
             return;
@@ -47,6 +47,7 @@ public class Solver
         m_numberOfReflections = numberOfReflections;
         m_maxDistance = maxDistance;
         m_frequencyStep = frequencyStep;
+        m_numberOfRays = numberOfRays;
         CreateRays();
         CreateIntersectedRaysWithMicrophones();
         ComputeIntensities();
@@ -64,7 +65,7 @@ public class Solver
     {
         m_rayGeometryGenerator = new RayGeometry(m_sourcePosition,
             Microphones,
-            NumberOfRays,
+            m_numberOfRays,
             m_numberOfReflections,
             m_maxDistance);
         m_rayGeometryGenerator.GenerateRays();
@@ -130,7 +131,7 @@ public class Solver
 
     private void ComputeIntensities()
     {
-        var intensityCalculator = new IntensityCalculator(Rays, Microphones, InitialPower);
+        var intensityCalculator = new IntensityCalculator(Rays, Microphones, m_initialPower);
         intensityCalculator.ComputePower();
         intensityCalculator.TransformIntensitiesToPressure();
         var intensities = intensityCalculator.intensities;

@@ -76,6 +76,7 @@ public class RayGenerator : MonoBehaviour
     private void RunAlgorithm()
     {
         m_solver.RunSolver(m_audioSource.clip.name, InputHandler.GetNumber(m_configurationInput.numberOfReflections),
+            InputHandler.GetNumber(m_configurationInput.numberOfRays),
             InputHandler.GetNumber(m_configurationInput.maxDistance),
             InputHandler.GetCheckedDropdownElement(m_configurationInput.frequencyStep));
 
