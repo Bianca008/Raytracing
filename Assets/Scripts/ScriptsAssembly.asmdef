@@ -1,6 +1,16 @@
-﻿{
-	"name": "ScriptsAssembly",
-	"references": [
-		"XCharts.Runtime"
-	]
+{
+    "name": "ScriptsAssembly",
+    "references": [
+        "XCharts.Runtime",
+        "SFB"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

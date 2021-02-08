@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using SFB;
 
 public class RayGenerator : MonoBehaviour
 {
@@ -113,8 +114,11 @@ public class RayGenerator : MonoBehaviour
 
     private void ShowDialog()
     {
-        string path = EditorUtility.OpenFilePanel("Overwrite with wav", "", "wav");
-        StartCoroutine(LoadAudioClip(path));
+        var extensions = new[] {
+                                new ExtensionFilter("Sound Files", "mp3", "wav" ),
+                                };
+        var path = StandaloneFileBrowser.OpenFilePanel("Open File", "", extensions, true);
+        StartCoroutine(LoadAudioClip(path[0]));
     }
 
     private IEnumerator LoadAudioClip(string path)
