@@ -8,6 +8,11 @@ public class SceneHandler : MonoBehaviour
         SceneManager.LoadScene("RoomAscene");
     }
 
+    public void OpenRoomB()
+    {
+        SceneManager.LoadScene("RoomBscene");
+    }
+
     public void ExitButton()
     {
         Application.Quit();
