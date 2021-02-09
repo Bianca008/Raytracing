@@ -9,7 +9,7 @@ public class UiImpulseResponse
 
     public UiImpulseResponse()
     {
-        GameObject impulseResponsePanel = GameObject.Find("Menu").gameObject.transform.
+        GameObject impulseResponsePanel = GameObject.Find("MenuObject").gameObject.transform.
                                           Find("Menu").
                                           Find("TabPanel").
                                           Find("TabPanels").

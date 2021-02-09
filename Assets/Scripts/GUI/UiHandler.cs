@@ -37,7 +37,7 @@ public class UiHandler
                      UiImpulseResponse uiImpulseResp,
                      List<double> frequencies)
     {
-        this.m_menuCanvas = GameObject.Find("Menu").gameObject.transform.Find("Menu").gameObject;
+        this.m_menuCanvas = GameObject.Find("MenuObject").gameObject.transform.Find("Menu").gameObject;
         m_chartDrawer = new ChartDrawer(this.m_menuCanvas);
 
         m_uiTimeEchogram = uiTimeEcho;

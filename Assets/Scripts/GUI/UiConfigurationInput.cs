@@ -17,7 +17,7 @@ public class UiConfigurationInput
 
     public UiConfigurationInput()
     {
-        GameObject inputPanel = GameObject.Find("Menu").gameObject.transform.
+        GameObject inputPanel = GameObject.Find("MenuObject").gameObject.transform.
                                 Find("Menu").
                                 Find("TabPanel").
                                 Find("TabPanels").

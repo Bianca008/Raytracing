@@ -7,7 +7,7 @@ public class UiTabController
 
     public UiTabController()
     {
-        m_menuCanvas = GameObject.Find("Menu").gameObject.transform.Find("Menu").gameObject;
+        m_menuCanvas = GameObject.Find("MenuObject").gameObject.transform.Find("Menu").gameObject;
         GameObject tabButtonsPanel = m_menuCanvas.transform.
                                      Find("TabPanel").
                                      Find("TabButtonsPanel").

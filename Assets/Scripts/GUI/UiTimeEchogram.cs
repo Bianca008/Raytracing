@@ -11,7 +11,7 @@ public class UiTimeEchogram
 
     public UiTimeEchogram()
     {
-        GameObject timeEchogramPanel = GameObject.Find("Menu").gameObject.transform.
+        GameObject timeEchogramPanel = GameObject.Find("MenuObject").gameObject.transform.
                                        Find("Menu").
                                        Find("TabPanel").
                                        Find("TabPanels").
