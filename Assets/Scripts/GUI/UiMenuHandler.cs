@@ -3,6 +3,8 @@ using UnityEngine.UI;
 
 public class UiMenuHandler
 {
+    public GameObject menuRays { get; set; }
+
     public GameObject menuInput { get; set; }
 
     public GameObject menuBar { get; set; }
@@ -18,10 +20,13 @@ public class UiMenuHandler
                                Find("Panel").
                                gameObject;
 
+        menuRays = GameObject.Find("MenuObject").gameObject.transform.Find("RayMenu").gameObject;
         menuInput = GameObject.Find("MenuObject").gameObject.transform.Find("Menu").gameObject;
         menuBar = GameObject.Find("MenuObject").gameObject.transform.Find("PrincipalMenuCanvas").gameObject;
         viewMenu = principalMenuCanvas.transform.Find("MenuButton").GetComponent<Button>();
         viewRay = principalMenuCanvas.transform.Find("ViewRayButton").GetComponent<Button>();
+        menuInput.SetActive(false);
+        menuRays.SetActive(false);
     }
 
     public void AddListenerForMenuButton()
@@ -41,8 +46,8 @@ public class UiMenuHandler
         menuBar.SetActive(true);
     }
 
-    public void AddListenerForRayMenuButton(GameObject menu)
+    public void AddListenerForRayMenuButton()
     {
-        viewRay.onClick.AddListener(() => { SetTransparentMenu(menu); });
+        viewRay.onClick.AddListener(() => { SetTransparentMenu(menuRays); });
     }
 }

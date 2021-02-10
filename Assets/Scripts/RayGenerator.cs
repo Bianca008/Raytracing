@@ -72,7 +72,7 @@ public class RayGenerator : MonoBehaviour
         m_rayMenu = new UiRayMenu();
         m_menuHandler = new UiMenuHandler();
         m_menuHandler.AddListenerForMenuButton();
-        m_menuHandler.AddListenerForRayMenuButton(m_rayMenu.canvasMenu);
+        m_menuHandler.AddListenerForRayMenuButton();
         m_rayMenu.AddListenerForShowButton(m_intersectedRayDrawer);
     }
 

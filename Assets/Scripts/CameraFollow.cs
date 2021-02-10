@@ -9,7 +9,7 @@ public class CameraFollow : MonoBehaviour
     public Vector2 targetCharacterDirection;
 
     public Vector3 mouseOrigin = new Vector3();
-    private bool m_isRottating = true;
+    private bool m_isRottating = false;
     public float speed = 6.0F;
     public float jumpSpeed = 8.0F;
     public float gravity = 20.0F;
