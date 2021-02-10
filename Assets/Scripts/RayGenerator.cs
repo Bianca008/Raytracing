@@ -47,6 +47,19 @@ public class RayGenerator : MonoBehaviour
                 microphone.radius);
             sphere.AddComponent<BoxCollider>();
             sphere.transform.parent = go.transform;
+
+            GameObject textGo = new GameObject("MicrophoneText");
+            textGo.transform.parent = sphere.transform;
+            TextMesh text = textGo.AddComponent<TextMesh>();
+            text.text = microphone.id.ToString();
+            var arialFont = (Font)Resources.GetBuiltinResource(typeof(Font), "Arial.ttf");
+            text.font = arialFont;
+            text.fontSize = 40;
+            text.alignment = TextAlignment.Center;
+            text.characterSize = 0.03f;
+            text.transform.position = new Vector3(sphere.transform.position.x,
+                sphere.transform.position.y + microphone.radius * 2,
+                sphere.transform.position.z);
         }
     }
 
