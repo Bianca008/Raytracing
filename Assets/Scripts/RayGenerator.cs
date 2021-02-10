@@ -160,7 +160,9 @@ public class RayGenerator : MonoBehaviour
 
             foreach (MicrophoneSphere microphone in m_solver.Microphones)
             {
-                if (microphone.IsAroundMicro(VectorConverter.Convert(clickedPosition)) == true && SoundConvolver.convolvedSounds.Count > 0)
+                if (microphone.IsAroundMicro(VectorConverter.Convert(clickedPosition)) == true &&
+                    SoundConvolver.convolvedSounds != null &&
+                    SoundConvolver.convolvedSounds.Count > 0)
                 {
                     float[] f = SoundConvolver.convolvedSounds[microphone.id];
                     var clip = AudioClip.Create("testSound", f.Length, 1, 44100, false, false);
