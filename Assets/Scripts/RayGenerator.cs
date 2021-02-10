@@ -37,6 +37,7 @@ public class RayGenerator : MonoBehaviour
 
     private void DrawMicrophones()
     {
+        GameObject go = new GameObject("Microphones");
         foreach (var microphone in m_solver.Microphones)
         {
             var sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -45,6 +46,7 @@ public class RayGenerator : MonoBehaviour
                 microphone.radius,
                 microphone.radius);
             sphere.AddComponent<BoxCollider>();
+            sphere.transform.parent = go.transform;
         }
     }
 

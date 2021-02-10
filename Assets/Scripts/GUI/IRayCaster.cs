@@ -29,9 +29,16 @@ public class IRayCaster
         set;
     }
 
+    private GameObject m_acousticMaterialsGameObject
+    {
+        get;
+        set;
+    }
+
     public IRayCaster(int maxDist)
     {
         m_MaxDistance = maxDist;
+        m_acousticMaterialsGameObject = new GameObject("AcousticMaterials");
     }
 
     public void RayCast(List<AcousticRay> rays,
@@ -53,8 +60,9 @@ public class IRayCaster
                 rays[numberOfRay].acousticMaterials.Add(acousticMaterial);
             else
             {
-                var gameObject = new GameObject();
+                var gameObject = new GameObject("AcousticMaterial");
                 rays[numberOfRay].acousticMaterials.Add(gameObject.AddComponent<AcousticMaterial>());
+                gameObject.transform.parent = m_acousticMaterialsGameObject.transform;
             }
         }
         else
