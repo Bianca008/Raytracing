@@ -17,6 +17,9 @@ public class ImpulseResponseTranformer
             im.Add((float)response.Imaginary);
         }
 
+        if (re.Count == 0 && im.Count == 0)
+            return new DiscreteSignal(22050, new float[] { 0, 0 });
+
         var fft = new RealFft(frequencyResponse.Count);
         var outputArray = new float[re.Count];
         fft.Inverse(re.ToArray(), im.ToArray(), outputArray);

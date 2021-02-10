@@ -156,11 +156,12 @@ public class Solver
         {
             var values = new List<Complex>();
             for (int indexFrequency = 0; indexFrequency < Frequencies.Count; ++indexFrequency)
-            {
-                var sumi = Echograms[Frequencies[indexFrequency]][microphone.id].
-                    Aggregate((s, a) => s + a);
-                values.Add(sumi);
-            }
+                if (Echograms[Frequencies[indexFrequency]][microphone.id].Count != 0)
+                {
+                    var sumi = Echograms[Frequencies[indexFrequency]][microphone.id].
+                        Aggregate((s, a) => s + a);
+                    values.Add(sumi);
+                }
             FrequencyResponse[microphone.id] = values;
         }
     }
