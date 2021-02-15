@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class UiRayMenu 
+public class UiRayMenu
 {
     public GameObject canvasMenu { get; set; }
 
@@ -28,10 +28,7 @@ public class UiRayMenu
 
     public void AddListenerForShowButton(RaysDrawer raysDrawer)
     {
-        /*TO DO: Please add validation for input*/
-        //if (microphoneNumber.text.ToString().Trim().Length != 0 &&
-        //    rayNumber.text.ToString().Trim().Length != 0)
-            showButton.onClick.AddListener(() =>
-            { raysDrawer.Draw(int.Parse(microphoneNumber.text), int.Parse(rayNumber.text)); });
+        showButton.onClick.AddListener(() =>
+        { raysDrawer.Draw(int.Parse(microphoneNumber.text), int.Parse(rayNumber.text)); });
     }
 }

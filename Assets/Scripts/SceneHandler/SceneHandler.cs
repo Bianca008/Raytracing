@@ -10,7 +10,7 @@ public class SceneHandler : MonoBehaviour
 
     public void OpenRoomB()
     {
-        SceneManager.LoadScene("RoomBscene");
+        SceneManager.LoadScene("RoomCscene");
     }
 
     public void ExitButton()
