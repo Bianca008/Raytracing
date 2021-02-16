@@ -182,6 +182,7 @@ public class RayGenerator : MonoBehaviour
                     float[] f = SoundConvolver.convolvedSounds[microphone.id];
                     var clip = AudioClip.Create("testSound", f.Length, 1, 44100, false, false);
                     clip.SetData(f, 0);
+                    Debug.Log("AM ajuns aici");
                     AudioSource.PlayClipAtPoint(clip, clickedPosition, 1.0f);
                 }
             }
