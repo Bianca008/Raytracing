@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 6195281517924692155}
   - component: {fileID: 6195281517924692156}
   - component: {fileID: 6195281517924692159}
-  - component: {fileID: 6195281517924692158}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -98,16 +97,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57b9e941a78162944a89637a20c2c7fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clampInDegrees: {x: 360, y: 180}
-  sensitivity: {x: 2, y: 2}
-  smoothing: {x: 3, y: 3}
-  targetDirection: {x: 0, y: 0}
-  targetCharacterDirection: {x: 0, y: 0}
-  mouseOrigin: {x: 0, y: 0, z: 0}
-  speed: 6
-  jumpSpeed: 8
-  gravity: 20
-  turnSpeed: 200
 --- !u!65 &6195281517924692159
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -120,22 +109,4 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!143 &6195281517924692158
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6195281517924692152}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Height: 2
-  m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
