@@ -87,6 +87,7 @@ public class RayGenerator : MonoBehaviour
         m_menuHandler.AddListenerForMenuButton();
         m_menuHandler.AddListenerForRayMenuButton();
         m_rayMenu.AddListenerForShowButton(m_intersectedRayDrawer);
+        m_rayMenu.AddListenerForAllButton(m_intersectedRayDrawer);
     }
 
     private void RunAlgorithm()

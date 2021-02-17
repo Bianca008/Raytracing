@@ -11,6 +11,8 @@ public class UiRayMenu
 
     public Button showButton { get; set; }
 
+    public Button allButton { get; set; }
+
     public UiRayMenu()
     {
         GameObject rayMenu = GameObject.Find("MenuObject").
@@ -24,11 +26,17 @@ public class UiRayMenu
         microphoneNumber = rayMenu.transform.Find("MicrophoneNumberInputField").GetComponent<InputField>();
         microphoneNumber.characterValidation = InputField.CharacterValidation.Integer;
         showButton = rayMenu.transform.Find("ShowButton").GetComponent<Button>();
+        allButton = rayMenu.transform.Find("AllButton").GetComponent<Button>();
     }
 
     public void AddListenerForShowButton(RaysDrawer raysDrawer)
     {
         showButton.onClick.AddListener(() =>
         { raysDrawer.Draw(int.Parse(microphoneNumber.text), int.Parse(rayNumber.text)); });
+    }
+
+    public void AddListenerForAllButton(RaysDrawer raysDrawer)
+    {
+        allButton.onClick.AddListener(raysDrawer.DrawAll);
     }
 }

@@ -21,13 +21,14 @@ public class RaysDrawer
         }
     }
 
-    public void Draw(int numberOfMicro, int numberOfLine)
+    public void Draw(int numberOfMicro, int numberOfLine, bool all = false)
     {
+        if (all == false)
+            ResetLines();
+
         if (rays.ContainsKey(numberOfMicro) == false) return;
         else
             if (numberOfLine >= rays[numberOfMicro].Count) return;
-
-        ResetLines();
 
         lines[numberOfLine].SetPosition(0,
             VectorConverter.Convert(rays[numberOfMicro][numberOfLine].source));
@@ -44,5 +45,12 @@ public class RaysDrawer
         lines[numberOfLine].positionCount = ++numberOfPoints;
         lines[numberOfLine].SetPosition(numberOfPoints - 1,
             VectorConverter.Convert(rays[numberOfMicro][numberOfLine].microphonePosition));
+    }
+
+    public void DrawAll()
+    {
+        foreach (var item in rays)
+            for (int index = 0; index < item.Value.Count; ++index)
+                Draw(item.Key, index, true);
     }
 }
