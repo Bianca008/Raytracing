@@ -29,14 +29,15 @@ public class UiRayMenu
         allButton = rayMenu.transform.Find("AllButton").GetComponent<Button>();
     }
 
-    public void AddListenerForShowButton(RaysDrawer raysDrawer)
+    public void AddListenerForShowButton(RaysDrawer raysDrawer, Material material)
     {
         showButton.onClick.AddListener(() =>
-        { raysDrawer.Draw(int.Parse(microphoneNumber.text), int.Parse(rayNumber.text)); });
+        { raysDrawer.Draw(material, int.Parse(microphoneNumber.text), int.Parse(rayNumber.text)); });
     }
 
-    public void AddListenerForAllButton(RaysDrawer raysDrawer)
+    public void AddListenerForAllButton(RaysDrawer raysDrawer, Material material)
     {
-        allButton.onClick.AddListener(raysDrawer.DrawAll);
+        allButton.onClick.AddListener(() =>
+        { raysDrawer.DrawAll(material); });
     }
 }

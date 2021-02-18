@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 using SFB;
+using System.Linq;
 
 public class RayGenerator : MonoBehaviour
 {
@@ -86,8 +87,8 @@ public class RayGenerator : MonoBehaviour
         m_menuHandler = new UiMenuHandler();
         m_menuHandler.AddListenerForMenuButton();
         m_menuHandler.AddListenerForRayMenuButton();
-        m_rayMenu.AddListenerForShowButton(m_intersectedRayDrawer);
-        m_rayMenu.AddListenerForAllButton(m_intersectedRayDrawer);
+        m_rayMenu.AddListenerForShowButton(m_intersectedRayDrawer, LineMaterial);
+        m_rayMenu.AddListenerForAllButton(m_intersectedRayDrawer, LineMaterial);
     }
 
     private void RunAlgorithm()
@@ -97,30 +98,7 @@ public class RayGenerator : MonoBehaviour
             InputHandler.GetNumber(m_configurationInput.maxDistance),
             InputHandler.GetCheckedDropdownElement(m_configurationInput.frequencyStep));
 
-        CreateDrawableRays();
-    }
-
-    private void CreateDrawableRays()
-    {
-        var count = 0;
-        for (int index = 0; index < m_solver.Rays.Count; ++index)
-            count += m_solver.Rays[index].Count;
-        m_intersectedLines = LinesCreator.GenerateLines(count, transform, LineMaterial);
-        m_intersectedRayDrawer.lines = m_intersectedLines;
         m_intersectedRayDrawer.rays = m_solver.Rays;
-    }
-
-    private void SetVisibilityForLoadingText()
-    {
-        Text loadingText = GameObject.Find("Menu").gameObject.transform.
-                           Find("TabPanel").
-                           Find("TabPanels").
-                           Find("InputTabPanel").
-                           Find("LoadingText").GetComponent<Text>();
-
-        Color visibleColor = loadingText.color;
-        visibleColor.a = 1 - visibleColor.a;
-        loadingText.color = visibleColor;
     }
 
     private void AddListenerForSoundButton()
