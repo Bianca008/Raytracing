@@ -1,11 +1,8 @@
 ﻿using System.Collections;
 using System.IO;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
-using UnityEngine.UI;
 using SFB;
-using System.Linq;
 
 public class RayGenerator : MonoBehaviour
 {
@@ -17,7 +14,6 @@ public class RayGenerator : MonoBehaviour
     private UiRayMenu m_rayMenu;
     private UiMenuHandler m_menuHandler;
     private RaysDrawer m_intersectedRayDrawer;
-    private LineRenderer[] m_intersectedLines;
     private AudioSource m_audioSource;
     private double m_maxFrequency;
 
