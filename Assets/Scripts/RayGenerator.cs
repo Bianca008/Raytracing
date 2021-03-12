@@ -89,6 +89,7 @@ public class RayGenerator : MonoBehaviour
 
     private void RunAlgorithm()
     {
+        Debug.Log("Audio: " + m_audioSource.clip.name);
         m_solver.RunSolver(m_audioSource.clip.name, InputHandler.GetNumber(m_configurationInput.numberOfReflections),
             InputHandler.GetNumber(m_configurationInput.numberOfRays),
             InputHandler.GetNumber(m_configurationInput.maxDistance),
@@ -108,6 +109,7 @@ public class RayGenerator : MonoBehaviour
                                 new ExtensionFilter("Sound Files", "mp3", "wav" ),
                                 };
         var path = StandaloneFileBrowser.OpenFilePanel("Open File", "", extensions, true);
+        Debug.Log(path[0]);
         StartCoroutine(LoadAudioClip(path[0]));
     }
 
@@ -162,5 +164,13 @@ public class RayGenerator : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void ClearAll()
+    {
+        m_solver.ResetSolver();
+        m_intersectedRayDrawer.lines.Clear();
+        m_intersectedRayDrawer.rays.Clear();
+        SoundConvolver.convolvedSounds.Clear();
     }
 }

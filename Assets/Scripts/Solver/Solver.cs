@@ -59,6 +59,7 @@ public class Solver
     {
         Microphones.Add(new MicrophoneSphere(new System.Numerics.Vector3(2, 1.6f, 1.7f), 0.1f));
         Microphones.Add(new MicrophoneSphere(new System.Numerics.Vector3(-1.5f, 1.2f, 1.7f), 0.1f));
+        Microphones.Add(new MicrophoneSphere(new System.Numerics.Vector3(1f, 2f, 13f), 0.1f));
     }
 
     private void CreateRays()
@@ -176,5 +177,16 @@ public class Solver
         }
 
         SoundConvolver.ConvolveSound(audioName, ImpulseResponses, Microphones);
+    }
+
+    public void ResetSolver()
+    {
+        Echograms.Clear();
+        Frequencies.Clear();
+        Rays.Clear();
+        Microphones.Clear();
+        FrequencyResponse.Clear();
+        ImpulseResponses.Clear();
+        m_rayGeometryGenerator.rays.Clear();
     }
 }
