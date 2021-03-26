@@ -3,19 +3,19 @@ using UnityEngine.UI;
 
 public class UiTabController
 {
-    private GameObject m_menuCanvas;
+    private GameObject menuCanvas;
 
     public UiTabController()
     {
-        m_menuCanvas = GameObject.Find("MenuObject").gameObject.transform.Find("Menu").gameObject;
-        GameObject tabButtonsPanel = m_menuCanvas.transform.
+        menuCanvas = GameObject.Find("MenuObject").gameObject.transform.Find("Menu").gameObject;
+        var tabButtonsPanel = menuCanvas.transform.
                                      Find("TabPanel").
                                      Find("TabButtonsPanel").
                                      gameObject;
-        Button inputTabButton = tabButtonsPanel.transform.Find("InputTabButton").gameObject.GetComponent<Button>();
-        Button timeEchogramButton = tabButtonsPanel.transform.Find("TimeEchogramTabButton").gameObject.GetComponent<Button>();
-        Button frequencyEchogramButton = tabButtonsPanel.transform.Find("FrequencyEchogramTabButton").gameObject.GetComponent<Button>();
-        Button impulseResponseButton = tabButtonsPanel.transform.Find("ImpulseResponseTabButton").gameObject.GetComponent<Button>();
+        var inputTabButton = tabButtonsPanel.transform.Find("InputTabButton").gameObject.GetComponent<Button>();
+        var timeEchogramButton = tabButtonsPanel.transform.Find("TimeEchogramTabButton").gameObject.GetComponent<Button>();
+        var frequencyEchogramButton = tabButtonsPanel.transform.Find("FrequencyEchogramTabButton").gameObject.GetComponent<Button>();
+        var impulseResponseButton = tabButtonsPanel.transform.Find("ImpulseResponseTabButton").gameObject.GetComponent<Button>();
 
         AddListenerForButton(inputTabButton, 0);
         AddListenerForButton(timeEchogramButton, 1);
@@ -27,12 +27,12 @@ public class UiTabController
 
     private void InitializeTabs(int indexVisibleTab)
     {
-        GameObject tabPanels = m_menuCanvas.transform.Find("TabPanel").gameObject;
-        GameObject panels = tabPanels.transform.Find("TabPanels").gameObject;        
-        GameObject inputTabPanel = panels.transform.Find("InputTabPanel").gameObject;
-        GameObject timeTabPanel = panels.transform.Find("TimeEchogramPanel").gameObject;
-        GameObject frequencyTabPanel = panels.transform.Find("FrequencyEchogramPanel").gameObject;
-        GameObject impulseResponePanel = panels.transform.Find("ImpulseResponsePanel").gameObject;
+        var tabPanels = menuCanvas.transform.Find("TabPanel").gameObject;
+        var panels = tabPanels.transform.Find("TabPanels").gameObject;
+        var inputTabPanel = panels.transform.Find("InputTabPanel").gameObject;
+        var timeTabPanel = panels.transform.Find("TimeEchogramPanel").gameObject;
+        var frequencyTabPanel = panels.transform.Find("FrequencyEchogramPanel").gameObject;
+        var impulseResponePanel = panels.transform.Find("ImpulseResponsePanel").gameObject;
 
         inputTabPanel.SetActive(false);
         timeTabPanel.SetActive(false);

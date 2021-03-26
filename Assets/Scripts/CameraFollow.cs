@@ -16,9 +16,9 @@ public class CameraFollow : MonoBehaviour
         if (Input.GetMouseButton(0))
         {
             transform.Rotate(new Vector3(Input.GetAxis("Mouse Y") * speed, -Input.GetAxis("Mouse X") * speed, 0));
-            float X = transform.rotation.eulerAngles.x;
-            float Y = transform.rotation.eulerAngles.y;
-            transform.rotation = Quaternion.Euler(X, Y, 0);
+            var x = transform.rotation.eulerAngles.x;
+            var y = transform.rotation.eulerAngles.y;
+            transform.rotation = Quaternion.Euler(x, y, 0);
         }
 
         if (Input.GetKey("w"))
@@ -45,7 +45,7 @@ public class CameraFollow : MonoBehaviour
         {
             transform.Translate(-transform.up * panSpeed * Time.deltaTime, Space.World);
         }
-        Vector3 pos = transform.position;
+        var pos = transform.position;
         pos.x = Mathf.Clamp(pos.x, -panLimit.x, panLimit.x);
         pos.y = Mathf.Clamp(pos.y, 1, panLimit.y);
         pos.z = Mathf.Clamp(pos.z, -panLimit.z, panLimit.z);

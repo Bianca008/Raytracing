@@ -3,36 +3,36 @@ using System.Numerics;
 
 public class MicrophoneSphere
 {
-    public int id
+    public int Id
     {
         get;
         private set;
     }
 
-    public Vector3 center
+    public Vector3 Center
     {
         get;
         set;
     }
 
-    public float radius
+    public float Radius
     {
         get;
         set;
     }
 
-    private static int m_id = -1;
+    private static int _id = -1;
 
     ~MicrophoneSphere()
     {
-        --m_id;
+        --_id;
     }
 
     public MicrophoneSphere(Vector3 center, float radius)
     {
         GenerateId();
-        this.center = center;
-        this.radius = radius;
+        this.Center = center;
+        this.Radius = radius;
     }
 
     public bool LineIntersectionWithSphere(Vector3 begin, Vector3 end)
@@ -41,29 +41,26 @@ public class MicrophoneSphere
                         Math.Pow(end.Y - begin.Y, 2) +
                         Math.Pow(end.Z - begin.Z, 2));
 
-        var b = -2 * ((end.X - begin.X) * (center.X - begin.X) +
-                      (end.Y - begin.Y) * (center.Y - begin.Y) +
-                      (end.Z - begin.Z) * (center.Z - begin.Z));
+        var b = -2 * ((end.X - begin.X) * (Center.X - begin.X) +
+                      (end.Y - begin.Y) * (Center.Y - begin.Y) +
+                      (end.Z - begin.Z) * (Center.Z - begin.Z));
 
-        var c = (float)(Math.Pow(center.X - begin.X, 2) +
-                        Math.Pow(center.Y - begin.Y, 2) +
-                        Math.Pow(center.Z - begin.Z, 2) -
-                        Math.Pow(radius, 2));
+        var c = (float)(Math.Pow(Center.X - begin.X, 2) +
+                        Math.Pow(Center.Y - begin.Y, 2) +
+                        Math.Pow(Center.Z - begin.Z, 2) -
+                        Math.Pow(Radius, 2));
 
         return Math.Pow(b, 2) - 4 * a * c >= 0;
     }
 
     public bool IsAroundMicro(Vector3 position)
     {
-        if (Vector3.Distance(center, position) > radius)
-            return false;
-
-        return true;
+        return !(Vector3.Distance(Center, position) > Radius);
     }
 
     private void GenerateId()
     {
-        id = ++m_id;
+        Id = ++_id;
     }
 
 }

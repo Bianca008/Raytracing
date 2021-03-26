@@ -9,7 +9,7 @@ using UnityEngine;
 
 public class SoundConvolver
 {
-    public static Dictionary<int, float[]> convolvedSounds
+    public static Dictionary<int, float[]> ConvolvedSounds
     {
         get;
         set;
@@ -25,7 +25,7 @@ public class SoundConvolver
         Dictionary<int, DiscreteSignal> impulseResponses,
         List<MicrophoneSphere> microphones)
     {
-        convolvedSounds = new Dictionary<int, float[]>();
+        ConvolvedSounds = new Dictionary<int, float[]>();
 
         foreach (var microphone in microphones)
         {
@@ -41,16 +41,16 @@ public class SoundConvolver
             NormalizeSampleData(discreteSignal);
 
             var convolutionResult = Operation.Convolve(discreteSignal,
-                impulseResponses[microphone.id]);
+                impulseResponses[microphone.Id]);
 
             NormalizeSampleData(convolutionResult);
 
             using (var stream = new FileStream("results/convolutionAttention" +
-                                               microphone.id.ToString() +
+                                               microphone.Id.ToString() +
                                                ".wav", FileMode.Create))
             {
                 var waveFile = new WaveFile(convolutionResult);
-                convolvedSounds[microphone.id] = convolutionResult.Samples;
+                ConvolvedSounds[microphone.Id] = convolutionResult.Samples;
                 waveFile.SaveTo(stream);
             }
         }
@@ -60,10 +60,10 @@ public class SoundConvolver
     {
         var maxi = signal.Samples.Max();
 
-        for (int index = 0; index < signal.Samples.Length; ++index)
+        for (var index = 0; index < signal.Samples.Length; ++index)
             signal.Samples[index] /= maxi;
 
-        for (int index = 0; index < signal.Samples.Length; ++index)
+        for (var index = 0; index < signal.Samples.Length; ++index)
             signal.Samples[index] *= 0.99f;
     }
 }

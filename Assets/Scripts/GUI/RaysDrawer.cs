@@ -4,23 +4,23 @@ using UnityEngine;
 
 public class RaysDrawer
 {
-    public Dictionary<int, List<AcousticRay>> rays { get; set; }
+    public Dictionary<int, List<AcousticRay>> Rays { get; set; }
 
-    public List<LineRenderer> lines { get; set; }
+    public List<LineRenderer> Lines { get; set; }
 
-    private GameObject m_go { get; set; }
+    private GameObject go { get; set; }
 
     public RaysDrawer()
     {
-        lines = new List<LineRenderer>();
-        rays = new Dictionary<int, List<AcousticRay>>();
-        m_go = new GameObject("Rays");
+        Lines = new List<LineRenderer>();
+        Rays = new Dictionary<int, List<AcousticRay>>();
+        go = new GameObject("Rays");
     }
 
     private void ResetLines()
     {
-        GameObject.Destroy(m_go);
-        m_go = new GameObject("Rays");
+        GameObject.Destroy(go);
+        go = new GameObject("Rays");
     }
 
     public void Draw(Material material, int microphoneNumber, int lineIndex, bool all = false)
@@ -28,18 +28,18 @@ public class RaysDrawer
         if (all == false)
             ResetLines();
 
-        if (rays.ContainsKey(microphoneNumber) == false) return;
-        if (lineIndex >= rays[microphoneNumber].Count) return;
+        if (Rays.ContainsKey(microphoneNumber) == false) return;
+        if (lineIndex >= Rays[microphoneNumber].Count) return;
 
         var go = new GameObject("[m: " + microphoneNumber + ", l: " + lineIndex + "]");
         var renderedLine = go.AddComponent<LineRenderer>();
-        go.transform.parent = m_go.transform;
+        go.transform.parent = this.go.transform;
 
-        var currentRay = rays[microphoneNumber][lineIndex];
+        var currentRay = Rays[microphoneNumber][lineIndex];
         var hitPoints = new List<Vector3>();
-        hitPoints.Add(VectorConverter.Convert(currentRay.source));
-        hitPoints.AddRange(currentRay.collisionPoints.Select(VectorConverter.Convert));
-        hitPoints.Add(VectorConverter.Convert(currentRay.microphonePosition));
+        hitPoints.Add(VectorConverter.Convert(currentRay.Source));
+        hitPoints.AddRange(currentRay.CollisionPoints.Select(VectorConverter.Convert));
+        hitPoints.Add(VectorConverter.Convert(currentRay.MicrophonePosition));
 
         renderedLine.positionCount = hitPoints.Count;
         renderedLine.SetPositions(hitPoints.ToArray());
@@ -48,12 +48,12 @@ public class RaysDrawer
         renderedLine.endWidth = 0.01f;
         if (material != null)
             renderedLine.material = material;
-        lines.Add(renderedLine);
+        Lines.Add(renderedLine);
     }
 
     public void DrawAll(Material material)
     {
-        foreach (var item in rays)
+        foreach (var item in Rays)
             for (int index = 0; index < item.Value.Count; ++index)
                 Draw(material, item.Key, index, true);
     }

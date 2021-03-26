@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Vector3 = System.Numerics.Vector3;
 
 public class RayGeometry
 {
-    private readonly int m_numberOfRays;
-    private readonly int m_numberOfCollisions;
-    private readonly int m_maxDistance;
-    private readonly IRayCaster m_rayCaster;
+    private readonly int numberOfRays;
+    private readonly int numberOfCollisions;
+    private readonly int maxDistance;
+    private readonly RayCaster rayCaster;
 
-    public List<AcousticRay> rays { get; set; } = new List<AcousticRay>();
+    public List<AcousticRay> Rays { get; set; } = new List<AcousticRay>();
 
     public RayGeometry(Vector3 sourcePos,
         List<MicrophoneSphere> microphones,
@@ -17,17 +18,17 @@ public class RayGeometry
         int nrOfCollisions = 3,
         int maxDist = 200)
     {
-        m_numberOfCollisions = nrOfCollisions;
-        m_numberOfRays = nrOfRays;
-        m_maxDistance = maxDist;
+        numberOfCollisions = nrOfCollisions;
+        numberOfRays = nrOfRays;
+        maxDistance = maxDist;
 
-        for (int indexRay = 0; indexRay < m_numberOfRays; ++indexRay)
-            for (int indexMicro = 0; indexMicro < microphones.Count; ++indexMicro)
+        for (var indexRay = 0; indexRay < numberOfRays; ++indexRay)
+            foreach (var microphone in microphones)
             {
-                rays.Add(new AcousticRay(sourcePos, microphones[indexMicro].center));
+                Rays.Add(new AcousticRay(sourcePos, microphone.Center));
             }
 
-        m_rayCaster = new IRayCaster(m_maxDistance);
+        rayCaster = new RayCaster(maxDistance);
     }
 
     public Vector3 GetCartesianCoordinates(double distance, double theta, double phi)
@@ -45,14 +46,14 @@ public class RayGeometry
         //!!!Var3 - Fibo Sphere!!!
         var goldenRatio = (1 + Math.Sqrt(5)) / 2;
         var goldenAngle = (2 - goldenRatio) * (2 * Math.PI);
-        int indexRay = 0;
+        var indexRay = 0;
 
-        for (int index = 0; index < m_numberOfRays; ++index)
+        for (var index = 0; index < numberOfRays; ++index)
         {
-            var theta = Math.Asin(-1.0 + 2.0 * index / (m_numberOfRays + 1.0));
+            var theta = Math.Asin(-1.0 + 2.0 * index / (numberOfRays + 1.0));
             var phi = goldenAngle * index;
 
-            GenerateRay(rays[index].source,
+            GenerateRay(Rays[index].Source,
                GetCartesianCoordinates(1, theta, phi),
                indexRay);
             ++indexRay;
@@ -61,15 +62,15 @@ public class RayGeometry
 
     private void GenerateRay(Vector3 position, Vector3 direction, int numberOfRay)
     {
-        m_rayCaster.totalDistance = 0;
-        m_rayCaster.numberOfReflections = 0;
-        m_rayCaster.position = position;
-        m_rayCaster.direction = direction;
+        rayCaster.TotalDistance = 0;
+        rayCaster.NumberOfReflections = 0;
+        rayCaster.Position = position;
+        rayCaster.Direction = direction;
 
-        while (m_rayCaster.totalDistance <= m_maxDistance &&
-            m_rayCaster.numberOfReflections <= m_numberOfCollisions)
+        while (rayCaster.TotalDistance <= maxDistance &&
+            rayCaster.NumberOfReflections <= numberOfCollisions)
         {
-            m_rayCaster.RayCast(rays, numberOfRay);
+            rayCaster.RayCast(Rays, numberOfRay);
         }
     }
 
@@ -77,21 +78,30 @@ public class RayGeometry
     {
         var newRays = new List<AcousticRay>();
 
-        foreach (var ray in rays)
+        foreach (var ray in Rays)
         {
-            if (ray.collisionPoints.Count > 0 &&
-                microphone.LineIntersectionWithSphere(ray.source,
-                    ray.collisionPoints[0]))
+            if (ray.CollisionPoints.Count == 0)
             {
-                newRays.Add(ray.TruncateRay(0, microphone.center));
+                var ok = false;
+                foreach (var newRay in newRays.Where(newRay => newRay.CollisionPoints.Count == 0))
+                    ok = true;
+                if (ok == false)
+                    newRays.Add(ray);
+            }
+            else
+            if (ray.CollisionPoints.Count > 0 &&
+                microphone.LineIntersectionWithSphere(ray.Source,
+                    ray.CollisionPoints[0]))
+            {
+                newRays.Add(ray.TruncateRay(0, microphone.Center));
             }
             else
             {
-                for (int indexPosition = 0; indexPosition < ray.collisionPoints.Count - 1; ++indexPosition)
+                for (var indexPosition = 0; indexPosition < ray.CollisionPoints.Count - 1; ++indexPosition)
                 {
-                    if (microphone.LineIntersectionWithSphere(ray.collisionPoints[indexPosition],
-                        ray.collisionPoints[indexPosition + 1]))
-                        newRays.Add(ray.TruncateRay(indexPosition + 1, microphone.center));
+                    if (microphone.LineIntersectionWithSphere(ray.CollisionPoints[indexPosition],
+                        ray.CollisionPoints[indexPosition + 1]))
+                        newRays.Add(ray.TruncateRay(indexPosition + 1, microphone.Center));
                 }
             }
         }

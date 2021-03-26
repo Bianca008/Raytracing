@@ -3,51 +3,51 @@ using UnityEngine.UI;
 
 public class UiMenuHandler
 {
-    public GameObject menuRays { get; set; }
+    public GameObject MenuRays { get; set; }
 
-    public GameObject menuInput { get; set; }
+    public GameObject MenuInput { get; set; }
 
-    public GameObject menuBar { get; set; }
+    public GameObject MenuBar { get; set; }
 
-    public Button viewMenu { get; set; }
+    public Button ViewMenu { get; set; }
 
-    public Button viewRay { get; set; }
+    public Button ViewRay { get; set; }
 
     public UiMenuHandler()
     {
-        GameObject principalMenuCanvas = GameObject.Find("MenuObject").
+        var principalMenuCanvas = GameObject.Find("MenuObject").
                                gameObject.transform.Find("PrincipalMenuCanvas").
                                Find("Panel").
                                gameObject;
 
-        menuRays = GameObject.Find("MenuObject").gameObject.transform.Find("RayMenu").gameObject;
-        menuInput = GameObject.Find("MenuObject").gameObject.transform.Find("Menu").gameObject;
-        menuBar = GameObject.Find("MenuObject").gameObject.transform.Find("PrincipalMenuCanvas").gameObject;
-        viewMenu = principalMenuCanvas.transform.Find("MenuButton").GetComponent<Button>();
-        viewRay = principalMenuCanvas.transform.Find("ViewRayButton").GetComponent<Button>();
-        menuInput.SetActive(false);
-        menuRays.SetActive(false);
+        MenuRays = GameObject.Find("MenuObject").gameObject.transform.Find("RayMenu").gameObject;
+        MenuInput = GameObject.Find("MenuObject").gameObject.transform.Find("Menu").gameObject;
+        MenuBar = GameObject.Find("MenuObject").gameObject.transform.Find("PrincipalMenuCanvas").gameObject;
+        ViewMenu = principalMenuCanvas.transform.Find("MenuButton").GetComponent<Button>();
+        ViewRay = principalMenuCanvas.transform.Find("ViewRayButton").GetComponent<Button>();
+        MenuInput.SetActive(false);
+        MenuRays.SetActive(false);
     }
 
     public void AddListenerForMenuButton()
     {
-        viewMenu.onClick.AddListener(() => { SetTransparentMenu(menuInput); });
+        ViewMenu.onClick.AddListener(() => { SetTransparentMenu(MenuInput); });
     }
 
     private void SetTransparentMenu(GameObject menu)
     {
-        CanvasGroup group = menu.GetComponent<CanvasGroup>();
+        var group = menu.GetComponent<CanvasGroup>();
         group.alpha = 1 - group.alpha;
         if (group.alpha == 0)
             menu.SetActive(false);
         else
             menu.SetActive(true);
-        menuBar.SetActive(false);
-        menuBar.SetActive(true);
+        MenuBar.SetActive(false);
+        MenuBar.SetActive(true);
     }
 
     public void AddListenerForRayMenuButton()
     {
-        viewRay.onClick.AddListener(() => { SetTransparentMenu(menuRays); });
+        ViewRay.onClick.AddListener(() => { SetTransparentMenu(MenuRays); });
     }
 }

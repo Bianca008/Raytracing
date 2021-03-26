@@ -3,9 +3,9 @@ using UnityEngine.UI;
 
 public class UiImpulseResponse 
 {
-    public Button showButton { get; private set; }
+    public Button ShowButton { get; private set; }
 
-    public InputField microphoneInputField { get; private set; }
+    public InputField MicrophoneInputField { get; private set; }
 
     public UiImpulseResponse()
     {
@@ -16,9 +16,9 @@ public class UiImpulseResponse
                                           Find("ImpulseResponsePanel").
                                           gameObject;
 
-        microphoneInputField = impulseResponsePanel.transform.Find("NumberOfMicrophoneInputField").
+        MicrophoneInputField = impulseResponsePanel.transform.Find("NumberOfMicrophoneInputField").
                                gameObject.GetComponent<InputField>();
-        microphoneInputField.characterValidation = InputField.CharacterValidation.Integer;
-        showButton = impulseResponsePanel.transform.Find("ImpulseResponsePlotButton").gameObject.GetComponent<Button>();
+        MicrophoneInputField.characterValidation = InputField.CharacterValidation.Integer;
+        ShowButton = impulseResponsePanel.transform.Find("ImpulseResponsePlotButton").gameObject.GetComponent<Button>();
     }
 }

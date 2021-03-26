@@ -10,13 +10,13 @@ public class InputHandler
         var numberStr = number.text;
 
         if (numberStr.Trim().Length > 0 && numberStr.All(char.IsDigit) == true)
-            return Int32.Parse(numberStr);
+            return int.Parse(numberStr);
 
         return -1;
     }
 
     public static int GetCheckedDropdownElement(Dropdown dropdown)
     {
-        return Int32.Parse(dropdown.options[dropdown.value].text);
+        return int.Parse(dropdown.options[dropdown.value].text);
     }
 }

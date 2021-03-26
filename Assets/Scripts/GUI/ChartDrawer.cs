@@ -11,12 +11,12 @@ public class ChartDrawer
         set;
     }
 
-    private BarChart m_timePhaseBarChart;
-    private BarChart m_timeMagnitudeBarChart;
+    private BarChart timePhaseBarChart;
+    private BarChart timeMagnitudeBarChart;
 
-    private LineChart m_timePhaseLineChart;
-    private LineChart m_timeMagnitudeLineChart;
-    private LineChart m_impulseResponseLineChart;
+    private LineChart timePhaseLineChart;
+    private LineChart timeMagnitudeLineChart;
+    private LineChart impulseResponseLineChart;
 
     public ChartDrawer(GameObject canvas)
     {
@@ -30,28 +30,28 @@ public class ChartDrawer
             switch (barChart.name)
             {
                 case "TimeMagnitudeBarChart":
-                    m_timeMagnitudeBarChart = barChart;
+                    timeMagnitudeBarChart = barChart;
                     break;
                 case "TimePhaseBarChart":
-                    m_timePhaseBarChart = barChart;
+                    timePhaseBarChart = barChart;
                     break;
             }
         }
 
-        SetBarChart(m_timeMagnitudeBarChart, "Time(1e+3)-Magnitude chart", "Magnitude");
+        SetBarChart(timeMagnitudeBarChart, "Time(1e+3)-Magnitude chart", "Magnitude");
 
         for (int index = 0; index < xTime.Count; ++index)
         {
-            m_timeMagnitudeBarChart.AddXAxisData(xTime[index].ToString());
-            m_timeMagnitudeBarChart.AddData(0, yMagnitude[index]);
+            timeMagnitudeBarChart.AddXAxisData(xTime[index].ToString());
+            timeMagnitudeBarChart.AddData(0, yMagnitude[index]);
         }
 
-        SetBarChart(m_timePhaseBarChart, "Time(1e+3)-Phase chart", "Phase");
+        SetBarChart(timePhaseBarChart, "Time(1e+3)-Phase chart", "Phase");
 
         for (int index = 0; index < xTime.Count; ++index)
         {
-            m_timePhaseBarChart.AddXAxisData(xTime[index].ToString());
-            m_timePhaseBarChart.AddData(0, yPhase[index]);
+            timePhaseBarChart.AddXAxisData(xTime[index].ToString());
+            timePhaseBarChart.AddData(0, yPhase[index]);
         }
     }
 
@@ -62,28 +62,28 @@ public class ChartDrawer
             switch (lineChart.name)
             {
                 case "FrequencyMagnitudeLineChart":
-                    m_timeMagnitudeLineChart = lineChart;
+                    timeMagnitudeLineChart = lineChart;
                     break;
                 case "FrequencyPhaseLineChart":
-                    m_timePhaseLineChart = lineChart;
+                    timePhaseLineChart = lineChart;
                     break;
             }
         }
 
-        SetLineChart(m_timeMagnitudeLineChart, "Frequency(Hz)-Magnitude chart", "Magnitude");
+        SetLineChart(timeMagnitudeLineChart, "Frequency(Hz)-Magnitude chart", "Magnitude");
 
         for (int index = 0; index < xFrequency.Count; ++index)
         {
-            m_timeMagnitudeLineChart.AddXAxisData(xFrequency[index].ToString());
-            m_timeMagnitudeLineChart.AddData(0, yMagnitude[index]);
+            timeMagnitudeLineChart.AddXAxisData(xFrequency[index].ToString());
+            timeMagnitudeLineChart.AddData(0, yMagnitude[index]);
         }
 
-        SetLineChart(m_timePhaseLineChart, "Frequency(Hz) - Phase chart", "Phase");
+        SetLineChart(timePhaseLineChart, "Frequency(Hz) - Phase chart", "Phase");
 
         for (int index = 0; index < xFrequency.Count; ++index)
         {
-            m_timePhaseLineChart.AddXAxisData(xFrequency[index].ToString());
-            m_timePhaseLineChart.AddData(0, yPhase[index]);
+            timePhaseLineChart.AddXAxisData(xFrequency[index].ToString());
+            timePhaseLineChart.AddData(0, yPhase[index]);
         }
     }
 
@@ -92,17 +92,17 @@ public class ChartDrawer
         foreach (var lineChart in chartArea.GetComponentsInChildren<LineChart>())
         {
             if (lineChart.name == "ImpulseResponseLineChart")
-                m_impulseResponseLineChart = lineChart;
+                impulseResponseLineChart = lineChart;
         }
 
-        SetLineChart(m_impulseResponseLineChart, "Impulse response");
+        SetLineChart(impulseResponseLineChart, "Impulse response");
         var newXtime = AverageValues.CreateSmallerDataSet(xTime, 30);
         var newYimpulseResponse = AverageValues.CreateSmallerDataSet(yImpulseResponse, 30);
         for (int index = 0; index < newXtime.Count; ++index)
         {
             /*TODO: vezi unitati de masura.*/
-            m_impulseResponseLineChart.AddXAxisData(newXtime[index].ToString());
-            m_impulseResponseLineChart.AddData(0, newYimpulseResponse[index]);
+            impulseResponseLineChart.AddXAxisData(newXtime[index].ToString());
+            impulseResponseLineChart.AddData(0, newYimpulseResponse[index]);
         }
     }
 

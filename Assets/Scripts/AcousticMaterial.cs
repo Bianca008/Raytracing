@@ -2,5 +2,5 @@
 
 public class AcousticMaterial : MonoBehaviour
 {
-    public float AbsorbtionCoefficient;
+    public float absorbtionCoefficient;
 }

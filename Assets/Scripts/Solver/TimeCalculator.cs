@@ -12,12 +12,12 @@ public class TimeCalculator
          v = d/t
          then t = d/v
          */
-        for (int indexMicro = 0; indexMicro < microphones.Count; ++indexMicro)
+        foreach (var microphone in microphones)
         {
-            rayTimes[microphones[indexMicro].id] = new List<float>();
-            for (int indexRay = 0; indexRay < rays[microphones[indexMicro].id].Count; ++indexRay)
-                rayTimes[microphones[indexMicro].id].Add(
-                    (float)(rays[microphones[indexMicro].id][indexRay].GetDistance() / airSoundSpeed));
+            rayTimes[microphone.Id] = new List<float>();
+            for (var indexRay = 0; indexRay < rays[microphone.Id].Count; ++indexRay)
+                rayTimes[microphone.Id].Add(
+                    (float)(rays[microphone.Id][indexRay].GetDistance() / airSoundSpeed));
         }
 
         return rayTimes;
