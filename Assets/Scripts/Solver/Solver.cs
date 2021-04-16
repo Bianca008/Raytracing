@@ -23,7 +23,7 @@ public class Solver
     private Vector3 sourcePosition;
     private float initialPower = 1;
     private int numberOfRays = 63000;
-    private double frequencyStep = 8192.0;
+    private double frequencyStep = 1024.0;
     private double maxFrequency = 22050.0;
     private int maxDistance = 200;
     private int numberOfReflections = 8;
@@ -58,10 +58,29 @@ public class Solver
 
     public void CreateMicrophones()
     {
-        Microphones.Add(new MicrophoneSphere(new System.Numerics.Vector3(2, 1.6f, 1.7f), 0.1f));
-        Microphones.Add(new MicrophoneSphere(new System.Numerics.Vector3(-1.5f, 1.2f, 1.7f), 0.1f));
-        if (SceneManager.GetActiveScene().name != "RoomAscene")
-            Microphones.Add(new MicrophoneSphere(new System.Numerics.Vector3(1f, 2f, 13f), 0.1f));
+        if (SceneManager.GetActiveScene().name == "RoomDScene")
+        {
+            float x = 0;
+            float y = 0;
+            float z = 0f;
+            int n = 8;
+            float r = 4f;
+            for (int i = 0; i < n; i++)
+            {
+                Microphones.Add(new MicrophoneSphere(
+                    new System.Numerics.Vector3((float)(x + r * Math.Cos(2 * i * Math.PI / n)),
+                        y,
+                        (float)(z + r * Math.Sin(2 * i * Math.PI / n))), 0.1f));
+
+            }
+        }
+        else
+        {
+            Microphones.Add(new MicrophoneSphere(new System.Numerics.Vector3(2, 1.6f, 1.7f), 0.1f));
+            Microphones.Add(new MicrophoneSphere(new System.Numerics.Vector3(-1.5f, 1.2f, 1.7f), 0.1f));
+            if (SceneManager.GetActiveScene().name != "RoomAscene" && SceneManager.GetActiveScene().name != "RoomDScene")
+                Microphones.Add(new MicrophoneSphere(new System.Numerics.Vector3(1f, 2f, 13f), 0.1f));
+        }
     }
 
     private void CreateRays()
@@ -121,7 +140,6 @@ public class Solver
         foreach (var microphone in Microphones)
         {
             var newRays = rayGeometryGenerator.GetIntersectedRays(microphone);
-
             newRays.Sort((first, second) => first.GetDistance().CompareTo(second.GetDistance()));
             var raysWithoutDuplicates = RemoveDuplicates(newRays);
             Rays[microphone.Id] = raysWithoutDuplicates;
@@ -183,6 +201,7 @@ public class Solver
 
     public void ResetSolver()
     {
+        SoundConvolver.ConvolvedSounds.Clear();
         Echograms.Clear();
         Frequencies.Clear();
         Rays.Clear();

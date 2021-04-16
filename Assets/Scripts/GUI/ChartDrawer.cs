@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using XCharts;
 
@@ -89,6 +90,22 @@ public class ChartDrawer
 
     public void DrawImpulseResponseChart(List<float> xTime, List<float> yImpulseResponse)
     {
+        using (var outputFile = new StreamWriter("xImpulseResponse.txt"))
+        {
+            foreach (var x in xTime)
+            {
+                outputFile.WriteLine(x);
+            }
+        }
+
+        using (var outputFile = new StreamWriter("yImpulseResponse.txt"))
+        {
+            foreach (var y in yImpulseResponse)
+            {
+                outputFile.WriteLine(y);
+            }
+        }
+
         foreach (var lineChart in chartArea.GetComponentsInChildren<LineChart>())
         {
             if (lineChart.name == "ImpulseResponseLineChart")

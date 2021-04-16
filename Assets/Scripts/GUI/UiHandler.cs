@@ -64,7 +64,7 @@ public class UiHandler
         Dictionary<int, DiscreteSignal> impulseResponses)
     {
         AddListenerForShowTimeButton(rays, microphones, echograms);
-        AddListenerForShowFrquencyButton(frequencyResponse, microphones);
+        AddListenerForShowFrequencyButton(frequencyResponse, microphones);
         AddListenerForShowImpulseResponse(impulseResponses, microphones);
     }
 
@@ -96,7 +96,7 @@ public class UiHandler
                     okToDraw = true;
 
             double freq = frequencies.Aggregate((x, y) => Math.Abs(x - frequency) < Math.Abs(y - frequency) ? x : y);
-            uiTimeEchogram.FrequencyInputField.text = freq.ToString();
+           // uiTimeEchogram.FrequencyInputField.text = freq.ToString();
 
             if (okToDraw == true)
                 DrawTimeEchogram(rays, microphones, echograms, numberOfMicrophone, freq);
@@ -119,7 +119,7 @@ public class UiHandler
         chartDrawer.DrawTimeChart(time, magnitude, phase);
     }
 
-    private void AddListenerForShowFrquencyButton(Echogram frequencyResponse,
+    private void AddListenerForShowFrequencyButton(Echogram frequencyResponse,
                                                   List<MicrophoneSphere> microphones)
     {
         uiFrequencyEchogram.ShowButton.onClick.AddListener(() =>

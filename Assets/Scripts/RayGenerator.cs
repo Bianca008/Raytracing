@@ -34,7 +34,7 @@ public class RayGenerator : MonoBehaviour
 
     private void DrawMicrophones()
     {
-        GameObject go = new GameObject("Microphones");
+        var go = new GameObject("Microphones");
         foreach (var microphone in solver.Microphones)
         {
             var sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -117,7 +117,7 @@ public class RayGenerator : MonoBehaviour
     {
         if (path.Length != 0)
         {
-            using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(path, AudioType.WAV))
+            using (var www = UnityWebRequestMultimedia.GetAudioClip(path, AudioType.WAV))
             {
                 yield return www.SendWebRequest();
 
