@@ -4328,17 +4328,17 @@ PrefabInstance:
     - target: {fileID: 7831397914419674293, guid: 3945a5f9562d1d346ad1487bbf38daaf,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 541.2246
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7831397914419674293, guid: 3945a5f9562d1d346ad1487bbf38daaf,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 227.68367
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7831397914419674293, guid: 3945a5f9562d1d346ad1487bbf38daaf,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 241.8631
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7831397914419674293, guid: 3945a5f9562d1d346ad1487bbf38daaf,
         type: 3}
