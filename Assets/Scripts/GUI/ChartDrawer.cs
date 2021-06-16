@@ -58,6 +58,36 @@ public class ChartDrawer
 
     public void DrawFrequencyChart(List<float> xFrequency, List<float> yMagnitude, List<float> yPhase)
     {
+        using (var outputFile = new StreamWriter("xFrequencyMagnitude.txt"))
+        {
+            foreach (var x in xFrequency)
+            {
+                outputFile.WriteLine(x);
+            }
+        }
+
+        using (var outputFile = new StreamWriter("yFrequencyMagnitude.txt"))
+        {
+            foreach (var y in yMagnitude)
+            {
+                outputFile.WriteLine(y);
+            }
+        }
+        using (var outputFile = new StreamWriter("xFrequencyPhase.txt"))
+        {
+            foreach (var x in xFrequency)
+            {
+                outputFile.WriteLine(x);
+            }
+        }
+
+        using (var outputFile = new StreamWriter("yFrequencyPhase.txt"))
+        {
+            foreach (var y in yPhase)
+            {
+                outputFile.WriteLine(y);
+            }
+        }
         foreach (var lineChart in chartArea.GetComponentsInChildren<LineChart>())
         {
             switch (lineChart.name)
@@ -90,6 +120,7 @@ public class ChartDrawer
 
     public void DrawImpulseResponseChart(List<float> xTime, List<float> yImpulseResponse)
     {
+        Debug.Log("Scriu");
         using (var outputFile = new StreamWriter("xImpulseResponse.txt"))
         {
             foreach (var x in xTime)
@@ -105,6 +136,7 @@ public class ChartDrawer
                 outputFile.WriteLine(y);
             }
         }
+        Debug.Log("Am terminat de scris");
 
         foreach (var lineChart in chartArea.GetComponentsInChildren<LineChart>())
         {
@@ -117,7 +149,6 @@ public class ChartDrawer
         var newYimpulseResponse = AverageValues.CreateSmallerDataSet(yImpulseResponse, 30);
         for (int index = 0; index < newXtime.Count; ++index)
         {
-            /*TODO: vezi unitati de masura.*/
             impulseResponseLineChart.AddXAxisData(newXtime[index].ToString());
             impulseResponseLineChart.AddData(0, newYimpulseResponse[index]);
         }

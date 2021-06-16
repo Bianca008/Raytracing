@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using NWaves.Signals;
 using UnityEngine;
@@ -112,6 +113,38 @@ public class UiHandler
         double indexFrequency)
     {
         var (time, magnitude, phase) = GetPhaseAndMagnitude(rays, microphones, echograms, indexMicrophone, indexFrequency);
+
+        using (var outputFile = new StreamWriter("xTimeMagnitude.txt"))
+        {
+            foreach (var x in time)
+            {
+                outputFile.WriteLine(x);
+            }
+        }
+
+        using (var outputFile = new StreamWriter("yTimeMagnitude.txt"))
+        {
+            foreach (var y in magnitude)
+            {
+                outputFile.WriteLine(y);
+            }
+        }
+
+        using (var outputFile = new StreamWriter("xTimePhase.txt"))
+        {
+            foreach (var x in time)
+            {
+                outputFile.WriteLine(x);
+            }
+        }
+
+        using (var outputFile = new StreamWriter("yTimePhase.txt"))
+        {
+            foreach (var y in phase)
+            {
+                outputFile.WriteLine(y);
+            }
+        }
 
         for (int index = 0; index < time.Count; ++index)
             time[index] = (float)Math.Round(time[index] * 1000, 2);
